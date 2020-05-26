@@ -3,7 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from numpy import log as ln
 import sympy as sym
-import multiprocessing
 
 G = 6.67*10**(-8)
 R = np.linspace(0.005,100,10)
