@@ -1,18 +1,11 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[61]:
-
-
 from scipy import integrate as inte
 import numpy as np
 import matplotlib.pyplot as plt
 import astropy.units as u
 G = 6.67*(10**(-8))*(1/(3.08*(10**18)))**3
-
-
-# In[68]:
-
 
 # Disk (Constant density)
 R_d = np.linspace(10,3*10**3)
@@ -30,10 +23,6 @@ def m_1(r):
 
 def v_1(r):
     return ((m_1(r)*G)/r)**(1/2)
-
-
-# In[69]:
-
 
 # Dark Matter Halo (1/r^2)
 rho_0 = (5.1*(10**-3)*1.988*10**33)
@@ -56,10 +45,6 @@ def m_2(r):
 def v_2(r):
     return ((m_2(r)*G)/r)**(1/2)
 
-
-# In[75]:
-
-
 # Bulge (Keplerian)
 R_b = np.linspace(10,0.5*10**3)
 M_b = 1.8 * (10 ** 10) * 1.988*10**33
@@ -68,17 +53,10 @@ def v_kep(r):
     return ((M_b*G)/r)**(1/2)
 
 
-# In[76]:
-
-
 # Combined curve (all three)
 
 def v_co(r):
     return (v_1(r)**2 + v_2(r)**2 + v_kep(r)**2)**(1/2)
-
-
-# In[83]:
-
 
 plt.plot(R_h/1000,v_co(R_h)*(3.08*10**13),label = 'velocity combined')
 plt.plot(R_h/1000,v_kep(R_h)*(3.08*10**13),label = 'velocity bulge')
@@ -89,17 +67,3 @@ plt.xlabel('radius [kpc]')
 plt.ylim(0,500)
 plt.legend()
 plt.show()
-plt.savefig('rotation_curve_simple.png')
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
