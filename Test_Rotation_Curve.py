@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[49]:
-
-
 from scipy import integrate as inte
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,10 +8,6 @@ from numpy import log as ln
 G = 6.67*(10**(-8))*(1/(3.08*(10**18)))**3
 R = np.linspace(10,30*10**3)
 h = 10 * 10**3
-
-
-# In[50]:
-
 
 # de Vaucouleurs bulge
 sigma_be = 3.2 * (10 ** 3) * 1.988 * (10 ** 33)
@@ -51,10 +44,6 @@ plt.ylabel('velocity [km/s]')
 plt.xlabel('radius [kpc]')
 plt.show()
 
-
-# In[51]:
-
-
 # Exponential Disk
 sigma_dc = 8.44 * (10 ** 2) * (1.988*10**33)
 r_d = 3.5 * 10**3
@@ -80,10 +69,6 @@ plt.ylabel('velocity [km/s]')
 plt.xlabel('radius [kpc]')
 plt.show()
 
-
-# In[52]:
-
-
 # Isothermal 
 rho_0_iso = 0.74 * (h/(10**3))**-2 * (1.988 * 10**33)
 
@@ -104,10 +89,6 @@ plt.plot(R/1000,v_h_iso(R)*(3.08*10**13))
 plt.ylabel('velocity [km/s]')
 plt.xlabel('radius [kpc]')
 plt.show()
-
-
-# In[53]:
-
 
 # NFW
 rho_0_NFW = rho_0_bur = 1.3 * (h/(10**3))**-2 * (1.988 * 10**33)
@@ -133,10 +114,6 @@ plt.ylabel('velocity [km/s]')
 plt.xlabel('radius [kpc]')
 plt.show()
 
-
-# In[54]:
-
-
 # Burkert 
 rho_0_bur = 1.5* (h/(10**3))**-2 * (1.988 * 10**33)
 
@@ -158,10 +135,6 @@ plt.ylabel('velocity [km/s]')
 plt.xlabel('radius [kpc]')
 plt.show()
 
-
-# In[55]:
-
-
 plt.plot(R/1000,v_h_NFW(R)*(3.08*10**13), label='NFW')
 plt.plot(R/1000,v_h_iso(R)*(3.08*10**13), label='isothermal')
 plt.plot(R/1000,v_h_bur(R)*(3.08*10**13), label='Burket')
@@ -169,10 +142,6 @@ plt.ylabel('velocity [km/s]')
 plt.xlabel('radius [kpc]')
 plt.legend()
 plt.show()
-
-
-# In[56]:
-
 
 plt.plot(R/1000,vel*(3.08*10**13), label= 'Bulge')
 plt.plot(R/1000,v_d(R)*(3.08*10**13), label = 'Disk')
@@ -184,17 +153,9 @@ plt.xlabel('radius [kpc]')
 plt.legend()
 plt.show()
 
-
-# In[57]:
-
-
 vel_t = np.sqrt(vel**2 + v_d(R)**2 + v_h_iso(R)**2)
 vel_t_1 = np.sqrt(vel**2 + v_d(R)**2 + v_h_NFW(R)**2)
 vel_t_2 = np.sqrt(vel**2 + v_d(R)**2 + v_h_bur(R)**2)
-
-
-# In[58]:
-
 
 plt.plot(R/1000,vel_t*(3.08*10**13),label = 'Total Curve (w/ iso)')
 plt.plot(R/1000,vel_t_1*(3.08*10**13),label = 'Total Curve (w/ NFW)')
@@ -208,22 +169,5 @@ plt.ylabel('velocity [km/s]')
 plt.xlabel('radius [kpc]')
 plt.legend()
 plt.show()
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
 
 
