@@ -19,7 +19,7 @@ from dynesty import plotting as dyplot
 ################################################################################
 # Reading in all the objects with Plate No. 7443
 #-------------------------------------------------------------------------------
-galaxy_ID = '7443-12705'
+galaxy_ID = '7443-12704'
 
 rot_curve_data_filename = galaxy_ID + '_rot_curve_data.txt'
 
@@ -62,8 +62,14 @@ plt.show()
 # Initial guesses
 p0_avg = [10.77897, 4, 0.02, 20]
 
+# Bounds
+param_bounds = [[8, 12],      # Disk mass [log(Msun)]
+                [0.1, 100],   # Disk radius [kpc]
+                [0.001, 10],  # Halo density [Msun/pc^2]
+                [0.1, 10000]] # Halo radius [kpc]
+
 bestfit_av = minimize(nloglike_Bur_nb, p0_avg, args=(r, av, av_err), 
-                        bounds=((8, 12), (0.1, 100), (0.001, 10), (0.1, 1000)))
+                        bounds=param_bounds)
 print('---------------------------------------------------')
 print('Average curve')
 print(bestfit_av)
@@ -88,7 +94,7 @@ plt.show()
 p0 = [10.77897, 4, 0.02, 15]
 
 bestfit_mav = minimize(nloglike_Bur_nb, p0, args=(r, mav, mav_err), 
-                         bounds=((8, 12), (0.1, 10), (0.001, 10), (0.1, 1000)))
+                         bounds=param_bounds)
 print('---------------------------------------------------')
 print('Positive curve')
 print(bestfit_mav)
@@ -108,7 +114,7 @@ plt.show()
 # Negative rotation curve
 #-------------------------------------------------------------------------------
 bestfit_miv = minimize(nloglike_Bur_nb, p0, args=(r, np.abs(miv), miv_err), 
-                         bounds=((8, 12), (0.1, 10), (0.001, 10), (0.1, 10000)))
+                         bounds=param_bounds)
 print('---------------------------------------------------')
 print('Negative curve')
 print(bestfit_miv)
