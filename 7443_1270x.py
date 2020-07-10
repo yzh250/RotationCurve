@@ -107,8 +107,8 @@ plt.show()
 #-------------------------------------------------------------------------------
 # Negative rotation curve
 #-------------------------------------------------------------------------------
-bestfit_miv = minimize(nloglike_Bur_nb, p0, args=(r, miv, miv_err), 
-                         bounds=((8, 12), (0.1, 10), (0.001, 10), (0.1, 1000)))
+bestfit_miv = minimize(nloglike_Bur_nb, p0, args=(r, np.abs(miv), miv_err), 
+                         bounds=((8, 12), (0.1, 10), (0.001, 10), (0.1, 10000)))
 print('---------------------------------------------------')
 print('Negative curve')
 print(bestfit_miv)
