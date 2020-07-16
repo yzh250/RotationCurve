@@ -55,14 +55,14 @@ for i in range(len(DTable_list)):
     av_err = DTable_list[i]['rot_vel_avg_error'].data
     mav_err = DTable_list[i]['max_velocity_error'].data
     miv_err = DTable_list[i]['min_velocity_error'].data
-    '''
-    if 1 + 1 == 2 :
+    if list(r)[int(len(r)/2)] != max(list(r)[:int(len(r)/2)]):
+            p0 = [0.5, 200, np.log10(Mass_list[i])+0.5, max(np.array(r))/3, 0.02, max(list(r))*10]
             param_bounds = [[0.2, 1],  # Scale Factor [unitless]
                             [0, 1000],  # Bulge Scale Velocity [km/s]
-                            [0, 12],  # Disk mass [log(Msun)]
-                            [0, 10],  # Disk radius [kpc]
-                            [0, 1],  # Halo density [Msun/pc^2]
-                            [0, 100]]  # Halo radius [kpc]
+                            [8, 12],  # Disk mass [log(Msun)]
+                            [0.1, 100],  # Disk radius [kpc]
+                            [0.0001, 10],  # Halo density [Msun/pc^2]
+                            [0.1, 1000]]  # Halo radius [kpc]
 
             bestfit_av = minimize(nloglike_Bur, p0, args=(r, av, av_err),
                               bounds=param_bounds)
@@ -136,11 +136,11 @@ for i in range(len(DTable_list)):
             plt.title(galaxy_ID_list[i])
             plt.show()
     else: #(no bulge)
-            p0 = [np.log10(Mass_list[i]), max(np.array(r)) / 3, 0.02, 20]
-            param_bounds = [[0, 12],  # Disk mass [log(Msun)]
-                        [0, 10],  # Disk radius [kpc]
-                        [0, 1],  # Halo density [Msun/pc^2]
-                        [0, 100]]  # Halo radius [kpc]
+            p0 = [np.log10(Mass_list[i]), max(np.array(r)) / 3, 0.02, max(list(r))*10]
+            param_bounds = [[8, 12],  # Disk mass [log(Msun)]
+                            [0.1, 100],  # Disk radius [kpc]
+                            [0.001, 10],  # Halo density [Msun/pc^2]
+                            [0.1, 1000]]  # Halo radius [kpc]
 
             bestfit_av = minimize(nloglike_Bur_nb, p0, args=(r, av, av_err),
                               bounds=param_bounds)
@@ -209,5 +209,4 @@ for i in range(len(DTable_list)):
             plt.ylabel('$v_{rot}$ [km/s]')
             plt.title(galaxy_ID_list[i])
             plt.show()
-    '''
 ################################################################################
