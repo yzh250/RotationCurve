@@ -142,9 +142,9 @@ def v_d(r, Mdisk, Rd):
     Mdisk_kg = Mdisk * Msun
 
     bessel_component = (iv(0, r / (2 * Rd)) * kn(0, r / (2 * Rd)) - iv(1, r / (2 * Rd)) * kn(1, r / (2 * Rd)))
-    vel = ((0.5) * G * Mdisk_kg * (r / Rd) ** 2 / (Rd * 3.08E16)) * bessel_component
+    vel2 = ((0.5) * G * Mdisk_kg * (r / Rd) ** 2 / (Rd * 3.08E16)) * bessel_component
 
-    return np.sqrt(vel) / 1000
+    return np.sqrt(vel2) / 1000
 
 
 ################################################################################
@@ -224,8 +224,6 @@ def vel_h_iso(r, Vinf, Rh):
     vel = np.sqrt(G * (halo_mass * Msun) / (r * 3.08E16))
     vel /= 1000
     return vel
-
-
 ################################################################################
 
 
@@ -363,7 +361,7 @@ def vel_h_Burket(r, rho0_h, Rh):
 # Total Velocity
 # -------------------------------------------------------------------------------
 # Isothermal Model
-def total_v_iso(r, params):
+def v_co_iso(r, params):
     '''
     r (radius): The a distance from the centre (kpc)
     params:
@@ -526,12 +524,11 @@ def v_co_Burket_nb(r, params):
 
 ################################################################################
 
-
 ################################################################################
 # Loglike function (Burket w/ bulge)
 # -------------------------------------------------------------------------------
-def loglike_Bur(theta, r, v, v_err):
-    model = v_co_Burket(np.array(r), theta)
+def loglike_Iso(theta, r, v, v_err):
+    model = v_co_iso(np.array(r), theta)
 
     inv_sigma2 = 1.0 / (np.array(v_err) ** 2)
 
@@ -545,15 +542,15 @@ def loglike_Bur(theta, r, v, v_err):
 
 
 # Negative likelihood
-def nloglike_Bur(theta, r, v, v_err):
-    return -loglike_Bur(theta, r, v, v_err)
+def nloglike_Iso(theta, r, v, v_err):
+    return -loglike_Iso(theta, r, v, v_err)
 #################################################################################
 
 ################################################################################
 # Loglike function (Burket no bulge)
 # -------------------------------------------------------------------------------
-def loglike_Bur_nb(theta, r, v, v_err):
-    model = v_co_Burket_nb(np.array(r), theta)
+def loglike_Iso_nb(theta, r, v, v_err):
+    model = v_co_iso_nb(np.array(r), theta)
 
     inv_sigma2 = 1.0 / (np.array(v_err) ** 2)
 
@@ -561,20 +558,19 @@ def loglike_Bur_nb(theta, r, v, v_err):
 
     # Additional (physical) penalties
     if theta[3] < theta[1]:
-        logL += 1E6
+        logL += 1E10
 
     return logL
 
-
 # Negative likelihood
-def nloglike_Bur_nb(theta, r, v, v_err):
-    return -loglike_Bur_nb(theta, r, v, v_err)
+def nloglike_Iso_nb(theta, r, v, v_err):
+    return -loglike_Iso_nb(theta, r, v, v_err)
 #################################################################################
 
 #################################################################################
-# Fitting Function (Burket w/ bulge)
+# Fitting Function (Isothermal)
 
-def RC_fitting(r,m,v,v_err):
+def RC_fitting_Iso(r,m,v,v_err):
     '''
 
     :param r: The a distance from the centre (kpc)
@@ -585,33 +581,35 @@ def RC_fitting(r,m,v,v_err):
     '''
     # variables for initial guesses
     a_guess = 0.2
-    v_inf_guess = 100
-    logM_guess = np.log10(m) + 0.5
+    v_inf_b_guess = 150
+    logM_guess = np.log10(m)+0.5
     r_d_guess = max(np.array(r)) / 3
-    rho_dc_guess = 0.02
-    r_h_guess = max(list(r)) * 10
+    v_inf_h_guess = 200
+    r_h_guess = max(list(r))*10
+    if max(list(r)) < 5:
+        logM_guess += 0.5
     half_idx = int(0.5 * len(r))
     if v[half_idx] < max(v[:half_idx]):
-            p0 = [a_guess, v_inf_guess,logM_guess , r_d_guess , rho_dc_guess, r_h_guess]
+            p0 = [a_guess, v_inf_b_guess,logM_guess , r_d_guess , v_inf_h_guess, r_h_guess]
             param_bounds = [[0.2, 1],  # Scale Factor [unitless]
-                            [0.01, 1000],  # Bulge Scale Velocity [km/s]
+                            [0.001, 1000],  # Bulge Scale Velocity [km/s]
                             [8, 12],  # Disk mass [log(Msun)]
-                            [0.1, 100],  # Disk radius [kpc]
-                            [0.0001, 10],  # Halo density [Msun/pc^2]
+                            [0.1,20],  # Disk radius [kpc]
+                            [0.001, 1000],  # Halo density [Msun/pc^2]
                             [0.1, 1000]]  # Halo radius [kpc]
 
-            bestfit = minimize(nloglike_Bur, p0, args=(r, v, v_err),
+            bestfit = minimize(nloglike_Iso, p0, args=(r, v, v_err, WF50),
                               bounds=param_bounds)
             print('---------------------------------------------------')
             print(bestfit)
     else: # No Bulge
-            p0 = [logM_guess, r_d_guess, rho_dc_guess, r_h_guess]
+            p0 = [logM_guess, r_d_guess, v_inf_h_guess, r_h_guess]
             param_bounds = [[8, 12],  # Disk mass [log(Msun)]
-                            [0.1, 100],  # Disk radius [kpc]
-                            [0.001, 10],  # Halo density [Msun/pc^2]
+                            [0.1, 20],  # Disk radius [kpc]
+                            [0.001, 1000],  # Halo density [Msun/pc^2]
                             [0.1, 1000]]  # Halo radius [kpc]
 
-            bestfit = minimize(nloglike_Bur_nb, p0, args=(r, v, v_err),
+            bestfit = minimize(nloglike_Iso_nb, p0, args=(r, v, v_err),
                               bounds=param_bounds)
             print('---------------------------------------------------')
             print(bestfit)
@@ -619,36 +617,174 @@ def RC_fitting(r,m,v,v_err):
 #################################################################################
 
 #################################################################################
-# Plotting
-def RC_plotting(r, v, v_err, bestfit, ID):
+# Plotting (Isohermal)
+def RC_plotting_Iso(r, v, v_err, bestfit, ID):
     half_idx = int(0.5 * len(r))
     if v[half_idx] < max(v[:half_idx]):
-            r_plot = np.linspace(0,5*max(r),100)
+            if max(list(r)) < bestfit.x[3]:
+                r_plot = np.linspace(0,3*bestfit.x[3],100)
+            else:
+                r_plot = np.linspace(0,3*max(list(r)),100)
+            plt.errorbar(r, v, yerr=v_err, fmt='g*', label='data')
+            plt.plot(r_plot, v_co_iso(np.array(r_plot), bestfit.x), '--', label='fit')
+            plt.plot(r_plot, vel_b(np.array(r_plot) * 1000, bestfit.x[0], bestfit.x[1], bestfit.x[3] * 1000),color='green',
+                 label='bulge')
+            plt.plot(r_plot, v_d(np.array(r_plot) * 1000, 10 ** bestfit.x[2], bestfit.x[3] * 1000),color='orange',label='disk')
+            plt.plot(r_plot, vel_h_iso(np.array(r_plot) * 1000, bestfit.x[4],bestfit.x[5] * 1000),color='blue',
+                 label='Isothermal halo')
+            plt.legend()
+            plt.xlabel('$r_{dep}$ [kpc]')
+            plt.ylabel('$v_{rot}$ [km/s]')
+            plt.title(ID)
+            plt.show()
+    else:
+            if max(list(r)) < bestfit.x[1]:
+                r_plot = np.linspace(0,3*bestfit.x[1],100)
+            else:
+                r_plot = np.linspace(0,3*max(list(r)),100)
+            plt.errorbar(r, v, yerr=v_err, fmt='g*', label='data')
+            plt.plot(r_plot, v_co_iso_nb(np.array(r_plot), bestfit.x), '--', label='fit')
+            plt.plot(r_plot, v_d(np.array(r_plot) * 1000, 10 ** bestfit.x[0], bestfit.x[1] * 1000),color='orange',
+                    label='disk')
+            plt.plot(r_plot, vel_h_iso(np.array(r_plot) * 1000, bestfit.x[2], bestfit.x[3] * 1000),color='blue',
+                    label='Isothermal halo')
+            plt.legend()
+            plt.xlabel('$r_{dep}$ [kpc]')
+            plt.ylabel('$v_{rot}$ [km/s]')
+            plt.title(ID)
+            plt.show()
+#################################################################################
+
+################################################################################
+# Loglike function (Burket w/ bulge)
+# -------------------------------------------------------------------------------
+def loglike_Bur(theta, r, v, v_err, WF50):
+    model = v_co_Burket(np.array(r), theta)
+
+    inv_sigma2 = 1.0 / (np.array(v_err) ** 2)
+
+    logL = -0.5 * (np.sum((np.array(v) - model) ** 2 * inv_sigma2 - np.log(inv_sigma2)))
+
+    # Additional (physical) penalties
+    # If disk radius greater than halo radius
+    if theta[3] < theta[1]:
+        logL += 1E6
+    if v_co_Burket(7*max(np.array(r)),theta) > WF50:
+        logL += 1E6
+    return logL
+
+
+# Negative likelihood
+def nloglike_Bur(theta, r, v, v_err,WF50):
+    return -loglike_Bur(theta, r, v, v_err,WF50)
+#################################################################################
+
+################################################################################
+# Loglike function (Burket no bulge)
+# -------------------------------------------------------------------------------
+def loglike_Bur_nb(theta, r, v, v_err,WF50):
+    model = v_co_Burket_nb(np.array(r), theta)
+
+    inv_sigma2 = 1.0 / (np.array(v_err) ** 2)
+
+    logL = -0.5 * (np.sum((np.array(v) - model) ** 2 * inv_sigma2 - np.log(inv_sigma2)))
+
+    # Additional (physical) penalties
+    if theta[3] < theta[1]:
+        logL += 1E6
+    if v_co_Burket_nb(7*max(np.array(r)),theta) > WF50:
+        logL += 1E6
+    return logL
+
+# Negative likelihood
+def nloglike_Bur_nb(theta, r, v, v_err,WF50):
+    return -loglike_Bur_nb(theta, r, v, v_err,WF50)
+#################################################################################
+
+#################################################################################
+# Fitting Function (Burket)
+def RC_fitting_Bur(r,m,v,v_err,WF50):
+    '''
+    :param r: The a distance from the centre (kpc)
+    :param m: Mass of the object (M_sol)
+    :param v: rotational velocity (km/s)
+    :param v_err: error in the rotational velocity (km/s)
+    :param WF50: HI data (km/s)
+    :return: The fitted parameters
+    '''
+    # variables for initial guesses
+    a_guess = 0.2
+    v_inf_guess = 150
+    logM_guess = np.log10(m)
+    r_d_guess = max(np.array(r))/3
+    rho_dc_guess = 0.02
+    r_h_guess = max(list(r))*20
+    if max(list(r)) < 5:
+        rho_dc_guess /= 100
+    half_idx = int(0.5 * len(r))
+    if v[half_idx] < max(v[:half_idx]):
+            p0 = [a_guess, v_inf_guess,logM_guess , r_d_guess , rho_dc_guess, r_h_guess]
+            param_bounds = [[0.2, 1],  # Scale Factor [unitless]
+                            [0.001, 1000],  # Bulge Scale Velocity [km/s]
+                            [8, 12],  # Disk mass [log(Msun)]
+                            [0.1,20],  # Disk radius [kpc]
+                            [0.0001, 1],  # Halo density [Msun/pc^2]
+                            [0.1, 1000]]  # Halo radius [kpc]
+
+            bestfit = minimize(nloglike_Bur, p0, args=(r, v, v_err,WF50),
+                              bounds=param_bounds)
+            print('---------------------------------------------------')
+            print(bestfit)
+    else: # No Bulge
+            p0 = [logM_guess, r_d_guess, rho_dc_guess, r_h_guess]
+            param_bounds = [[8, 12],  # Disk mass [log(Msun)]
+                            [0.1, 20],  # Disk radius [kpc]
+                            [0.0001, 1],  # Halo density [Msun/pc^2]
+                            [0.1, 1000]]  # Halo radius [kpc]
+
+            bestfit = minimize(nloglike_Bur_nb, p0, args=(r, v, v_err,WF50),
+                              bounds=param_bounds)
+            print('---------------------------------------------------')
+            print(bestfit)
+    return bestfit
+#################################################################################
+
+#################################################################################
+# Plotting (Burket)
+def RC_plotting_Bur(r,v, v_err, bestfit, ID):
+    half_idx = int(0.5 * len(r))
+    if v[half_idx] < max(v[:half_idx]):
+            if max(list(r)) < bestfit.x[3]:
+                r_plot = np.linspace(0,3*bestfit.x[3],100)
+            else:
+                r_plot = np.linspace(0,3*max(list(r)),100)
             plt.errorbar(r, v, yerr=v_err, fmt='g*', label='data')
             plt.plot(r_plot, v_co_Burket(np.array(r_plot), bestfit.x), '--', label='fit')
-            plt.plot(r_plot, vel_b(np.array(r_plot) * 1000, bestfit.x[0], bestfit.x[1], bestfit.x[3] * 1000),
+            plt.plot(r_plot, vel_b(np.array(r_plot) * 1000, bestfit.x[0], bestfit.x[1], bestfit.x[3] * 1000),color='green',
                  label='bulge')
-            plt.plot(r_plot, v_d(np.array(r_plot) * 1000, 10 ** bestfit.x[2], bestfit.x[3] * 1000), label='disk')
-            plt.plot(r_plot, vel_h_Burket(np.array(r_plot) * 1000, bestfit.x[4], bestfit.x[5] * 1000),
+            plt.plot(r_plot, v_d(np.array(r_plot) * 1000, 10 ** bestfit.x[2], bestfit.x[3] * 1000),color='orange',label='disk')
+            plt.plot(r_plot, vel_h_Burket(np.array(r_plot) * 1000, bestfit.x[4],bestfit.x[5] * 1000),color='blue',
                  label='Burket halo')
             plt.legend()
-            plt.xlabel('r [kpc]')
+            plt.xlabel('$r_{dep}$ [kpc]')
             plt.ylabel('$v_{rot}$ [km/s]')
             plt.title(ID)
             plt.show()
-            plt.savefig(ID)
     else:
-            r_plot = np.linspace(0,5*max(r),100)
-            plt.errorbar(r, v, yerr=v_err, fmt='b*', label='data')
+            if max(list(r)) < bestfit.x[1]:
+                r_plot = np.linspace(0,3*bestfit.x[1],100)
+            else:
+                r_plot = np.linspace(0,3*max(list(r)),100)
+            plt.errorbar(r, v, yerr=v_err, fmt='g*', label='data')
             plt.plot(r_plot, v_co_Burket_nb(np.array(r_plot), bestfit.x), '--', label='fit')
-            plt.plot(r_plot, v_d(np.array(r_plot) * 1000, 10 ** bestfit.x[0], bestfit.x[1] * 1000),
+            plt.plot(r_plot, v_d(np.array(r_plot) * 1000, 10 ** bestfit.x[0], bestfit.x[1] * 1000),color='orange',
                     label='disk')
-            plt.plot(r_plot, vel_h_Burket(np.array(r_plot) * 1000, bestfit.x[2], bestfit.x[3] * 1000),
+            plt.plot(r_plot, vel_h_Burket(np.array(r_plot) * 1000, bestfit.x[2], bestfit.x[3] * 1000),color='blue',
                     label='Burket halo')
             plt.legend()
-            plt.xlabel('r [kpc]')
+            plt.xlabel('$r_{dep}$ [kpc]')
             plt.ylabel('$v_{rot}$ [km/s]')
             plt.title(ID)
             plt.show()
-            plt.savefig(ID)
 #################################################################################
+
