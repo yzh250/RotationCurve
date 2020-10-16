@@ -141,6 +141,7 @@ for i in range(len(rho_dc)):
 
 print(bestfit_list)
 
+# Calculating chi-sqaure
 for i in range(len(bestfit_list)):
     chi_square_av_Bur = np.zeros(len(av))
     for j in range(len(av)):
