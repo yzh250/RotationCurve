@@ -14,6 +14,8 @@ from scipy.optimize import minimize
 import astropy.units as u
 from scipy.special import kn
 from scipy.special import iv
+import dynesty
+from dynesty import plotting as dyplot
 
 
 ################################################################################
@@ -28,7 +30,7 @@ param_bounds = [[0.2,1], # Scale Factor [unitless]
                 [0,1000], # Bulge Scale Velocity [km/s]
                 [0, 12],  # Disk mass [log(Msun)]
                 [0, 10],  # Disk radius [kpc]
-                [0, 1],  # Halo density [Msun/pc^2]
+                [0, 1],  # Halo density [Msun/pc^3]
                 [0, 100]]  # Halo radius [kpc]
 ################################################################################
 
@@ -664,19 +666,20 @@ def loglike_Bur(theta, r, v, v_err, WF50):
     inv_sigma2 = 1.0 / (np.array(v_err) ** 2)
 
     logL = -0.5 * (np.sum((np.array(v) - model) ** 2 * inv_sigma2 - np.log(inv_sigma2)))
-
-    # Additional (physical) penalties
-    # If disk radius greater than halo radius
-    if theta[3] < theta[1]:
-        logL += 1E6
-    if v_co_Burket(7*max(np.array(r)),theta) > WF50:
-        logL += 1E6
     return logL
 
 
 # Negative likelihood
 def nloglike_Bur(theta, r, v, v_err,WF50):
-    return -loglike_Bur(theta, r, v, v_err,WF50)
+    nlogL = -loglike_Bur(theta, r, v, v_err, WF50)
+    # Additional (physical) penalties
+    # If disk radius greater than halo radius
+    if theta[3] < theta[1]:
+        nlogL += 1E6
+    # If max velocity greater than HI
+    if v_co_Burket(5 * max(np.array(r)), theta) > WF50:
+        nlogL += 1E3
+    return nlogL
 #################################################################################
 
 ################################################################################
@@ -688,17 +691,19 @@ def loglike_Bur_nb(theta, r, v, v_err,WF50):
     inv_sigma2 = 1.0 / (np.array(v_err) ** 2)
 
     logL = -0.5 * (np.sum((np.array(v) - model) ** 2 * inv_sigma2 - np.log(inv_sigma2)))
-
-    # Additional (physical) penalties
-    if theta[3] < theta[1]:
-        logL += 1E6
-    if v_co_Burket_nb(7*max(np.array(r)),theta) > WF50:
-        logL += 1E6
     return logL
 
 # Negative likelihood
 def nloglike_Bur_nb(theta, r, v, v_err,WF50):
-    return -loglike_Bur_nb(theta, r, v, v_err,WF50)
+    nlogL = -loglike_Bur_nb(theta, r, v, v_err,WF50)
+    # Additional (physical) penalties
+    # If disk radius greater than halo radius
+    if theta[3] < theta[1]:
+        nlogL += 1E6
+    # If max velocity greater than HI
+    if v_co_Burket_nb(5*max(np.array(r)),theta) > WF50:
+        nlogL += 1E3
+    return nlogL
 #################################################################################
 
 #################################################################################
@@ -716,9 +721,9 @@ def RC_fitting_Bur(r,m,v,v_err,WF50):
     a_guess = 0.2
     v_inf_guess = 150
     logM_guess = np.log10(m)
-    r_d_guess = max(np.array(r))/3
-    rho_dc_guess = 0.02
-    r_h_guess = max(list(r))*20
+    r_d_guess = max(np.array(r))/5.25
+    rho_dc_guess = 0.0051
+    r_h_guess = max(list(r))*1.1
     if max(list(r)) < 5:
         rho_dc_guess /= 100
     half_idx = int(0.5 * len(r))
@@ -787,4 +792,3 @@ def RC_plotting_Bur(r,v, v_err, bestfit, ID):
             plt.title(ID)
             plt.show()
 #################################################################################
-
