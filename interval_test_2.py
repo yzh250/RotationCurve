@@ -139,21 +139,19 @@ for i in range(len(rho_dc)):
         plt.title('7443-12705')
         plt.show()
 
-print(bestfit_list)
 
-# Calculating chi-sqaure
 for i in range(len(bestfit_list)):
     chi_square_av_Bur = np.zeros(len(av))
     for j in range(len(av)):
-        chi_square_av_Bur[j] = ((av[j] - v_co_Burket_nb(np.array(r), bestfit_list[i])[j] / (av_err)[j])) ** 2
+        chi_square_av_Bur[j] = ((np.array(av)[j] - v_co_Burket_nb(np.array(r), bestfit_list[i])[j])/ (av_err)[j])**2
     chi_square_av_Bur = np.sum(chi_square_av_Bur)/(len(av)-4)
     chi_square.append(chi_square_av_Bur)
 print(chi_square)
 
-
+'''
     # Plotting Average
     # If fitted disk radius is greater than the upper bound of data
-'''
+
         if max(list(r)) < bestfit_av.x[1]:
             r_plot = np.linspace(0, 3 * bestfit_av.x[1], 100)
         else:
@@ -187,7 +185,6 @@ print(chi_square)
             rho_good_initial.append(rho_dc[i])
             rhalo_good.append(bestfit_av.x[3])
             rhalo_good_initial.append(r_h[j])
-
 
 print('---------------------------------------------------')
 print('$\\rho_{dc}$ fits:')
