@@ -164,6 +164,9 @@ def disk_vel(params, r):
     '''
     SigD, Rd = params
     
+    r = r*1000
+    Rd = Rd*1000
+    
     y = r / (2 * Rd)
 
     bessel_component = (iv(0, y) * kn(0, y) - iv(1, y) * kn(1, y))
