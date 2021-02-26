@@ -155,7 +155,7 @@ def v_d(r, Mdisk, Rd):
 # Disk velocity from Paolo et al. 2019
 # -------------------------------------------------------------------------------
 # Fitting for central surface density
-def diak_vel(params, r):
+def disk_vel(params, r):
     '''
     :param SigD: Central surface density for the disk [M_sol/pc^2]
     :param Rd: The scale radius of the disk [pc]
