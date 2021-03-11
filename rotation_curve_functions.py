@@ -147,7 +147,8 @@ def disk_mass(function_parameters, r):
 
     function_parameters : dictionary
         Parameter values (and their uncertainties) for the disk velocity 
-        function (Sigma_d, R_d)
+        function (Sigma_d, R_d).  Sigma_D has units of Msun/pc^2, and R_d has 
+        units of kpc.
 
     r : float
         Radius within which to calculate the total mass.  Units are kpc
@@ -157,19 +158,22 @@ def disk_mass(function_parameters, r):
     =======
 
     Mdisk : float
-        Mass of the disk within the radius r.
+        Mass of the disk within the radius r.  Units are log(solar masses).
 
     Mdisk_err : float
-        Uncertainty in the disk mass
+        Uncertainty in the disk mass.  Units are log(solar masses).
     '''
 
-    SigD = function_parameters['Sigma_disk']
+    SigD = function_parameters['Sigma_disk']*1e6 # Converting from Msun/pc^2 to Msun/kpc^2
     Rd = function_parameters['R_disk']
     
     Mdisk, Mdisk_err = inte.quad(mass_integrand, 0, r, args=[SigD, Rd])
     
-    return Mdisk, Mdisk_err
+    return np.log10(Mdisk), np.log10(Mdisk_err)
 ################################################################################
+
+
+
 
 ################################################################################
 # Disk velocity from Paolo et al. 2019
