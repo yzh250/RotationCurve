@@ -132,34 +132,43 @@ def vel_b(r,a,b):
 def surface_density(r, SigD, Rd):
     return SigD*np.exp(-r/Rd)
 
+
 def mass_integrand(r, SigD, Rd):
-    SigD, Rd = params
     return 2*np.pi*surface_density(r, SigD, Rd)*r
 
-def disk_mass(r, SigD, Rd):
+
+def disk_mass(function_parameters, r):
     '''
     Calculate the total mass within some radius r from the disk mass function.
+
+
     PARAMETERS
     ==========
+
     function_parameters : dictionary
-        Parameter values (and their uncertainties) for the disk velocity function (Sigma_d, R_d)
+        Parameter values (and their uncertainties) for the disk velocity 
+        function (Sigma_d, R_d)
+
     r : float
-        Radius within which to calculate the total mass
-    z : float
-        Redshift of the galaxy (Note: This might not be necessary.)
+        Radius within which to calculate the total mass.  Units are kpc
+
+    
     RETURNS
     =======
+
     Mdisk : float
         Mass of the disk within the radius r.
+
     Mdisk_err : float
         Uncertainty in the disk mass
     '''
+
+    SigD = function_parameters['Sigma_disk']
+    Rd = function_parameters['R_disk']
     
     Mdisk, Mdisk_err = inte.quad(mass_integrand, 0, r, args=[SigD, Rd])
     
     return Mdisk, Mdisk_err
-    
-
 ################################################################################
 
 ################################################################################
