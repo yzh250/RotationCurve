@@ -134,7 +134,7 @@ def surface_density(r, SigD, Rd):
 
 
 def mass_integrand(r, SigD, Rd):
-    return 2*np.pi*surface_density(r, SigD, Rd)*r
+    return 2*np.pi*r*surface_density(r, SigD, Rd)
 
 
 def disk_mass(function_parameters, r):
@@ -167,7 +167,11 @@ def disk_mass(function_parameters, r):
     SigD = function_parameters['Sigma_disk']*1e6 # Converting from Msun/pc^2 to Msun/kpc^2
     Rd = function_parameters['R_disk']
     
-    Mdisk, Mdisk_err = inte.quad(mass_integrand, 0, r, args=[SigD, Rd])
+    #Mdisk, Mdisk_err = inte.quad(mass_integrand, 0, r, args=[SigD, Rd])
+    Mdisk = 2*np.pi*SigD*Rd*(Rd - np.exp(-r/Rd)*(r + Rd))
+
+    Mdisk_err = np.sqrt((2*np.pi*SigD*Rd*(2*(1 - np.exp(-r/Rd)) - (r/Rd)**2*np.exp(-r/Rd) - 2*(r/Rd)*np.exp(-r/Rd)))**2*function_parameters['Sigma_disk_err']**2 \
+                        + (Mdisk/SigD)**2*function_parameters['R_disk_err']**2)
     
     return np.log10(Mdisk), np.log10(Mdisk_err)
 ################################################################################
@@ -202,14 +206,15 @@ def v_d(r, Mdisk, Rd):
 # Disk velocity from Paolo et al. 2019
 # -------------------------------------------------------------------------------
 # Fitting for central surface density
-def disk_vel(params, r):
+#def disk_vel(params, r):
+def disk_vel(r, SigD, Rd):
     '''
     :param SigD: Central surface density for the disk [M_sol/pc^2]
-    :param Rd: The scale radius of the disk [pc]
-    :param r: The a distance from the centre [pc]
+    :param Rd: The scale radius of the disk [kpc]
+    :r: The distance from the centre [kpc]
     :return: The rotational velocity of the disk [km/s]
     '''
-    SigD, Rd = params
+    #SigD, Rd = params
     
     r = r*1000
     Rd = Rd*1000
