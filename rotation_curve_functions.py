@@ -44,6 +44,13 @@ def vel_b(r, A, Vin, Rd):
     :return: The rotational velocity of the bulge (km/s)
     '''
     v = A * (Vin ** 2) * ((r / (0.2 * Rd)) ** -1)
+    '''
+    try:
+        sv = np.sqrt(v)
+    except RuntimeError:
+        print(v)
+        raise
+    '''
     return np.sqrt(v)
 
 
@@ -216,9 +223,6 @@ def disk_vel(r, SigD, Rd):
     '''
     #SigD, Rd = params
     
-    r = r*1000
-    Rd = Rd*1000
-    
     y = r / (2 * Rd)
 
     bessel_component = (iv(0, y) * kn(0, y) - iv(1, y) * kn(1, y))
@@ -232,10 +236,8 @@ def disk_vel(r, SigD, Rd):
 ################################################################################
 # halo (isothermal)
 # -------------------------------------------------------------------------------
-# e = rho_0_iso
-# f = h
 
-def rho0_iso(Vinf, Rh):
+def rho0_iso(Vinf, Rh_kpc):
     '''
     parameters:
     Vinf (rotational velocity): The rotational velocity when r approaches infinity (km/s)
@@ -243,7 +245,7 @@ def rho0_iso(Vinf, Rh):
 
     return: volume density of the isothermal halo (g/pc^3)
     '''
-    return 0.740 * (Vinf / 200) * (Rh) ** (-2)
+    return 0.740 * (Vinf / 200) * (Rh_kpc) ** (-2)
 
 
 def rho_iso(r, Vinf, Rh):
@@ -301,16 +303,23 @@ def vel_h_iso(r, Vinf, Rh):
             halo_mass[i] = mass_h_iso(r[i], Vinf, Rh)
 
     vel = np.sqrt(G * (halo_mass * Msun) / (r * 3.08E16))
-    vel /= 1000
-    return vel
+
+    '''
+    try:
+        vel = np.sqrt(G * (halo_mass * Msun) / (r * 3.08E16))
+    except RuntimeWarning:
+        print(G * (halo_mass * Msun) / (r * 3.08E16))
+        vel = np.sqrt(G * (halo_mass * Msun) / (r * 3.08E16))
+        raise
+    '''
+
+    return vel/1000
 ################################################################################
 
 
 ################################################################################
 # halo (NFW)
-# -------------------------------------------------------------------------------
-# e = rho_0_NFW
-# f = h
+# -------------------------------------------------------------------------------\
 
 def rho_NFW(r, rho0_h, Rh):
     '''
@@ -365,10 +374,16 @@ def vel_h_NFW(r, rho0_h, Rh):
         halo_mass = np.zeros(len(r))
         for i in range(len(r)):
             halo_mass[i] = mass_h_NFW(r[i], rho0_h, Rh)
-
-    vel = np.sqrt(G * (halo_mass * Msun) / (r * 3.0857E16))
-    vel /= 1000
-    return vel
+    vel = np.sqrt(G * (halo_mass * Msun) / (r * 3.08E16))
+    '''
+    try:
+        vel = np.sqrt(v2)
+    except RuntimeWarning:
+        print(v2)
+        raise
+        exit()
+    '''
+    return vel/1000
 
 
 ################################################################################
@@ -425,19 +440,25 @@ def vel_h_Burket(r, rho0_h, Rh):
         for i in range(len(r)):
             halo_mass[i] = mass_h_Burket(r[i], rho0_h, Rh)
 
-    # Unit conversion
-    halo_mass_kg = halo_mass * Msun
+    vel = np.sqrt(G * (halo_mass * Msun) / (r * 3.08E16))
 
-    vel = np.sqrt(G * halo_mass_kg / (r * 3.0857E16))
-    vel /= 1000
-    return vel
+    '''
+    try:
+        vel = np.sqrt(G * (halo_mass * Msun) / (r * 3.08E16))
+    except RuntimeWarning:
+        print(G * (halo_mass * Msun) / (r * 3.08E16))
+        vel = np.sqrt(G * (halo_mass * Msun) / (r * 3.08E16))
+        raise
+    '''
+
+    return vel/1000
 
 
 ################################################################################
 
 
 ################################################################################
-# Total Velocity
+# Total Velocity (Fitting Disk Mass)
 # -------------------------------------------------------------------------------
 # Isothermal Model
 def v_co_iso(r, params):
@@ -602,6 +623,168 @@ def v_co_Burket_nb(r, params):
 
 
 ################################################################################
+
+################################################################################
+# Total Velocity (Fitting Disk Central Density)
+# -------------------------------------------------------------------------------
+# Isothermal Model
+def v_tot_iso(r, params):
+    '''
+    r (radius): The a distance from the centre (kpc)
+    params:
+      - (scale factor): Scale factor for the bulge [unitless]
+      - (interior velocity): The velocity in the bulge [km/s]
+      - (central radius): The central radius of the bulge (kpc)
+      - (mass of disk): The total mass of the disk [log(Msun)]
+      - (disk radius): The central radius of the disk (kpc)
+      - (rotational velocity): The rotational velocity when r approaches infinity (km/s)
+      - (scale radius): The scale radius of the dark matter halo (kpc)
+    '''
+
+    A, Vin, SigD, Rd, Vinf, Rh = params
+
+    # Unit conversion
+    r_pc = r * 1000
+    Rd_pc = Rd * 1000
+    Rh_pc = Rh * 1000
+
+    Vbulge = vel_b(r_pc, A, Vin, Rd_pc)
+    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
+    Vhalo = vel_h_iso(r_pc, Vinf, Rh_pc)
+
+    return np.sqrt(Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2)  # km/s
+
+
+# Isothermal Model (No Bulge)
+def v_tot_iso_nb(r, params):
+    '''
+    r (radius): The a distance from the centre (kpc)
+    params:
+      - (mass of disk): The total mass of the disk [log(Msun)]
+      - (disk radius): The central radius of the disk (kpc)
+      - (rotational velocity): The rotational velocity when r approaches infinity (km/s)
+      - (scale radius): The scale radius of the dark matter halo (kpc)
+    '''
+    SigD, Rd, Vinf, Rh = params
+
+    # Unit conversion
+    r_pc = r * 1000
+    Rd_pc = Rd * 1000
+    Rh_pc = Rh * 1000
+
+    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
+    Vhalo = vel_h_iso(r_pc, Vinf, Rh_pc)
+
+    return np.sqrt(Vdisk ** 2 + Vhalo ** 2)  # km/s
+
+
+# NFW Model
+def v_tot_NFW(r, params):
+    '''
+    r (radius): The a distance from the centre (kpc)
+    params:
+      - (scale factor): Scale factor for the bulge [unitless]
+      - (interior velocity): The velocity in the bulge [km/s]
+      - (central radius): The central radius of the bulge (kpc)
+      - (mass of disk): The total mass of the disk [log(Msun)]
+      - (disk radius): The central radius of the disk (kpc)
+      - (central density): The central density of the halo (M_sol/pc^3)
+      - (scale radius): The scale radius of the dark matter halo (kpc)
+    '''
+
+    A, Vin, SigD, Rd, rho0_h, Rh = params
+
+    # Unit conversion
+    r_pc = r * 1000
+    Rd_pc = Rd * 1000
+    Rh_pc = Rh * 1000
+
+    Vbulge = vel_b(r_pc, A, Vin, Rd_pc)
+    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
+    Vhalo = vel_h_NFW(r_pc, rho0_h, Rh_pc)
+
+    return np.sqrt(Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2)  # km/s
+
+
+# NFW Model (No Bulge)
+def v_tot_NFW_nb(r, params):
+    '''
+    r (radius): The a distance from the centre (kpc)
+    params:
+      - (mass of disk): The total mass of the disk [log(Msun)]
+      - (disk radius): The central radius of the disk (kpc)
+      - (central density): The central density of the halo (M_sol/pc^3)
+      - (scale radius): The scale radius of the dark matter halo (kpc)
+    '''
+
+    SigD, Rd, rho0_h, Rh = params
+
+    # Unit conversion
+    r_pc = r * 1000
+    Rd_pc = Rd * 1000
+    Rh_pc = Rh * 1000
+
+    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
+    Vhalo = vel_h_NFW(r_pc, rho0_h, Rh_pc)
+
+    return np.sqrt(Vdisk ** 2 + Vhalo ** 2)  # km/s
+
+
+# Burket Model
+def v_tot_Burket(r, params):
+    '''
+    r (radius): The a distance from the centre (kpc)
+    params:
+      - (scale factor): Scale factor for the bulge [unitless]
+      - (interior velocity): The velocity in the bulge [km/s]
+      - (central radius): The central radius of the bulge (kpc)
+      - (mass of disk): The total mass of the disk [log(Msun)]
+      - (disk radius): The central radius of the disk (kpc)
+      - (central density): The central density of the halo (M_sol/pc^3)
+      - (scale radius): The scale radius of the dark matter halo (kpc)
+    '''
+    A, Vin, SigD, Rd, rho0_h, Rh = params
+
+    # Unit conversion
+    r_pc = r * 1000
+    Rd_pc = Rd * 1000
+    Rh_pc = Rh * 1000
+
+    Vbulge = vel_b(r_pc, A, Vin, Rd_pc)
+    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
+    Vhalo = vel_h_Burket(r_pc, rho0_h, Rh_pc)
+
+    return np.sqrt(Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2)  # km/s
+
+
+# Burket Model (No Bulge)
+def v_tot_Burket_nb(r, params):
+    '''
+    r (radius): The a distance from the centre (kpc)
+    params:
+      - (scale factor): Scale factor for the bulge [unitless]
+      - (interior velocity): The velocity in the bulge [km/s]
+      - (central radius): The central radius of the bulge (kpc)
+      - (mass of disk): The total mass of the disk [log(Msun)]
+      - (disk radius): The central radius of the disk (kpc)
+      - (central density): The central density of the halo (M_sol/pc^3)
+      - (scale radius): The scale radius of the dark matter halo (kpc)
+    '''
+    SigD, Rd, rho0_h, Rh = params
+
+    # Unit conversion
+    r_pc = r * 1000
+    Rd_pc = Rd * 1000
+    Rh_pc = Rh * 1000
+
+    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
+    Vhalo = vel_h_Burket(r_pc, rho0_h, Rh_pc)
+
+    return np.sqrt(Vdisk ** 2 + Vhalo ** 2)  # km/s
+
+
+################################################################################
+
 
 ################################################################################
 # Loglike function (Burket w/ bulge)
