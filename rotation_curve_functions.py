@@ -15,6 +15,9 @@ import astropy.units as u
 from scipy.special import kn
 from scipy.special import iv
 
+import warnings
+warnings.filterwarnings('error')
+
 
 ################################################################################
 
@@ -44,13 +47,17 @@ def vel_b(r, A, Vin, Rd):
     :return: The rotational velocity of the bulge (km/s)
     '''
     v = A * (Vin ** 2) * ((r / (0.2 * Rd)) ** -1)
-    '''
+    
     try:
         sv = np.sqrt(v)
-    except RuntimeError:
-        print(v)
-        raise
-    '''
+    except Warning:
+        print('Runtime Warning encountered in vel_b')
+        print('v =', v)
+        print('A =', A)
+        print('Vin =', Vin)
+        print('r =', r)
+        print('Rd =', Rd)
+    
     return np.sqrt(v)
 
 
@@ -642,6 +649,7 @@ def v_tot_iso(r, params):
     '''
 
     A, Vin, SigD, Rd, Vinf, Rh = params
+    #print('A in v_tot_iso:', A)
 
     # Unit conversion
     r_pc = r * 1000
