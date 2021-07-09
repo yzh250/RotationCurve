@@ -12,11 +12,11 @@ import time
 
 
 # Import functions from other .py files
-from Velocity_Map_Functions import rot_incl_iso,\
+from Velocity_Map_Functions_mod import rot_incl_iso,\
                                    rot_incl_NFW, \
                                    rot_incl_bur
 
-from RC_2D_Fit_Functions import Galaxy_Data, \
+from RC_2D_Fit_Functions_mod import Galaxy_Data, \
                                 Galaxy_Fitting_iso,\
                                 Galaxy_Fitting_NFW, \
                                 Galaxy_Fitting_bur, \

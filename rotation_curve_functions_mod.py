@@ -49,24 +49,18 @@ def vel_b(r, A, Vin, Rd):
 
     v2 = A * (Vin ** 2) * ((r / (0.2 * Rd)) ** -1)
 
-    if v2 <= 0:
-        v = np.sqrt(np.abs(v2))
-    else:
-        v = np.sqrt(v2)
-    ''''
     try:
-        v = np.sqrt(v2)
+        sv = np.sqrt(v2)
     except Warning:
-        print('RuntimeWarning in vel_b')
-        print('v = ',v2)
-        print('A = ',A)
-        print('r = ',r)
-        print('Vin = ',Vin)
-        print('Rd = ', Rd)
-    else:
-        v = np.sqrt(np.abs(v2))
-    '''
-    return v
+        print('Runtime Warning encountered in vel_b')
+        print('v2 = ')
+        print('v =', sv)
+        print('A =', A)
+        print('Vin =', Vin)
+        print('r =', r)
+        print('Rd =', Rd)
+
+    return np.sqrt(v2)
 
 
 ################################################################################
@@ -318,24 +312,17 @@ def vel_h_iso(r, Vinf, Rh):
             halo_mass[i] = mass_h_iso(r[i], Vinf, Rh)
 
     vel2 = G * (halo_mass * Msun) / (r * 3.08E16)
-    '''
+
     try:
         vel = np.sqrt(vel2)/1000
     except Warning:
         print('RuntimeWarning in vel_h_iso')
-        print('vel = ',vel2)
+        print('vel2 = ',vel2)
+        print('vel = ',vel)
         print('halo_mass = ',halo_mass)
         print('r = ',r)
-    else:
-        vel = np.sqrt(np.abs(vel2))/1000
-    '''
 
-    if vel2 <= 0:
-        vel = np.sqrt(np.abs(vel2))
-    else:
-        vel = np.sqrt(vel2)
-
-    return vel/1000
+    return np.sqrt(vel2)/1000
 
 ################################################################################
 
@@ -399,24 +386,17 @@ def vel_h_NFW(r, rho0_h, Rh):
             halo_mass[i] = mass_h_NFW(r[i], rho0_h, Rh)
 
     vel2 = G * (halo_mass * Msun) / (r * 3.08E16)
-    '''
+
     try:
         vel = np.sqrt(vel2) / 1000
     except Warning:
         print('RuntimeWarning in vel_h_NFW')
-        print('vel = ',vel2)
+        print('vel2 = ',vel2)
+        print('vel = ',vel)
         print('halo_mass = ',halo_mass)
         print('r = ',r)
-    else:
-        vel = np.sqrt(np.abs(vel2)) / 1000
-    '''
 
-    if vel2 <= 0:
-        vel = np.sqrt(np.abs(vel2))
-    else:
-        vel = np.sqrt(vel2)
-
-    return vel/1000
+    return np.sqrt(vel2)/1000
 
 
 ################################################################################
@@ -475,24 +455,16 @@ def vel_h_Burket(r, rho0_h, Rh):
 
     vel2 = G * (halo_mass * Msun) / (r * 3.08E16)
 
-    '''
     try:
         vel = np.sqrt(vel2)/1000
     except Warning:
         print('RuntimeWarning in vel_h_Burket')
-        print('vel = ', vel2)
+        print('vel2 = ', vel2)
+        print('vel = ',vel)
         print('halo_mass = ', halo_mass)
         print('r = ', r)
-    else:
-        vel = np.sqrt(np.abs(vel2))/1000
-    '''
 
-    if vel2 <= 0:
-        vel = np.sqrt(np.abs(vel2))
-    else:
-        vel = np.sqrt(vel2)
-
-    return vel/2
+    return np.sqrt(vel2)/1000
 
 
 

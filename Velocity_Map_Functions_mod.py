@@ -10,7 +10,7 @@
 import numpy as np
 import numpy.ma as ma
 
-from rotation_curve_functions import vel_b, \
+from rotation_curve_functions_mod import vel_b, \
                                      disk_vel, \
                                      vel_h_iso, \
                                      vel_h_NFW, \

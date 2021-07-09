@@ -15,7 +15,7 @@ import numdifftools as ndt
 
 
 # Import functions from other .py files
-from Velocity_Map_Functions import rot_incl_iso,\
+from Velocity_Map_Functions_mod import rot_incl_iso,\
                                    rot_incl_NFW, \
                                    rot_incl_bur, \
                                    nloglikelihood_iso,\
@@ -391,15 +391,16 @@ def Hessian_Calculation_Isothermal(fit_solution, scale, shape, vmap, ivar):
     print('Best-fit values in Hessian_Calculation_Isothermal:', fit_solution)
 
     mask = vmap.mask
-
+    print(mask)
+    print('size of mask ', len(mask))
     vmap_flat = vmap.compressed()
-
+    print('size of vmap', len(vmap_flat))
     ivar_masked = ma.array(ivar, mask=mask)
 
     ivar_flat = ivar_masked.compressed()
-
+    print('length of ivar', len(ivar_flat))
     #print('Inverse variance flat array')
-    #print(ivar_flat)
+    print(ivar_flat)
 
     #print('Calculating Hessian')
     hessian_iso = ndt.Hessian(loglikelihood_iso_flat)#, method='forward', order=1)
@@ -408,8 +409,8 @@ def Hessian_Calculation_Isothermal(fit_solution, scale, shape, vmap, ivar):
     hess_ll_iso = hessian_iso(fit_solution, 
                               scale, 
                               shape, 
-                              vmap_flat, 
-                              ivar_flat, 
+                              vmap_flat,
+                              ivar_flat,
                               mask)
 
     hess_inv_iso = np.linalg.inv(hess_ll_iso)
