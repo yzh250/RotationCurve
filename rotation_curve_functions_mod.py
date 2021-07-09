@@ -53,7 +53,7 @@ def vel_b(r, A, Vin, Rd):
         sv = np.sqrt(v2)
     except Warning:
         print('Runtime Warning encountered in vel_b')
-        print('v2 = ')
+        print('v2 = ',v2)
         print('v =', sv)
         print('A =', A)
         print('Vin =', Vin)
