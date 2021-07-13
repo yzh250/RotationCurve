@@ -126,6 +126,7 @@ rband, Ha_vel, Ha_vel_ivar, Ha_vel_mask, vmasked, ivar_masked, gshape, x_center_
 print('Fitting galaxy')
 start_time = time.time()
 
+
 parameters = [incl, ph, x_center_guess, y_center_guess]
 
 Isothermal_fit = Galaxy_Fitting_iso(parameters, 
@@ -134,6 +135,7 @@ Isothermal_fit = Galaxy_Fitting_iso(parameters,
                                     vmasked,
                                     Ha_vel_ivar,
                                     Ha_vel_mask)
+
 '''
 NFW_fit = Galaxy_Fitting_NFW(parameters, 
                              scale, 
@@ -154,7 +156,6 @@ Burket_Fit = Galaxy_Fitting_bur(parameters,
 
 print('Fit galaxy', time.time() - start_time)
 #-------------------------------------------------------------------------------
-
 
 #-------------------------------------------------------------------------------
 # Plotting

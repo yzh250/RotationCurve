@@ -188,7 +188,7 @@ def nloglikelihood_iso(params, scale, shape, vdata, ivar):
 
 # Isothermal model flat
 
-def loglikelihood_iso_flat(params, scale, shape, vdata_flat, inv_sigma2, mask):
+def loglikelihood_iso_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
 
     #print('Best-fit values in loglikelihood_iso_flat:', params)
 
@@ -196,8 +196,6 @@ def loglikelihood_iso_flat(params, scale, shape, vdata_flat, inv_sigma2, mask):
     model = rot_incl_iso(shape, scale, params)
     model_masked = ma.array(model, mask=mask)
     model_flat = model_masked.compressed()
-    ivar_masked = ma.array(inv_sigma2, mask=mask)
-    ivar_flat = ivar_masked.compressed()
     logL = -0.5 * ma.sum((vdata_flat - model_flat) ** 2 * ivar_flat - np.log(ivar_flat))
 
     return logL
@@ -221,14 +219,12 @@ def nloglikelihood_NFW(params, scale, shape, vdata, ivar):
 
 # NFW model flat
 
-def loglikelihood_NFW_flat(params, scale, shape, vdata_flat, inv_sigma2, mask):
+def loglikelihood_NFW_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
 
     # Construct the model
     model = rot_incl_NFW(shape, scale, params)
     model_masked = ma.array(model, mask=mask)
     model_flat = model_masked.compressed()
-    ivar_masked = ma.array(inv_sigma2, mask=mask)
-    ivar_flat = ivar_masked.compressed()
     logL = -0.5 * ma.sum((vdata_flat - model_flat) ** 2 * ivar_flat - np.log(ivar_flat))
 
     return logL
@@ -252,15 +248,17 @@ def nloglikelihood_bur(params, scale, shape, vdata, ivar):
 
 # Burket model flat
 
-def loglikelihood_bur_flat(params, scale, shape, vdata_flat, inv_sigma2, mask):
+def loglikelihood_bur_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
 
     # Construct the model
     model = rot_incl_bur(shape, scale, params)
     model_masked = ma.array(model, mask=mask)
     model_flat = model_masked.compressed()
-    ivar_masked = ma.array(inv_sigma2, mask=mask)
-    ivar_flat = ivar_masked.compressed()
+    #ivar_masked = ma.array(inv_sigma2, mask=mask)
+    #ivar_flat = ivar_masked.compressed()
+    #print(ivar_flat,len(ivar_flat))
     logL = -0.5 * ma.sum((vdata_flat - model_flat) ** 2 * ivar_flat - np.log(ivar_flat))
+    print(logL)
     
     return logL
 

@@ -911,7 +911,7 @@ def RC_fitting_Iso(r,m,v,v_err):
                             [0.001, 1000],  # Halo density [Msun/pc^2]
                             [0.1, 1000]]  # Halo radius [kpc]
 
-            bestfit = minimize(nloglike_Iso, p0, args=(r, v, v_err, WF50),
+            bestfit = minimize(nloglike_Iso, p0, args=(r, v, v_err),
                               bounds=param_bounds)
             print('---------------------------------------------------')
             print(bestfit)

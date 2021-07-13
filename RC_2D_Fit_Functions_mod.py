@@ -391,32 +391,15 @@ def Hessian_Calculation_Isothermal(fit_solution, scale, shape, vmap, ivar):
     print('Best-fit values in Hessian_Calculation_Isothermal:', fit_solution)
 
     mask = vmap.mask
-    print(mask)
-    print('size of mask ', len(mask))
     vmap_flat = vmap.compressed()
-    print('size of vmap', len(vmap_flat))
-    ivar_masked = ma.array(ivar, mask=mask)
-
+    ivar_masked = ma.array(ivar,mask=mask)
     ivar_flat = ivar_masked.compressed()
-    print('length of ivar', len(ivar_flat))
-    #print('Inverse variance flat array')
-    print(ivar_flat)
-
     #print('Calculating Hessian')
     hessian_iso = ndt.Hessian(loglikelihood_iso_flat)#, method='forward', order=1)
-
     #print('Evaluating Hessian at solution')
-    hess_ll_iso = hessian_iso(fit_solution, 
-                              scale, 
-                              shape, 
-                              vmap_flat,
-                              ivar_flat,
-                              mask)
-
+    hess_ll_iso = hessian_iso(fit_solution,scale,shape,vmap_flat,ivar_flat,mask)
     hess_inv_iso = np.linalg.inv(hess_ll_iso)
-
     fit_err_iso = np.sqrt(np.diag(np.abs(hess_inv_iso)))
-
     print('-------------------------------------------')
     print('Hessian matrix for Isothermal')
     print(fit_err_iso)
@@ -435,11 +418,11 @@ def Hessian_Calculation_NFW(fit_solution, scale, shape, vmap, ivar):
     :return:
     '''
     mask = vmap.mask
-    vmap_flat = vmap.compressed()
+    vmap_flat = vmap.compressed
     ivar_masked = ma.array(ivar, mask=mask)
     ivar_flat = ivar_masked.compressed()
-    print('Inverse variance flat array')
-    print(ivar_flat)
+    #print('Inverse variance flat array')
+    #print(ivar_flat)
     hessian_NFW = ndt.Hessian(loglikelihood_NFW_flat)
     hess_ll_NFW = hessian_NFW(fit_solution, scale, shape, vmap_flat, ivar_flat, mask)
     hess_inv_NFW = np.linalg.inv(hess_ll_NFW)
@@ -465,8 +448,6 @@ def Hessian_Calculation_Burket(fit_solution, scale, shape, vmap, ivar):
     vmap_flat = vmap.compressed()
     ivar_masked = ma.array(ivar, mask=mask)
     ivar_flat = ivar_masked.compressed()
-    print('Inverse variance flat array')
-    print(ivar_flat)
     hessian_bur = ndt.Hessian(loglikelihood_bur_flat)
     hess_ll_bur = hessian_bur(fit_solution, scale, shape, vmap_flat, ivar_flat, mask)
     hess_inv_bur = np.linalg.inv(hess_ll_bur)
