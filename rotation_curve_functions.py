@@ -36,7 +36,7 @@ param_bounds = [[0.2,1], # Scale Factor [unitless]
 ################################################################################
 
 ################################################################################
-# bulge (Simpler Model)
+# bulge (Di Paolo et al. 2019)
 # -------------------------------------------------------------------------------
 def vel_b(r, A, Vin, Rd):
     '''
@@ -46,19 +46,20 @@ def vel_b(r, A, Vin, Rd):
     :param Rd: The scale radius of the disk (pc)
     :return: The rotational velocity of the bulge (km/s)
     '''
-    v = A * (Vin ** 2) * ((r / (0.2 * Rd)) ** -1)
-    
+
+    v2 = A * (Vin ** 2) * ((r / (0.2 * Rd)) ** -1)
+
     try:
-        sv = np.sqrt(v)
+        sv = np.sqrt(v2)
     except Warning:
         print('Runtime Warning encountered in vel_b')
-        print('v =', v)
+        print('v2 = ',v2)
         print('A =', A)
         print('Vin =', Vin)
         print('r =', r)
         print('Rd =', Rd)
-    
-    return np.sqrt(v)
+
+    return np.sqrt(v2)
 
 
 ################################################################################
@@ -309,18 +310,18 @@ def vel_h_iso(r, Vinf, Rh):
         for i in range(len(r)):
             halo_mass[i] = mass_h_iso(r[i], Vinf, Rh)
 
-    vel = np.sqrt(G * (halo_mass * Msun) / (r * 3.08E16))
+    vel2 = G * (halo_mass * Msun) / (r * 3.08E16)
 
-    '''
     try:
-        vel = np.sqrt(G * (halo_mass * Msun) / (r * 3.08E16))
-    except RuntimeWarning:
-        print(G * (halo_mass * Msun) / (r * 3.08E16))
-        vel = np.sqrt(G * (halo_mass * Msun) / (r * 3.08E16))
-        raise
-    '''
+        vel = np.sqrt(vel2)/1000
+    except Warning:
+        print('RuntimeWarning in vel_h_iso')
+        print('vel2 = ',vel2)
+        print('halo_mass = ',halo_mass)
+        print('r = ',r)
 
-    return vel/1000
+    return np.sqrt(vel2)/1000
+
 ################################################################################
 
 
@@ -381,16 +382,18 @@ def vel_h_NFW(r, rho0_h, Rh):
         halo_mass = np.zeros(len(r))
         for i in range(len(r)):
             halo_mass[i] = mass_h_NFW(r[i], rho0_h, Rh)
-    vel = np.sqrt(G * (halo_mass * Msun) / (r * 3.08E16))
-    '''
+
+    vel2 = G * (halo_mass * Msun) / (r * 3.08E16)
+
     try:
-        vel = np.sqrt(v2)
-    except RuntimeWarning:
-        print(v2)
-        raise
-        exit()
-    '''
-    return vel/1000
+        vel = np.sqrt(vel2) / 1000
+    except Warning:
+        print('RuntimeWarning in vel_h_NFW')
+        print('vel2 = ',vel2)
+        print('halo_mass = ',halo_mass)
+        print('r = ',r)
+
+    return np.sqrt(vel2)/1000
 
 
 ################################################################################
@@ -409,7 +412,7 @@ def rho_Burket(r, rho0_h, Rh):
     :param Rh: The scale radius of the dark matter halo (pc)
     :return: volume density of the isothermal halo (M/pc^3)
     '''
-    return (rho0_h * Rh ** 3) / ((r + Rh) * (r ** 2 + Rh ** 2))
+    return (rho0_h) / ((1 + (r/Rh)) * (1 + (r/Rh) ** 2))
 
 
 def integrand_h_Burket(r, rho0_h, Rh):
@@ -447,18 +450,18 @@ def vel_h_Burket(r, rho0_h, Rh):
         for i in range(len(r)):
             halo_mass[i] = mass_h_Burket(r[i], rho0_h, Rh)
 
-    vel = np.sqrt(G * (halo_mass * Msun) / (r * 3.08E16))
+    vel2 = G * (halo_mass * Msun) / (r * 3.08E16)
 
-    '''
     try:
-        vel = np.sqrt(G * (halo_mass * Msun) / (r * 3.08E16))
-    except RuntimeWarning:
-        print(G * (halo_mass * Msun) / (r * 3.08E16))
-        vel = np.sqrt(G * (halo_mass * Msun) / (r * 3.08E16))
-        raise
-    '''
+        vel = np.sqrt(vel2)/1000
+    except Warning:
+        print('RuntimeWarning in vel_h_Burket')
+        print('vel2 = ', vel2)
+        print('halo_mass = ', halo_mass)
+        print('r = ', r)
 
-    return vel/1000
+    return np.sqrt(vel2)/1000
+
 
 
 ################################################################################
@@ -651,16 +654,22 @@ def v_tot_iso(r, params):
     A, Vin, SigD, Rd, Vinf, Rh = params
     #print('A in v_tot_iso:', A)
 
-    # Unit conversion
-    r_pc = r * 1000
-    Rd_pc = Rd * 1000
-    Rh_pc = Rh * 1000
+    if r == 0:
+        v2 = 0
+    else:
+        # Unit conversion
+        r_pc = r * 1000
+        Rd_pc = Rd * 1000
+        Rh_pc = Rh * 1000
 
-    Vbulge = vel_b(r_pc, A, Vin, Rd_pc)
-    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
-    Vhalo = vel_h_iso(r_pc, Vinf, Rh_pc)
+        Vbulge = vel_b(r_pc, A, Vin, Rd_pc)
+        Vdisk = disk_vel(r_pc, SigD, Rd_pc)
+        Vhalo = vel_h_iso(r_pc, Vinf, Rh_pc)
+        v2 = Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2
 
-    return np.sqrt(Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2)  # km/s
+    v = np.sqrt(v2)
+
+    return v  # km/s
 
 
 # Isothermal Model (No Bulge)
@@ -675,15 +684,21 @@ def v_tot_iso_nb(r, params):
     '''
     SigD, Rd, Vinf, Rh = params
 
-    # Unit conversion
-    r_pc = r * 1000
-    Rd_pc = Rd * 1000
-    Rh_pc = Rh * 1000
+    if r == 0:
+        v2 = 0
+    else:
+        # Unit conversion
+        r_pc = r * 1000
+        Rd_pc = Rd * 1000
+        Rh_pc = Rh * 1000
 
-    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
-    Vhalo = vel_h_iso(r_pc, Vinf, Rh_pc)
+        Vdisk = disk_vel(r_pc, SigD, Rd_pc)
+        Vhalo = vel_h_iso(r_pc, Vinf, Rh_pc)
+        v2 = Vdisk ** 2 + Vhalo ** 2
 
-    return np.sqrt(Vdisk ** 2 + Vhalo ** 2)  # km/s
+    v = np.sqrt(v2)
+
+    return v  # km/s
 
 
 # NFW Model
@@ -702,16 +717,22 @@ def v_tot_NFW(r, params):
 
     A, Vin, SigD, Rd, rho0_h, Rh = params
 
-    # Unit conversion
-    r_pc = r * 1000
-    Rd_pc = Rd * 1000
-    Rh_pc = Rh * 1000
+    if r == 0:
+        v2 = 0
+    else:
+        # Unit conversion
+        r_pc = r * 1000
+        Rd_pc = Rd * 1000
+        Rh_pc = Rh * 1000
 
-    Vbulge = vel_b(r_pc, A, Vin, Rd_pc)
-    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
-    Vhalo = vel_h_NFW(r_pc, rho0_h, Rh_pc)
+        Vbulge = vel_b(r_pc, A, Vin, Rd_pc)
+        Vdisk = disk_vel(r_pc, SigD, Rd_pc)
+        Vhalo = vel_h_NFW(r_pc, rho0_h, Rh_pc)
+        v2 = Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2
 
-    return np.sqrt(Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2)  # km/s
+    v = np.sqrt(v2)
+
+    return v  # km/s
 
 
 # NFW Model (No Bulge)
@@ -727,15 +748,21 @@ def v_tot_NFW_nb(r, params):
 
     SigD, Rd, rho0_h, Rh = params
 
-    # Unit conversion
-    r_pc = r * 1000
-    Rd_pc = Rd * 1000
-    Rh_pc = Rh * 1000
+    if r == 0:
+        v2 = 0
+    else:
+        # Unit conversion
+        r_pc = r * 1000
+        Rd_pc = Rd * 1000
+        Rh_pc = Rh * 1000
 
-    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
-    Vhalo = vel_h_NFW(r_pc, rho0_h, Rh_pc)
+        Vdisk = disk_vel(r_pc, SigD, Rd_pc)
+        Vhalo = vel_h_NFW(r_pc, rho0_h, Rh_pc)
+        v2 = Vdisk ** 2 + Vhalo ** 2
 
-    return np.sqrt(Vdisk ** 2 + Vhalo ** 2)  # km/s
+    v = np.sqrt(v2)
+
+    return v  # km/s
 
 
 # Burket Model
@@ -753,16 +780,22 @@ def v_tot_Burket(r, params):
     '''
     A, Vin, SigD, Rd, rho0_h, Rh = params
 
-    # Unit conversion
-    r_pc = r * 1000
-    Rd_pc = Rd * 1000
-    Rh_pc = Rh * 1000
+    if r == 0:
+        v2 = 0
+    else:
+        # Unit conversion
+        r_pc = r * 1000
+        Rd_pc = Rd * 1000
+        Rh_pc = Rh * 1000
 
-    Vbulge = vel_b(r_pc, A, Vin, Rd_pc)
-    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
-    Vhalo = vel_h_Burket(r_pc, rho0_h, Rh_pc)
+        Vbulge = vel_b(r_pc, A, Vin, Rd_pc)
+        Vdisk = disk_vel(r_pc, SigD, Rd_pc)
+        Vhalo = vel_h_Burket(r_pc, rho0_h, Rh_pc)
+        v2 = Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2
 
-    return np.sqrt(Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2)  # km/s
+    v = np.sqrt(v2)
+
+    return v  # km/s
 
 
 # Burket Model (No Bulge)
@@ -780,15 +813,21 @@ def v_tot_Burket_nb(r, params):
     '''
     SigD, Rd, rho0_h, Rh = params
 
-    # Unit conversion
-    r_pc = r * 1000
-    Rd_pc = Rd * 1000
-    Rh_pc = Rh * 1000
+    if r == 0:
+        v2 = 0
+    else:
+        # Unit conversion
+        r_pc = r * 1000
+        Rd_pc = Rd * 1000
+        Rh_pc = Rh * 1000
 
-    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
-    Vhalo = vel_h_Burket(r_pc, rho0_h, Rh_pc)
+        Vdisk = disk_vel(r_pc, SigD, Rd_pc)
+        Vhalo = vel_h_Burket(r_pc, rho0_h, Rh_pc)
+        v2 = Vdisk ** 2 + Vhalo ** 2
 
-    return np.sqrt(Vdisk ** 2 + Vhalo ** 2)  # km/s
+    v = np.sqrt(v2)
+
+    return v # km/s
 
 
 ################################################################################
@@ -868,7 +907,7 @@ def RC_fitting_Iso(r,m,v,v_err):
                             [0.001, 1000],  # Halo density [Msun/pc^2]
                             [0.1, 1000]]  # Halo radius [kpc]
 
-            bestfit = minimize(nloglike_Iso, p0, args=(r, v, v_err, WF50),
+            bestfit = minimize(nloglike_Iso, p0, args=(r, v, v_err),
                               bounds=param_bounds)
             print('---------------------------------------------------')
             print(bestfit)
