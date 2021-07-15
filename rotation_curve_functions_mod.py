@@ -15,8 +15,8 @@ import astropy.units as u
 from scipy.special import kn
 from scipy.special import iv
 
-#import warnings
-#arnings.filterwarnings('error')
+import warnings
+warnings.filterwarnings('error')
 
 
 ################################################################################
@@ -40,33 +40,83 @@ param_bounds = [[0.2,1], # Scale Factor [unitless]
 # -------------------------------------------------------------------------------
 def vel_b(r, A, Vin, Rd):
     '''
-    :param r: The projected radius (pc)
-    :param A: Scale factor [unitless]
-    :param Vin: the scale velocity in the bulge (km/s)
-    :param Rd: The scale radius of the disk (pc)
-    :return: The rotational velocity of the bulge (km/s)
+    Calculate the velocity due to the bulge component.
+    
+    Formula is from DiPaolo19 (eqn. 8)
+    
+    
+    PARAMETERS
+    ==========
+    
+    r : float
+        The projected radius (pc)
+    
+    A: float
+        Scale factor [unitless]
+    Vin : float
+        The scale velocity in the bulge (km/s)
+    
+    Rd : float
+        The scale radius of the disk (pc)
+        
+    
+    RETURNS
+    =======
+    
+    v : float
+        The rotational velocity of the bulge (km/s)
     '''
 
-    v2 = A * (Vin ** 2) * ((r / (0.2 * Rd)) ** -1)
-
-    if v2 <= 0:
-        v = np.sqrt(np.abs(v2))
-    else:
-        v = np.sqrt(v2)
-    ''''
+    v2 = A * (Vin ** 2) / (r / (0.2 * Rd))
+    
+    #v = np.sqrt(np.abs(v2))
+    
     try:
         v = np.sqrt(v2)
+        
     except Warning:
         print('RuntimeWarning in vel_b')
-        print('v = ',v2)
-        print('A = ',A)
-        print('r = ',r)
-        print('Vin = ',Vin)
-        print('Rd = ', Rd)
-    else:
-        v = np.sqrt(np.abs(v2))
-    '''
+        print('v =', v2)
+        print('A =', A)
+        print('r =', r)
+        print('Vin =', Vin)
+        print('Rd =', Rd)
+    
     return v
+
+
+def vel_b2(r, A, Vin, Rd):
+    '''
+    Calculate the square of the velocity due to the bulge component.
+    
+    Formula is from DiPaolo19 (eqn. 8)
+    
+    
+    PARAMETERS
+    ==========
+    
+    r : float
+        The projected radius (pc)
+    
+    A: float
+        Scale factor [unitless]
+    Vin : float
+        The scale velocity in the bulge (km/s)
+    
+    Rd : float
+        The scale radius of the disk (pc)
+        
+    
+    RETURNS
+    =======
+    
+    v2 : float
+        The square of the rotational velocity of the bulge (km/s)
+    '''
+
+    v2 = A * (Vin ** 2) / (r / (0.2 * Rd))
+    
+    return v2
 
 
 ################################################################################
@@ -685,6 +735,7 @@ def v_tot_iso(r, params):
 
     A, Vin, SigD, Rd, Vinf, Rh = params
     #print('A in v_tot_iso:', A)
+    #print('Vin in v_tot_iso:', Vin)
 
     if r == 0:
         v2 = 0
@@ -695,11 +746,20 @@ def v_tot_iso(r, params):
         Rh_pc = Rh * 1000
 
         Vbulge = vel_b(r_pc, A, Vin, Rd_pc)
+        #Vbulge2 = vel_b2(r_pc, A, Vin, Rd_pc)
         Vdisk = disk_vel(r_pc, SigD, Rd_pc)
         Vhalo = vel_h_iso(r_pc, Vinf, Rh_pc)
+        
         v2 = Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2
-
-    v = np.sqrt(v2)
+        #v2 = Vbulge2 + Vdisk**2 + Vhalo**2
+        
+    
+    try:
+        v = np.sqrt(v2)
+    except RuntimeWarning:
+        print('Vbulge2:', Vbulge2)
+        print('Vdisk2:', Vdisk**2)
+        print('Vhalo2:', Vhalo**2)
 
     return v  # km/s
 

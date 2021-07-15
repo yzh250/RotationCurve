@@ -16,16 +16,16 @@ from Velocity_Map_Functions import rot_incl_iso,\
                                    rot_incl_NFW, \
                                    rot_incl_bur
 
-from RC_2D_Fit_Functions import Galaxy_Data, \
-                                Galaxy_Fitting_iso,\
-                                Galaxy_Fitting_NFW, \
-                                Galaxy_Fitting_bur, \
-                                Hessian_Calculation_Isothermal,\
-                                Hessian_Calculation_NFW,\
-                                Hessian_Calculation_Burket,\
-                                Plotting_Isothermal,\
-                                Plotting_NFW,\
-                                Plotting_Burket
+from RC_2D_Fit_Functions_mod import Galaxy_Data, \
+                                    Galaxy_Fitting_iso,\
+                                    Galaxy_Fitting_NFW, \
+                                    Galaxy_Fitting_bur, \
+                                    Hessian_Calculation_Isothermal,\
+                                    Hessian_Calculation_NFW,\
+                                    Hessian_Calculation_Burket,\
+                                    Plotting_Isothermal,\
+                                    Plotting_NFW,\
+                                    Plotting_Burket
 ################################################################################
 
 
@@ -51,7 +51,8 @@ DTable1 = QTable.read('Master_Table.txt',format='ascii.commented_header')
 DTable2 = QTable.read('DRPall-master_file.txt',format='ascii.ecsv')
 '''
 
-MANGA_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+#MANGA_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+MANGA_FOLDER = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/spectro/'
 DRP_FILENAME = MANGA_FOLDER + 'redux/v2_4_3/drpall-v2_4_3.fits'
 
 DTable =  Table.read(DRP_FILENAME, format='fits')
@@ -116,7 +117,8 @@ incl = np.arccos(rat[i])
 ph = phi[i] * np.pi / 180
 
 #scale, incl, ph, rband, Ha_vel, Ha_vel_ivar, Ha_vel_mask, vmasked, gshape, x_center_guess, y_center_guess = Galaxy_Data(galaxy_ID)
-rband, Ha_vel, Ha_vel_ivar, Ha_vel_mask, vmasked, ivar_masked, gshape, x_center_guess, y_center_guess = Galaxy_Data(galaxy_ID)
+rband, Ha_vel, Ha_vel_ivar, Ha_vel_mask, vmasked, ivar_masked, gshape, x_center_guess, y_center_guess = Galaxy_Data(galaxy_ID, 
+                                                                                                                    MANGA_FOLDER)
 #-------------------------------------------------------------------------------
 
 
@@ -189,6 +191,7 @@ chi2_iso = ma.sum(Ha_vel_ivar*(vmasked - vmap_iso)**2)
 #chi2_iso_norm = chi2_iso/(nd_iso - 8)
 chi2_iso_norm = chi2_iso/(nd_iso - len(Isothermal_fit))
 #-------------------------------------------------------------------------------
+print('Isothermal chi2:', chi2_iso_norm, time.time() - start_time)
 
 '''
 #-------------------------------------------------------------------------------
@@ -209,6 +212,7 @@ chi2_NFW = ma.sum(Ha_vel_ivar*(vmasked - vmap_NFW)**2)
 #chi2_NFW_norm = chi2_NFW/(nd_NFW - 8)
 chi2_NFW_norm = chi2_NFW/(nd_NFW - len(NFW_fit))
 #-------------------------------------------------------------------------------
+print('NFW chi2:', chi2_NFW_norm)
 '''
 '''
 #-------------------------------------------------------------------------------
@@ -229,11 +233,8 @@ chi2_bur = ma.sum(Ha_vel_ivar*(vmasked - vmap_bur)**2)
 #chi2_bur_norm = chi2_bur/(nd_bur-8)
 chi2_bur_norm = chi2_bur/(nd_bur - len(Burket_Fit))
 #-------------------------------------------------------------------------------
+print('Burket chi2:', chi2_bur_norm)
 '''
-
-print('Isothermal chi2:', chi2_iso_norm, time.time() - start_time)
-#print('NFW chi2:', chi2_NFW_norm)
-#print('Burket chi2:', chi2_bur_norm)
 #-------------------------------------------------------------------------------
 
 

@@ -10,17 +10,17 @@
 import numpy as np
 import numpy.ma as ma
 
-from rotation_curve_functions import vel_b, \
-                                     disk_vel, \
-                                     vel_h_iso, \
-                                     vel_h_NFW, \
-                                     vel_h_Burket, \
-                                     v_tot_iso, \
-                                     v_tot_iso_nb, \
-                                     v_tot_NFW, \
-                                     v_tot_NFW_nb, \
-                                     v_tot_Burket, \
-                                     v_tot_Burket_nb
+from rotation_curve_functions_mod import vel_b, \
+                                         disk_vel, \
+                                         vel_h_iso, \
+                                         vel_h_NFW, \
+                                         vel_h_Burket, \
+                                         v_tot_iso, \
+                                         v_tot_iso_nb, \
+                                         v_tot_NFW, \
+                                         v_tot_NFW_nb, \
+                                         v_tot_Burket, \
+                                         v_tot_Burket_nb
 ################################################################################
 
 
@@ -33,6 +33,7 @@ def rot_incl_iso(shape, scale, params):
 
     A, Vin, SigD, Rd, Vinf, Rh, inclination, phi, center_x, center_y = params
     #print('A in rot_incl_iso:', A)
+    #print('Vin in rot_incl_iso:', Vin)
 
     rotated_inclined_map = np.zeros(shape)
     
@@ -45,9 +46,15 @@ def rot_incl_iso(shape, scale, params):
             x = (xb*np.cos(phi) - yb*np.sin(phi))/np.cos(inclination)
             y = (xb*np.sin(phi) + yb*np.cos(phi))
             r = np.sqrt(x**2 + y**2)
+            
             theta = np.arctan2(x,y)
+            
             r_in_kpc = r*scale
-            v = v_tot_iso(r_in_kpc,[A, Vin, SigD, Rd, Vinf, Rh])*np.sin(inclination)*np.cos(theta)
+            
+            v_rot = v_tot_iso(r_in_kpc, [A, Vin, SigD, Rd, Vinf, Rh])
+            
+            v = v_rot*np.sin(inclination)*np.cos(theta)
+            
             rotated_inclined_map[i,j] = v
 
     return rotated_inclined_map
@@ -186,27 +193,127 @@ def loglikelihood_iso(params, scale, shape, vdata, inv_sigma2):
 def nloglikelihood_iso(params, scale, shape, vdata, ivar):
     return -loglikelihood_iso(params, scale, shape, vdata, ivar)
 
-# Isothermal model flat
 
+
+
+
+################################################################################
+# Isothermal model flat
+#-------------------------------------------------------------------------------
 def loglikelihood_iso_flat(params, scale, shape, vdata_flat, inv_sigma2, mask):
 
     #print('Best-fit values in loglikelihood_iso_flat:', params)
 
+    ############################################################################
     # Construct the model
+    #---------------------------------------------------------------------------
     model = rot_incl_iso(shape, scale, params)
     model_masked = ma.array(model, mask=mask)
     model_flat = model_masked.compressed()
+    ############################################################################
+    
+    
+    ############################################################################
+    # Flatten the inverse variance map
+    #---------------------------------------------------------------------------
     ivar_masked = ma.array(inv_sigma2, mask=mask)
     ivar_flat = ivar_masked.compressed()
-    logL = -0.5 * ma.sum((vdata_flat - model_flat) ** 2 * ivar_flat - np.log(ivar_flat))
+    ############################################################################
+    
+    logL = -0.5 * ma.sum((vdata_flat - model_flat) ** 2 * ivar_flat \
+                         - np.log(ivar_flat))
 
     return logL
 
+
+
+
 def nloglikelihood_iso_flat(params, scale, shape, vdata_flat, inv_sigma2, mask):
-    return -loglikelihood_iso_flat(params, scale, shape, vdata_flat, inv_sigma2, mask)
+    
+    return -loglikelihood_iso_flat(params, 
+                                   scale, 
+                                   shape, 
+                                   vdata_flat, 
+                                   inv_sigma2, 
+                                   mask)
 
+
+
+
+def chi2_iso_flat(params, scale, shape, vdata_flat, inv_sigma2, mask):
+    '''
+    chi2 of the velocity map with the Isothermal halo model
+    
+    
+    PARAMETERS
+    ==========
+    
+    params : list of floats
+        Best-fit parameter values
+        
+    scale : float
+    
+    shape : length-2 tuple
+        shape of the velocity map
+        
+    vdata_flat : ndarray of shape (N,)
+        Flattened velocity data map; contains only non-masked spaxels
+        
+    inv_sigma2 : ndarray of shape (n,n)
+        Inverse variance data map
+        
+    mask : ndarray of shape (n,n)
+        Bit-mask
+        
+        
+    RETURNS
+    =======
+    
+    chi2_norm : float
+        chi-squared value of the model normalized by the number of data points 
+        (minus the number of free parameters)
+    '''
+    
+    ############################################################################
+    # Construct the model
+    #---------------------------------------------------------------------------
+    model = rot_incl_iso(shape, scale, params)
+    
+    model_masked = ma.array(model, mask=mask)
+    
+    model_flat = model_masked.compressed()
+    ############################################################################
+    
+    
+    ############################################################################
+    # Flatten the inverse variance map
+    #---------------------------------------------------------------------------
+    ivar_masked = ma.array(inv_sigma2, mask=mask)
+    
+    ivar_flat = ivar_masked.compressed()
+    ############################################################################
+    
+    
+    ############################################################################
+    # Calculate chi2 of current fit
+    #---------------------------------------------------------------------------
+    chi2 = np.sum(ivar_flat*(model_flat - vdata_flat)**2)
+    
+    chi2_norm = chi2/(len(vdata_flat) - len(params))
+    ############################################################################
+    
+    
+    return chi2_norm
+################################################################################
+
+
+
+
+
+
+################################################################################
 # NFW model with bulge
-
+#-------------------------------------------------------------------------------
 def loglikelihood_NFW(params, scale, shape, vdata, inv_sigma2):
 
     # Construct the model

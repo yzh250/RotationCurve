@@ -9,24 +9,26 @@ import numpy.ma as ma
 from astropy.io import fits
 from astropy.table import QTable
 
-from scipy.optimize import minimize
+from scipy.optimize import minimize, Bounds
+from scipy_minimize_custom import minimize_powell
 
 import numdifftools as ndt
 
 
 # Import functions from other .py files
-from Velocity_Map_Functions import rot_incl_iso,\
-                                   rot_incl_NFW, \
-                                   rot_incl_bur, \
-                                   nloglikelihood_iso,\
-                                   nloglikelihood_NFW, \
-                                   nloglikelihood_bur,\
-                                   loglikelihood_iso_flat,\
-                                   loglikelihood_NFW_flat, \
-                                   loglikelihood_bur_flat,\
-                                   nloglikelihood_iso_flat,\
-                                   nloglikelihood_NFW_flat,\
-                                   nloglikelihood_bur_flat
+from Velocity_Map_Functions_mod import rot_incl_iso,\
+                                       rot_incl_NFW, \
+                                       rot_incl_bur, \
+                                       nloglikelihood_iso,\
+                                       nloglikelihood_NFW, \
+                                       nloglikelihood_bur,\
+                                       loglikelihood_iso_flat,\
+                                       loglikelihood_NFW_flat, \
+                                       loglikelihood_bur_flat,\
+                                       nloglikelihood_iso_flat,\
+                                       nloglikelihood_NFW_flat,\
+                                       nloglikelihood_bur_flat,\
+                                       chi2_iso_flat
 ################################################################################
 
 
@@ -41,8 +43,6 @@ H_0 =  100 * h # km * s^-1 * Mpc^-1
 ################################################################################
 
 
-MANGA_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
-VEL_MAP_FOLDER = MANGA_FOLDER + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
 
 
 '''
@@ -70,13 +70,16 @@ r50_ang = DTable2['nsa_elpetro_th50_r'].data
 
 
 
-def Galaxy_Data(galaxy_ID):
+def Galaxy_Data(galaxy_ID, MANGA_FOLDER):
     '''
     PARAMETERS
     ==========
 
     galaxy_ID : string
         'Plate-IFU'
+        
+    MANGA_FOLDER : string
+        Location of the MaNGA data on the current computer system
 
 
     RETURNS
@@ -85,6 +88,7 @@ def Galaxy_Data(galaxy_ID):
     physical properties & data of the galaxy
 
     '''
+    
     plate, IFU = galaxy_ID.split('-')
     '''
     ############################################################################
@@ -122,6 +126,8 @@ def Galaxy_Data(galaxy_ID):
     ############################################################################
     # Obtaining Data Cubes, Inverse Variances, and Masks
     #---------------------------------------------------------------------------
+    VEL_MAP_FOLDER = MANGA_FOLDER + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
+    
     #cube = fits.open('manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
     cube = fits.open(VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
 
@@ -161,30 +167,58 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, mask):
     :param ivar:
     :return:
     '''
-
+    '''
+    plt.figure()
+    plt.imshow(ma.array(vmap, mask=mask), cmap='RdBu_r', origin='lower')
+    plt.colorbar()
+    plt.show()
+    '''
     incl, ph, x_guess, y_guess = params
 
     vmap_flat = vmap.compressed()
 
     # Isothermal Fitting
-    bounds_iso = [[1e-9, 1],  # Scale Factor [unitless]
-                  [0.001, 1000],  # Bulge Scale Velocity [km/s]
-                  [0, 10000],  # Surface Density [Msol/pc^2]
-                  [0.1, 20],  # Disk radius [kpc]
-                  [50, 5000],  # Velocity at infinity [km/s]
-                  [0.1, 100],  # Halo radius [kpc]
-                  [0.1, 0.5*np.pi],  # Inclination angle
-                  [0, 2 * np.pi],  # Phase angle
-                  [27, 47],  # center_x
-                  [27, 47]]  # center_y
+    bounds_iso = [(0.0, 1.0),       # Scale Factor [unitless]
+                  (0.001, 1000.0),  # Bulge Scale Velocity [km/s]
+                  (0.0, 10000.0),   # Surface Density [Msol/pc^2]
+                  (0.1, 20.0),      # Disk radius [kpc]
+                  (50.0, 5000.0),   # Velocity at infinity [km/s]
+                  (0.1, 100.0),     # Halo radius [kpc]
+                  (0.1, 0.5*np.pi), # Inclination angle
+                  (0.0, 2*np.pi),   # Phase angle
+                  (27.0, 47.0),     # center_x
+                  (27.0, 47.0)]     # center_y
+    
+    bounds_iso = Bounds(np.array([0.0, 0.001, 0.0, 0.1, 50.0, 0.1, 0.1, 0.0, 27.0, 27.0]), 
+                        np.array([1.0, 1000.0, 10000.0, 20.0, 5000.0, 100.0, 0.5*np.pi, 2*np.pi, 47.0, 47.0]), 
+                        keep_feasible=True)
+    
+    #print(bounds_iso)
 
     ig_iso = [0.4, 127, 1000, 4, 150, 25, incl, ph, x_guess, y_guess]
-
-    bestfit_iso = minimize(nloglikelihood_iso_flat,
+    '''
+    initial_guess_within_bounds = True
+    
+    for ig, curr_bounds in zip(ig_iso, bounds_iso):
+        if ig < curr_bounds[0] or ig > curr_bounds[1]:
+            initial_guess_within_bounds = False
+            
+    print("All initial guesses within bounds: ", initial_guess_within_bounds)
+    '''
+    
+    
+    #bestfit_iso = minimize(nloglikelihood_iso_flat,
+    bestfit_iso = minimize_powell(nloglikelihood_iso_flat, 
                            ig_iso, 
                            args=(scale, shape, vmap_flat, ivar, mask),
-                           method='Powell', 
-                           bounds=bounds_iso)
+                           #method='Powell', #'Nelder-Mead',
+                           bounds=bounds_iso, 
+                           #options={#'direc':np.identity(len(ig_iso)), 
+                                    #'return_all':True, 
+                                    #'disp':3})
+                            disp=True, 
+                            return_all=True)
+    
     print('---------------------------------------------------')
     print(bestfit_iso)
 
