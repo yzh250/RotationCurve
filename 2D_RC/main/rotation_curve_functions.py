@@ -1,6 +1,6 @@
 ################################################################################
 # All the libraries used & constant values
-# -------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 from scipy import integrate as inte
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,27 +17,15 @@ from scipy.special import iv
 
 import warnings
 warnings.filterwarnings('error')
-
-
 ################################################################################
 
-################################################################################
-# Initial Guess
-################################################################################
 
-################################################################################
-# Bounds
-param_bounds = [[0.2,1], # Scale Factor [unitless]
-                [0,1000], # Bulge Scale Velocity [km/s]
-                [0, 12],  # Disk mass [log(Msun)]
-                [0, 10],  # Disk radius [kpc]
-                [0, 1],  # Halo density [Msun/pc^3]
-                [0, 100]]  # Halo radius [kpc]
-################################################################################
+
+
 
 ################################################################################
 # bulge (Di Paolo et al. 2019)
-# -------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 def vel_b(r, A, Vin, Rd):
     '''
     Calculate the velocity due to the bulge component.
@@ -76,13 +64,14 @@ def vel_b(r, A, Vin, Rd):
         
     except Warning:
         print('RuntimeWarning in vel_b')
-        print('v =', v2)
+        print('v2 =', v2)
         print('A =', A)
         print('r =', r)
         print('Vin =', Vin)
         print('Rd =', Rd)
     
     return v
+
 
 
 def vel_b2(r, A, Vin, Rd):
@@ -122,12 +111,19 @@ def vel_b2(r, A, Vin, Rd):
 ################################################################################
 
 
-'''
+
+
+
 ################################################################################
-# bulge (Not the simplest model)
+# de Vaucouleur's bulge model
 #-------------------------------------------------------------------------------
 gamma = 3.3308 # unitless
 kappa = gamma*ln(10) # unitless
+
+
+#-------------------------------------------------------------------------------
+# surface density - sigma
+#-------------------------------------------------------------------------------
 def sigma_b(x,a,b):
     """
     parameters:
@@ -138,8 +134,12 @@ def sigma_b(x,a,b):
     return: surface density of the bulge (g/pc^2)
     """
     return a*np.exp(-1*kappa*((x/b)**0.25-1)) #M_sol/pc^2
+#-------------------------------------------------------------------------------
 
+
+#-------------------------------------------------------------------------------
 # derivative of sigma with respect to r
+#-------------------------------------------------------------------------------
 def dsdx(x,a,b):
     """
     parameters:
@@ -150,11 +150,16 @@ def dsdx(x,a,b):
     return: derivative of sigma (g/pc^3)
     """
     return sigma_b(x,a,b)*(-0.25*kappa)*(b**-0.25)*(x**-0.75) # M_sol/pc^2
-# integrand for getting denisty
+#-------------------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------------------
+# integrand for getting volume density
+#-------------------------------------------------------------------------------
 def density_integrand(x,r,a,b):
     """
     parameters:
-    x (projected radius): The projected rdius  (pc)   
+    x (projected radius): The projected radius  (pc)
     r (radius): The a distance from the centre (pc)
     a (central density): The central density of the bulge (M/pc^2)
     b (central radius): The central radius of the bulge (kpc)
@@ -162,6 +167,12 @@ def density_integrand(x,r,a,b):
     return: integrand for volume density of the bulge (g/pc^3)
     """
     return -(1/np.pi)*dsdx(x,a,b)/np.sqrt(x**2-r**2)
+#-------------------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------------------
+# mass integrand
+#-------------------------------------------------------------------------------
 def mass_integrand(r,a,b):
     """
     parameters:
@@ -172,11 +183,16 @@ def mass_integrand(r,a,b):
 
     return: volume density of the bulge
     """
+    # integrating for volume density
     vol_den, vol_den_err = inte.quad(density_integrand, r, np.inf, args=(r,a,b))
     return 4*np.pi*vol_den*r**2
+#-------------------------------------------------------------------------------
 
+
+#-------------------------------------------------------------------------------
 # getting a velocity
-def vel_b(r,a,b):
+#-------------------------------------------------------------------------------
+def bulge_vel(r,a,b):
     """
     parameters:
     r (radius): The a distance from the centre (pc)
@@ -185,6 +201,7 @@ def vel_b(r,a,b):
 
     return: rotational velocity of the bulge (pc/s)
     """
+    # integrating to get mass
     if isinstance(r, float):
         bulge_mass, m_err = inte.quad(mass_integrand, 0, r, args=(Sigma_be, Rb))
     else:
@@ -193,14 +210,21 @@ def vel_b(r,a,b):
 
         for i in range(len(r)):
             bulge_mass[i],err[i] = inte.quad(mass_integrand, 0, r[i], args=(a,b))
+
+    # v = sqrt(GM/r) for circular velocity
     vel = np.sqrt(G*(bulge_mass*1.988E30)/(r*3.08E16))
     vel /= 1000
+
     return vel
+#-------------------------------------------------------------------------------
 ################################################################################
-'''
+
+
+
 
 ################################################################################
 # Disk Mass
+#-------------------------------------------------------------------------------
 def surface_density(r, SigD, Rd):
     return SigD*np.exp(-r/Rd)
 
@@ -253,7 +277,7 @@ def disk_mass(function_parameters, r):
 
 ################################################################################
 # Disk velocity from Paolo et al. 2019
-# -------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Fitting for disk mass
 def v_d(r, Mdisk, Rd):
     '''
@@ -274,9 +298,12 @@ def v_d(r, Mdisk, Rd):
 ################################################################################
 
 
+
+
+
 ################################################################################
 # Disk velocity from Paolo et al. 2019
-# -------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Fitting for central surface density
 #def disk_vel(params, r):
 def disk_vel(r, SigD, Rd):
@@ -294,14 +321,14 @@ def disk_vel(r, SigD, Rd):
     vel2 = (4 *np.pi * G * SigD * y ** 2 * (Rd/(3.086E16))*Msun) * bessel_component
 
     return np.sqrt(vel2) / 1000
-
-
 ################################################################################
+
+
+
 
 ################################################################################
 # halo (isothermal)
-# -------------------------------------------------------------------------------
-
+#-------------------------------------------------------------------------------
 def rho0_iso(Vinf, Rh_kpc):
     '''
     parameters:
@@ -368,32 +395,46 @@ def vel_h_iso(r, Vinf, Rh):
             halo_mass[i] = mass_h_iso(r[i], Vinf, Rh)
 
     vel2 = G * (halo_mass * Msun) / (r * 3.08E16)
-    '''
+
     try:
         vel = np.sqrt(vel2)/1000
     except Warning:
         print('RuntimeWarning in vel_h_iso')
-        print('vel = ',vel2)
+        print('vel2 = ',vel2)
         print('halo_mass = ',halo_mass)
         print('r = ',r)
-    else:
-        vel = np.sqrt(np.abs(vel2))/1000
-    '''
 
-    if vel2 <= 0:
-        vel = np.sqrt(np.abs(vel2))
-    else:
-        vel = np.sqrt(vel2)
+    return np.sqrt(vel2)/1000
+################################################################################
 
-    return vel/1000
+
+
 
 ################################################################################
+# Circular velocity for isothermal Halo without the complicated integrals
+# from eqn (51) & (52) from Sofue 2013.
+#-------------------------------------------------------------------------------
+def halo_vel_iso(r, rho0_h, Rh):
+    '''
+    :param r: The a distance from the centre (pc)
+    :param rho_iso: The central density of the halo (M_sol/pc^3)
+    :param Rh: The scale radius of the dark matter halo (pc)
+    :return: rotational velocity
+    '''
+
+    v_inf = np.sqrt(4*np.pi*G*rho0_h*Rh**2)
+    # the part in the square root would be unitless
+    vel = v_inf * np.sqrt(1 - ((Rh/r)*np.arctan2(Rh,r)))
+
+    return vel
+################################################################################
+
+
 
 
 ################################################################################
 # halo (NFW)
-# -------------------------------------------------------------------------------\
-
+#-------------------------------------------------------------------------------
 def rho_NFW(r, rho0_h, Rh):
     '''
     parameters:
@@ -449,32 +490,37 @@ def vel_h_NFW(r, rho0_h, Rh):
             halo_mass[i] = mass_h_NFW(r[i], rho0_h, Rh)
 
     vel2 = G * (halo_mass * Msun) / (r * 3.08E16)
-    '''
+
     try:
         vel = np.sqrt(vel2) / 1000
     except Warning:
         print('RuntimeWarning in vel_h_NFW')
-        print('vel = ',vel2)
+        print('vel2 = ',vel2)
         print('halo_mass = ',halo_mass)
         print('r = ',r)
-    else:
-        vel = np.sqrt(np.abs(vel2)) / 1000
-    '''
 
-    if vel2 <= 0:
-        vel = np.sqrt(np.abs(vel2))
-    else:
-        vel = np.sqrt(vel2)
+    return np.sqrt(vel2)/1000
+################################################################################
 
-    return vel/1000
+
 
 
 ################################################################################
+# NFW_halo
+# mass -- already evaluated integral
+#-------------------------------------------------------------------------------
+def halo_vel_NFW(r, rho0_h, Rh):
+    halo_mass = 4*np.pi*rho0_h*Rh**3*((-r/(Rh+r)) + np.log(Rh + r) - np.log(Rh))
+    vel2 = G * (halo_mass * Msun) / (r * 3.08E16)
+    return np.sqrt(vel2)/1000
+################################################################################
+
+
 
 
 ################################################################################
 # halo (Burket)
-# -------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # e = rho_0_Bur
 # f = h
 
@@ -525,34 +571,41 @@ def vel_h_Burket(r, rho0_h, Rh):
 
     vel2 = G * (halo_mass * Msun) / (r * 3.08E16)
 
-    '''
     try:
         vel = np.sqrt(vel2)/1000
     except Warning:
         print('RuntimeWarning in vel_h_Burket')
-        print('vel = ', vel2)
+        print('vel2 = ', vel2)
         print('halo_mass = ', halo_mass)
         print('r = ', r)
-    else:
-        vel = np.sqrt(np.abs(vel2))/1000
-    '''
 
-    if vel2 <= 0:
-        vel = np.sqrt(np.abs(vel2))
-    else:
-        vel = np.sqrt(vel2)
+    return np.sqrt(vel2)/1000
+################################################################################
 
-    return vel/2
 
 
 
 ################################################################################
+# Burket halo
+# mass -- already evaluated integral
+#-------------------------------------------------------------------------------
+def halo_vel_Bur(r,rho0_h, Rh):
+
+    halo_mass = np.pi * (-rho0_h) * (Rh**3) * (-np.log(Rh**2 + r**2) - 2*np.log(Rh + r) + 2*np.arctan2(Rh,r) + np.log(Rh**2)\
+                                               + 2*np.log(Rh) - 2*np.arctan2(Rh,0))
+    vel2 = G * (halo_mass * Msun) / (r * 3.08E16)
+
+    return np.sqrt(vel2) / 1000
+################################################################################
+
+
 
 
 ################################################################################
 # Total Velocity (Fitting Disk Mass)
-# -------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Isothermal Model
+#-------------------------------------------------------------------------------
 def v_co_iso(r, params):
     '''
     r (radius): The a distance from the centre (kpc)
@@ -579,9 +632,12 @@ def v_co_iso(r, params):
     Vhalo = vel_h_iso(r_pc, Vinf, Rh_pc)
 
     return np.sqrt(Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2)  # km/s
+#-------------------------------------------------------------------------------
 
 
+#-------------------------------------------------------------------------------
 # Isothermal Model (No Bulge)
+#-------------------------------------------------------------------------------
 def v_co_iso_nb(r, params):
     '''
     r (radius): The a distance from the centre (kpc)
@@ -603,9 +659,12 @@ def v_co_iso_nb(r, params):
     Vhalo = vel_h_iso(r_pc, Vinf, Rh_pc)
 
     return np.sqrt(Vdisk ** 2 + Vhalo ** 2)  # km/s
+#-------------------------------------------------------------------------------
 
 
+#-------------------------------------------------------------------------------
 # NFW Model
+#-------------------------------------------------------------------------------
 def v_co_NFW(r, params):
     '''
     r (radius): The a distance from the centre (kpc)
@@ -632,9 +691,12 @@ def v_co_NFW(r, params):
     Vhalo = vel_h_NFW(r_pc, rho0_h, Rh_pc)
 
     return np.sqrt(Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2)  # km/s
+#-------------------------------------------------------------------------------
 
 
+#-------------------------------------------------------------------------------
 # NFW Model (No Bulge)
+#-------------------------------------------------------------------------------
 def v_co_NFW_nb(r, params):
     '''
     r (radius): The a distance from the centre (kpc)
@@ -657,9 +719,12 @@ def v_co_NFW_nb(r, params):
     Vhalo = vel_h_NFW(r_pc, rho0_h, Rh_pc)
 
     return np.sqrt(Vdisk ** 2 + Vhalo ** 2)  # km/s
+#-------------------------------------------------------------------------------
 
 
+#-------------------------------------------------------------------------------
 # Burket Model
+#-------------------------------------------------------------------------------
 def v_co_Burket(r, params):
     '''
     r (radius): The a distance from the centre (kpc)
@@ -685,9 +750,12 @@ def v_co_Burket(r, params):
     Vhalo = vel_h_Burket(r_pc, rho0_h, Rh_pc)
 
     return np.sqrt(Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2)  # km/s
+#-------------------------------------------------------------------------------
 
 
+#-------------------------------------------------------------------------------
 # Burket Model (No Bulge)
+#-------------------------------------------------------------------------------
 def v_co_Burket_nb(r, params):
     '''
     r (radius): The a distance from the centre (kpc)
@@ -712,14 +780,17 @@ def v_co_Burket_nb(r, params):
     Vhalo = vel_h_Burket(r_pc, rho0_h, Rh_pc)
 
     return np.sqrt(Vdisk ** 2 + Vhalo ** 2)  # km/s
-
-
+#-------------------------------------------------------------------------------
 ################################################################################
+
+
+
 
 ################################################################################
 # Total Velocity (Fitting Disk Central Density)
-# -------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Isothermal Model
+#-------------------------------------------------------------------------------
 def v_tot_iso(r, params):
     '''
     r (radius): The a distance from the centre (kpc)
@@ -762,9 +833,12 @@ def v_tot_iso(r, params):
         print('Vhalo2:', Vhalo**2)
 
     return v  # km/s
+#-------------------------------------------------------------------------------
 
 
+#-------------------------------------------------------------------------------
 # Isothermal Model (No Bulge)
+#-------------------------------------------------------------------------------
 def v_tot_iso_nb(r, params):
     '''
     r (radius): The a distance from the centre (kpc)
@@ -791,9 +865,12 @@ def v_tot_iso_nb(r, params):
     v = np.sqrt(v2)
 
     return v  # km/s
+#-------------------------------------------------------------------------------
 
 
+#-------------------------------------------------------------------------------
 # NFW Model
+#-------------------------------------------------------------------------------
 def v_tot_NFW(r, params):
     '''
     r (radius): The a distance from the centre (kpc)
@@ -825,9 +902,12 @@ def v_tot_NFW(r, params):
     v = np.sqrt(v2)
 
     return v  # km/s
+#-------------------------------------------------------------------------------
 
 
+#-------------------------------------------------------------------------------
 # NFW Model (No Bulge)
+#-------------------------------------------------------------------------------
 def v_tot_NFW_nb(r, params):
     '''
     r (radius): The a distance from the centre (kpc)
@@ -855,9 +935,12 @@ def v_tot_NFW_nb(r, params):
     v = np.sqrt(v2)
 
     return v  # km/s
+#-------------------------------------------------------------------------------
 
 
+#-------------------------------------------------------------------------------
 # Burket Model
+#-------------------------------------------------------------------------------
 def v_tot_Burket(r, params):
     '''
     r (radius): The a distance from the centre (kpc)
@@ -888,9 +971,12 @@ def v_tot_Burket(r, params):
     v = np.sqrt(v2)
 
     return v  # km/s
+#-------------------------------------------------------------------------------
 
 
+#-------------------------------------------------------------------------------
 # Burket Model (No Bulge)
+#-------------------------------------------------------------------------------
 def v_tot_Burket_nb(r, params):
     '''
     r (radius): The a distance from the centre (kpc)
@@ -920,14 +1006,13 @@ def v_tot_Burket_nb(r, params):
     v = np.sqrt(v2)
 
     return v # km/s
-
-
+#-------------------------------------------------------------------------------
 ################################################################################
 
 
 ################################################################################
 # Loglike function (Burket w/ bulge)
-# -------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 def loglike_Iso(theta, r, v, v_err):
     model = v_co_iso(np.array(r), theta)
 
@@ -947,9 +1032,12 @@ def nloglike_Iso(theta, r, v, v_err):
     return -loglike_Iso(theta, r, v, v_err)
 #################################################################################
 
+
+
+
 ################################################################################
 # Loglike function (Burket no bulge)
-# -------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 def loglike_Iso_nb(theta, r, v, v_err):
     model = v_co_iso_nb(np.array(r), theta)
 
@@ -968,9 +1056,12 @@ def nloglike_Iso_nb(theta, r, v, v_err):
     return -loglike_Iso_nb(theta, r, v, v_err)
 #################################################################################
 
+
+
+
 #################################################################################
 # Fitting Function (Isothermal)
-
+#-------------------------------------------------------------------------------
 def RC_fitting_Iso(r,m,v,v_err):
     '''
 
@@ -999,7 +1090,7 @@ def RC_fitting_Iso(r,m,v,v_err):
                             [0.001, 1000],  # Halo density [Msun/pc^2]
                             [0.1, 1000]]  # Halo radius [kpc]
 
-            bestfit = minimize(nloglike_Iso, p0, args=(r, v, v_err, WF50),
+            bestfit = minimize(nloglike_Iso, p0, args=(r, v, v_err),
                               bounds=param_bounds)
             print('---------------------------------------------------')
             print(bestfit)
@@ -1017,8 +1108,12 @@ def RC_fitting_Iso(r,m,v,v_err):
     return bestfit
 #################################################################################
 
+
+
+
 #################################################################################
 # Plotting (Isohermal)
+#-------------------------------------------------------------------------------
 def RC_plotting_Iso(r, v, v_err, bestfit, ID):
     half_idx = int(0.5 * len(r))
     if v[half_idx] < max(v[:half_idx]):
@@ -1056,9 +1151,12 @@ def RC_plotting_Iso(r, v, v_err, bestfit, ID):
             plt.show()
 #################################################################################
 
+
+
+
 ################################################################################
 # Loglike function (Burket w/ bulge)
-# -------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 def loglike_Bur(theta, r, v, v_err, WF50):
     model = v_co_Burket(np.array(r), theta)
 
@@ -1081,9 +1179,12 @@ def nloglike_Bur(theta, r, v, v_err,WF50):
     return nlogL
 #################################################################################
 
+
+
+
 ################################################################################
 # Loglike function (Burket no bulge)
-# -------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 def loglike_Bur_nb(theta, r, v, v_err,WF50):
     model = v_co_Burket_nb(np.array(r), theta)
 
@@ -1105,8 +1206,12 @@ def nloglike_Bur_nb(theta, r, v, v_err,WF50):
     return nlogL
 #################################################################################
 
+
+
+
 #################################################################################
 # Fitting Function (Burket)
+#-------------------------------------------------------------------------------
 def RC_fitting_Bur(r,m,v,v_err,WF50):
     '''
     :param r: The a distance from the centre (kpc)
@@ -1151,10 +1256,14 @@ def RC_fitting_Bur(r,m,v,v_err,WF50):
             print('---------------------------------------------------')
             print(bestfit)
     return bestfit
-#################################################################################
+################################################################################
 
-#################################################################################
+
+
+
+################################################################################
 # Plotting (Burket)
+#-------------------------------------------------------------------------------
 def RC_plotting_Bur(r,v, v_err, bestfit, ID):
     half_idx = int(0.5 * len(r))
     if v[half_idx] < max(v[:half_idx]):
@@ -1190,4 +1299,4 @@ def RC_plotting_Bur(r,v, v_err, bestfit, ID):
             plt.ylabel('$v_{rot}$ [km/s]')
             plt.title(ID)
             plt.show()
-#################################################################################
+################################################################################
