@@ -2,29 +2,21 @@
 # Functions for constructing velocity maps
 ################################################################################
 
-
-
 ################################################################################
 # Importing modules and functions
 #-------------------------------------------------------------------------------
 import numpy as np
 import numpy.ma as ma
 
-from rotation_curve_functions import vel_b, \
-                                     disk_vel, \
-                                     vel_h_iso, \
-                                     vel_h_NFW, \
-                                     vel_h_Burket, \
-                                     v_tot_iso, \
-                                     v_tot_iso_nb, \
-                                     v_tot_NFW, \
-                                     v_tot_NFW_nb, \
-                                     v_tot_Burket, \
-                                     v_tot_Burket_nb
+from galaxy_component_functions import bulge_vel,\
+                                       disk_vel,\
+                                       halo_vel_iso,\
+                                       halo_vel_NFW,\
+                                       halo_vel_bur,\
+                                       vel_tot_iso,\
+                                       vel_tot_NFW,\
+                                       vel_tot_bur
 ################################################################################
-
-
-
 
 ################################################################################
 # Isothermal model with bulge
@@ -47,15 +39,13 @@ def rot_incl_iso(shape, scale, params):
             r = np.sqrt(x**2 + y**2)
             theta = np.arctan2(x,y)
             r_in_kpc = r*scale
-            v = v_tot_iso(r_in_kpc,[A, Vin, SigD, Rd, Vinf, Rh])*np.sin(inclination)*np.cos(theta)
+            v = vel_tot_iso(r_in_kpc,[A, Vin, SigD, Rd, Vinf, Rh])*np.sin(inclination)*np.cos(theta)
             rotated_inclined_map[i,j] = v
 
     return rotated_inclined_map
 ################################################################################
 
-
-
-
+'''
 ################################################################################
 # Isothermal model without bulge
 #-------------------------------------------------------------------------------
@@ -86,10 +76,7 @@ def rot_incl_iso_nb(shape,scale,params):
 
     return rotated_inclined_map
 ################################################################################
-
-
-
-
+'''
 
 ################################################################################
 # NFW model with bulge
@@ -107,12 +94,15 @@ def rot_incl_NFW(shape,scale,params):
             r = np.sqrt(x**2+y**2)
             theta = np.arctan2(x,y)
             r_in_kpc = r*scale
-            v = v_tot_NFW(r_in_kpc,[A,Vin,SigD,r_d,rho_h,r_h])*np.sin(inclination)*np.cos(theta)
+            v = vel_tot_NFW(r_in_kpc,[A,Vin,SigD,r_d,rho_h,r_h])*np.sin(inclination)*np.cos(theta)
             rotated_inclined_map[i,j] = v
     return rotated_inclined_map
+################################################################################
 
+'''
+################################################################################
 # NFW model without bulge
-
+#-------------------------------------------------------------------------------
 def rot_incl_NFW_nb(shape,scale,params):
     SigD,r_d,rho_h,r_h,inclination,phi,center_x,center_y = params
     rotated_inclined_map = np.zeros(shape)
@@ -129,9 +119,12 @@ def rot_incl_NFW_nb(shape,scale,params):
             v = v_tot_NFW_nb(r_in_kpc,[SigD,r_d,rho_h,r_h])*np.sin(inclination)*np.cos(theta)
             rotated_inclined_map[i,j] = v
     return rotated_inclined_map
+################################################################################
+'''
 
+################################################################################
 # Burket model with bulge
-
+#-------------------------------------------------------------------------------
 def rot_incl_bur(shape,scale,params):
     A, Vin,SigD,r_d,rho_h,r_h,inclination,phi,center_x,center_y = params
     rotated_inclined_map = np.zeros(shape)
@@ -145,12 +138,15 @@ def rot_incl_bur(shape,scale,params):
             r = np.sqrt(x**2+y**2)
             theta = np.arctan2(x,y)
             r_in_kpc = r*scale
-            v = v_tot_Burket(r_in_kpc,[A,Vin,SigD,r_d,rho_h,r_h])*np.sin(inclination)*np.cos(theta)
+            v = vel_tot_bur(r_in_kpc,[A,Vin,SigD,r_d,rho_h,r_h])*np.sin(inclination)*np.cos(theta)
             rotated_inclined_map[i,j] = v
     return rotated_inclined_map
+################################################################################
 
+'''
+################################################################################
 # Burket model without bulge
-
+#-------------------------------------------------------------------------------
 def rot_incl_bur_nb(shape,scale,params):
     SigD,r_d,rho_h,r_h,inclination,phi,center_x,center_y = params
     rotated_inclined_map = np.zeros(shape)
@@ -167,6 +163,9 @@ def rot_incl_bur_nb(shape,scale,params):
             v = v_tot_Burket_nb(r_in_kpc,[SigD,r_d,rho_h,r_h])*np.sin(inclination)*np.cos(theta)
             rotated_inclined_map[i,j] = v
     return rotated_inclined_map
+
+##############################################################################
+'''
 
 ##############################################################################
 # Loglikelihood Functions
@@ -203,8 +202,6 @@ def loglikelihood_iso_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
     return logL
 
 def nloglikelihood_iso_flat(params, scale, shape, vdata_flat, inv_sigma2, mask):
-    print('Printing params - nloglikelihood')
-    print(params)
     return -loglikelihood_iso_flat(params, scale, shape, vdata_flat, inv_sigma2, mask)
 
 # NFW model with bulge
