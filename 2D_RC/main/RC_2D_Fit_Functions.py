@@ -26,7 +26,8 @@ from Velocity_Map_Functions import rot_incl_iso,\
                                    loglikelihood_bur_flat,\
                                    nloglikelihood_iso_flat,\
                                    nloglikelihood_NFW_flat,\
-                                   nloglikelihood_bur_flat
+                                   nloglikelihood_bur_flat,\
+                                   find_phi
 ################################################################################
 
 
@@ -151,7 +152,157 @@ def Galaxy_Data(galaxy_ID):
 
 
 
-def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, mask):
+def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar):
+    '''
+
+    :param params:
+    :param scale:
+    :param shape:
+    :param vmap:
+    :param ivar:
+    :return:
+    '''
+
+    incl, ph, x_guess, y_guess = params
+
+    '''
+    vmap_flat = vmap.compressed()
+    ivar_masked = ma.array(ivar,mask=mask)
+    ivar_flat = ivar_masked.compressed()
+    '''
+
+    center_coord = (x_guess, y_guess)
+    ph = find_phi(center_coord, ph, vmap)
+
+    # Isothermal Fitting
+    bounds_iso = [[1e-9, 1],  # Scale Factor [unitless]
+                  [0.001, 1000],  # Bulge Scale Velocity [km/s]
+                  [0, 10000],  # Surface Density [Msol/pc^2]
+                  [0.1, 20],  # Disk radius [kpc]
+                  [0.0001, 0.1],  # Halo density [Msun/pc^2]
+                  [0.1, 100],  # Halo radius [kpc]
+                  [0.1, 0.5*np.pi],  # Inclination angle
+                  [0, 2 * np.pi],  # Phase angle
+                  [x_guess-10, x_guess+10],  # center_x
+                  [y_guess-10, y_guess+10]] # center_y
+                  #[-10.0, 10.0]]
+
+    #lnf_nui = 0.5
+
+    ig_iso = [0.4, 127, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess]#, lnf_nui]
+
+    print(ig_iso)
+
+    bestfit_iso = minimize(nloglikelihood_iso,
+                           ig_iso, 
+                           args=(scale, shape, vmap, ivar),
+                           method='Powell', 
+                           bounds=bounds_iso)
+    print('---------------------------------------------------')
+    print(bestfit_iso)
+
+    return bestfit_iso.x
+
+
+def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar):
+    '''
+
+    :param params:
+    :param scale:
+    :param shape:
+    :param vmap:
+    :param ivar:
+    :return:
+    '''
+    incl, ph, x_guess, y_guess = params
+    '''
+    vmap_flat = vmap.compressed()
+    ivar_masked = ma.array(ivar, mask=mask)
+    ivar_flat = ivar_masked.compressed()
+    '''
+    center_coord = (x_guess, y_guess)
+    ph = find_phi(center_coord, ph, vmap)
+
+    # NFW Fitting
+    bounds_NFW = [[1e-9, 1],  # Scale Factor [unitless]
+                  [0.001, 1000],  # Bulge Scale Velocity [km/s]
+                  [0, 10000],  # Surface Density [Msol/pc^2]
+                  [0.1, 20],  # Disk radius [kpc]
+                  [0.0001, 0.1],  # Halo density [Msun/pc^2]
+                  [0.1, 100],  # Halo radius [kpc]
+                  [0.1, 0.5*np.pi],  # Inclination angle
+                  [0, 2 * np.pi],  # Phase angle
+                  [x_guess-10, x_guess+10],  # center_x
+                  [y_guess-10, y_guess+10]] # center_y
+                  #[-np.inf,np.inf]]
+
+    #lnf_nui = 0.5
+
+    ig_NFW = [0.4, 127, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess] #, lnf_nui]
+
+    bestfit_NFW = minimize(nloglikelihood_NFW,
+                           ig_NFW, 
+                           args=(scale, shape, vmap, ivar),
+                           method='Powell', 
+                           bounds=bounds_NFW)
+    print('---------------------------------------------------')
+    print(bestfit_NFW)
+
+    return bestfit_NFW.x
+
+
+def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar):
+    '''
+
+    :param params:
+    :param scale:
+    :param shape:
+    :param vmap:
+    :param ivar:
+    :return:
+    '''
+
+
+    incl, ph, x_guess, y_guess = params
+    '''
+    vmap_flat = vmap.compressed()
+    ivar_masked = ma.array(ivar, mask=mask)
+    ivar_flat = ivar_masked.compressed()
+    '''
+
+    center_coord = (x_guess, y_guess)
+    ph = find_phi(center_coord, ph, vmap)
+
+    # Burket Fitting
+    bounds_bur = [[1e-9, 1],  # Scale Factor [unitless]
+                  [0.001, 1000],  # Bulge Scale Velocity [km/s]
+                  [0, 10000],  # Surface Density [Msol/pc^2]
+                  [0.1, 20],  # Disk radius [kpc]
+                  [0.0001, 0.1],  # Halo central density[km/s]
+                  [0.1, 100],  # Halo radius [kpc]
+                  [0.1, 0.5*np.pi],  # Inclination angle
+                  [0, 2 * np.pi],  # Phase angle
+                  [x_guess-10, x_guess+10],  # center_x
+                  [y_guess-10, y_guess+10]] # center_y
+                  # [-np.inf,np.inf]]  # center_y
+
+    lnf_nui = 0.5
+
+    ig_bur = [0.4, 127, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess] #, lnf_nui]
+
+    bestfit_bur = minimize(nloglikelihood_bur,
+                           ig_bur, 
+                           args=(scale, shape, vmap, ivar),
+                           method='Powell', 
+                           bounds=bounds_bur)
+    print('---------------------------------------------------')
+    print(bestfit_bur)
+
+    return bestfit_bur.x
+
+# Fitting with flat loglikelihood
+
+def Galaxy_Fitting_iso_flat(params, scale, shape, vmap, ivar, mask):
     '''
 
     :param params:
@@ -173,29 +324,28 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, mask):
                   [0.001, 1000],  # Bulge Scale Velocity [km/s]
                   [0, 10000],  # Surface Density [Msol/pc^2]
                   [0.1, 20],  # Disk radius [kpc]
-                  [50, 5000],  # Velocity at infinity [km/s]
+                  [0.0001, 0.1],  # Halo density [Msun/pc^2]
                   [0.1, 100],  # Halo radius [kpc]
                   [0.1, 0.5*np.pi],  # Inclination angle
                   [0, 2 * np.pi],  # Phase angle
                   [x_guess-10, x_guess+10],  # center_x
                   [y_guess-10, y_guess+10]]  # center_y
 
-    ig_iso = [0.5, 127, 1000, 4, 150, 25, incl, ph, x_guess, y_guess]
+    ig_iso = [0.4, 127, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess]
 
     print(ig_iso)
 
     bestfit_iso = minimize(nloglikelihood_iso_flat,
-                           ig_iso, 
+                           ig_iso,
                            args=(scale, shape, vmap_flat, ivar_flat, mask),
-                           method='Powell', 
+                           method='Powell',
                            bounds=bounds_iso)
     print('---------------------------------------------------')
     print(bestfit_iso)
 
     return bestfit_iso.x
 
-
-def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar,mask):
+def Galaxy_Fitting_NFW_flat(params, scale, shape, vmap, ivar, mask):
     '''
 
     :param params:
@@ -205,7 +355,6 @@ def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar,mask):
     :param ivar:
     :return:
     '''
-
     incl, ph, x_guess, y_guess = params
 
     vmap_flat = vmap.compressed()
@@ -221,24 +370,22 @@ def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar,mask):
                   [0.1, 100],  # Halo radius [kpc]
                   [0.1, 0.5*np.pi],  # Inclination angle
                   [0, 2 * np.pi],  # Phase angle
-                  [27, 47],  # center_x
-                  [27, 47]]  # center_y
+                  [x_guess-10, x_guess+10],  # center_x
+                  [y_guess-10, y_guess+10]]  # center_y
 
     ig_NFW = [0.4, 127, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess]
 
     bestfit_NFW = minimize(nloglikelihood_NFW_flat,
-                           ig_NFW, 
+                           ig_NFW,
                            args=(scale, shape, vmap_flat, ivar_flat, mask),
-                           method='Powell', 
+                           method='Powell',
                            bounds=bounds_NFW)
     print('---------------------------------------------------')
     print(bestfit_NFW)
 
-    return bestfit_NFW.x, 
+    return bestfit_NFW.x
 
-
-
-def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar,mask):
+def Galaxy_Fitting_bur_flat(params, scale, shape, vmap, ivar, mask):
     '''
 
     :param params:
@@ -249,11 +396,13 @@ def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar,mask):
     :return:
     '''
 
+
     incl, ph, x_guess, y_guess = params
 
     vmap_flat = vmap.compressed()
     ivar_masked = ma.array(ivar, mask=mask)
     ivar_flat = ivar_masked.compressed()
+
 
     # Burket Fitting
     bounds_bur = [[1e-9, 1],  # Scale Factor [unitless]
@@ -264,25 +413,20 @@ def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar,mask):
                   [0.1, 100],  # Halo radius [kpc]
                   [0.1, 0.5*np.pi],  # Inclination angle
                   [0, 2 * np.pi],  # Phase angle
-                  [27, 47],  # center_x
-                  [27, 47]]  # center_y
+                  [x_guess-10, x_guess+10],  # center_x
+                  [y_guess-10, y_guess+10]]  # center_y
 
     ig_bur = [0.4, 127, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess]
 
     bestfit_bur = minimize(nloglikelihood_bur_flat,
-                           ig_bur, 
+                           ig_bur,
                            args=(scale, shape, vmap_flat, ivar_flat, mask),
-                           method='Powell', 
+                           method='Powell',
                            bounds=bounds_bur)
     print('---------------------------------------------------')
     print(bestfit_bur)
 
     return bestfit_bur.x
-
-
-
-
-
 
 # Showing and Saving Images
 # Isothermal
@@ -313,10 +457,6 @@ def Plotting_Isothermal(ID, shape, scale, fit_solution, mask):
     plt.show()
     #plt.savefig(ID + ' Isothermal.png', format='png')
     #plt.close()
-    
-
-
-
 
 # NFW
 def Plotting_NFW(ID, shape, scale, fit_solution, mask):
@@ -332,8 +472,8 @@ def Plotting_NFW(ID, shape, scale, fit_solution, mask):
 
     plt.figure()
 
-    plt.imshow(ma.array(rot_incl_NFW(shape, scale, fit_solution), mask=mask), 
-               origin='lower', 
+    plt.imshow(ma.array(rot_incl_NFW(shape, scale, fit_solution), mask=mask),
+               origin='lower',
                cmap='RdBu_r')
 
     plt.title(ID + ' NFW Fit')
@@ -402,10 +542,8 @@ def Hessian_Calculation_Isothermal(fit_solution, scale, shape, vmap, ivar):
     vmap_flat = vmap.compressed()
     ivar_masked = ma.array(ivar,mask=mask)
     ivar_flat = ivar_masked.compressed()
-    #print('Calculating Hessian')
-    hessian_iso = ndt.Hessian(loglikelihood_iso_flat)#, method='forward', order=1)
-    #print('Evaluating Hessian at solution')
-    hess_ll_iso = hessian_iso(fit_solution,scale,shape,vmap_flat,ivar_flat,mask)
+    hessian_iso = ndt.Hessian(loglikelihood_iso_flat)
+    hess_ll_iso = hessian_iso(fit_solution, scale, shape, vmap_flat, ivar_flat, mask)
     hess_inv_iso = np.linalg.inv(hess_ll_iso)
     fit_err_iso = np.sqrt(np.diag(np.abs(hess_inv_iso)))
     print('-------------------------------------------')
@@ -425,12 +563,13 @@ def Hessian_Calculation_NFW(fit_solution, scale, shape, vmap, ivar):
     :param ivar:
     :return:
     '''
+
+    print('Best-fit values in Hessian_Calculation_NFW:', fit_solution)
+
     mask = vmap.mask
-    vmap_flat = vmap.compressed
+    vmap_flat = vmap.compressed()
     ivar_masked = ma.array(ivar, mask=mask)
     ivar_flat = ivar_masked.compressed()
-    #print('Inverse variance flat array')
-    #print(ivar_flat)
     hessian_NFW = ndt.Hessian(loglikelihood_NFW_flat)
     hess_ll_NFW = hessian_NFW(fit_solution, scale, shape, vmap_flat, ivar_flat, mask)
     hess_inv_NFW = np.linalg.inv(hess_ll_NFW)
@@ -452,6 +591,9 @@ def Hessian_Calculation_Burket(fit_solution, scale, shape, vmap, ivar):
     :param ivar:
     :return:
     '''
+
+    print('Best-fit values in Hessian_Calculation_Burket:', fit_solution)
+
     mask = vmap.mask
     vmap_flat = vmap.compressed()
     ivar_masked = ma.array(ivar, mask=mask)

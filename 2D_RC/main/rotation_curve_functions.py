@@ -134,7 +134,7 @@ def bulge_vel(r,a,b):
     """
     # integrating to get mass
     if isinstance(r, float):
-        bulge_mass, m_err = inte.quad(mass_integrand, 0, r, args=(Sigma_be, Rb))
+        bulge_mass, m_err = inte.quad(mass_integrand, 0, r, args=(a, b))
     else:
         bulge_mass = np.zeros(len(r))
         err = np.zeros(len(r))
@@ -202,7 +202,7 @@ def disk_mass(function_parameters, r):
 
 
 ################################################################################
-# Disk velocity from Paolo et al. 2019
+# Disk velocity from Sofue 2013
 # -------------------------------------------------------------------------------
 # Fitting for disk mass
 def v_d(r, Mdisk, Rd):
@@ -260,7 +260,7 @@ def rho0_iso(Vinf, Rh_kpc):
 
     return: volume density of the isothermal halo (g/pc^3)
     '''
-    return 0.740 * (Vinf / 200) * (Rh_kpc) ** (-2)
+    return 0.740 * (Vinf / 200)**2 * (Rh_kpc) ** (-2)
 
 
 def rho_iso(r, Vinf, Rh):
@@ -273,6 +273,7 @@ def rho_iso(r, Vinf, Rh):
     return: volume density of the isothermal halo (g/pc^3)
     '''
     rho_0 = rho0_iso(Vinf, Rh / 1000)
+    print(rho_0)
     return rho_0 / (1 + (r / Rh) ** 2)
 
 
@@ -328,23 +329,6 @@ def vel_h_iso(r, Vinf, Rh):
         print('r = ',r)
 
     return np.sqrt(vel2)/1000
-
-################################################################################
-
-################################################################################
-# Circular velocity for isothermal Halo without the complicated integrals
-# from eqn (51) & (52) from Sofue 2013.
-def halo_vel_iso(r, rho0_h, Rh):
-    '''
-    :param r: The a distance from the centre (pc)
-    :param rho_iso: The central density of the halo (M_sol/pc^3)
-    :param Rh: The scale radius of the dark matter halo (pc)
-    :return: rotational velocity
-    '''
-    v_inf = np.sqrt(4*np.pi*G*rho0_h*Rh**2)
-    # the part in the square root would be unitless
-    vel = v_inf * np.sqrt(1 - ((Rh/r)*np.arctan2(Rh,r)))
-    return vel
 
 ################################################################################
 
@@ -422,15 +406,6 @@ def vel_h_NFW(r, rho0_h, Rh):
 ################################################################################
 
 ################################################################################
-# NFW_halo
-# mass -- already evaluated integral
-def halo_vel_NFW(r, rho0_h, Rh):
-    halo_mass = 4*np.pi*rho0_h*Rh**3*((-r/(Rh+r)) + np.log(Rh + r) - np.log(Rh))
-    vel2 = G * (halo_mass * Msun) / (r * 3.08E16)
-    return np.sqrt(vel2)/1000
-################################################################################
-
-################################################################################
 # halo (Burket)
 # -------------------------------------------------------------------------------
 # e = rho_0_Bur
@@ -495,16 +470,6 @@ def vel_h_Burket(r, rho0_h, Rh):
 
 
 
-################################################################################
-
-################################################################################
-# Burket halo
-# mass -- already evaluated integral
-def halo_vel_Bur(r,rho0_h, Rh):
-    halo_mass = np.pi * (-rho0_h) * (Rh**3) * (-np.log(Rh**2 + r**2) - 2*np.log(Rh + r) + 2*np.arctan2(Rh,r) + np.log(Rh**2)\
-                                               + 2*np.log(Rh) - 2*np.arctan2(Rh,0))
-    vel2 = G * (halo_mass * Msun) / (r * 3.08E16)
-    return np.sqrt(vel2) / 1000
 ################################################################################
 
 ################################################################################
@@ -694,18 +659,16 @@ def v_tot_iso(r, params):
     A, Vin, SigD, Rd, Vinf, Rh = params
     #print('A in v_tot_iso:', A)
 
-    if r == 0:
-        v2 = 0
-    else:
-        # Unit conversion
-        r_pc = r * 1000
-        Rd_pc = Rd * 1000
-        Rh_pc = Rh * 1000
 
-        Vbulge = vel_b(r_pc, A, Vin, Rd_pc)
-        Vdisk = disk_vel(r_pc, SigD, Rd_pc)
-        Vhalo = vel_h_iso(r_pc, Vinf, Rh_pc)
-        v2 = Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2
+    # Unit conversion
+    r_pc = r * 1000
+    Rd_pc = Rd * 1000
+    Rh_pc = Rh * 1000
+
+    Vbulge = vel_b(r_pc, A, Vin, Rd_pc)
+    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
+    Vhalo = vel_h_iso(r_pc, Vinf, Rh_pc)
+    v2 = Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2
 
     v = np.sqrt(v2)
 
@@ -724,17 +687,15 @@ def v_tot_iso_nb(r, params):
     '''
     SigD, Rd, Vinf, Rh = params
 
-    if r == 0:
-        v2 = 0
-    else:
-        # Unit conversion
-        r_pc = r * 1000
-        Rd_pc = Rd * 1000
-        Rh_pc = Rh * 1000
 
-        Vdisk = disk_vel(r_pc, SigD, Rd_pc)
-        Vhalo = vel_h_iso(r_pc, Vinf, Rh_pc)
-        v2 = Vdisk ** 2 + Vhalo ** 2
+    # Unit conversion
+    r_pc = r * 1000
+    Rd_pc = Rd * 1000
+    Rh_pc = Rh * 1000
+
+    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
+    Vhalo = vel_h_iso(r_pc, Vinf, Rh_pc)
+    v2 = Vdisk ** 2 + Vhalo ** 2
 
     v = np.sqrt(v2)
 
@@ -757,18 +718,16 @@ def v_tot_NFW(r, params):
 
     A, Vin, SigD, Rd, rho0_h, Rh = params
 
-    if r == 0:
-        v2 = 0
-    else:
-        # Unit conversion
-        r_pc = r * 1000
-        Rd_pc = Rd * 1000
-        Rh_pc = Rh * 1000
 
-        Vbulge = vel_b(r_pc, A, Vin, Rd_pc)
-        Vdisk = disk_vel(r_pc, SigD, Rd_pc)
-        Vhalo = vel_h_NFW(r_pc, rho0_h, Rh_pc)
-        v2 = Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2
+    # Unit conversion
+    r_pc = r * 1000
+    Rd_pc = Rd * 1000
+    Rh_pc = Rh * 1000
+
+    Vbulge = vel_b(r_pc, A, Vin, Rd_pc)
+    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
+    Vhalo = vel_h_NFW(r_pc, rho0_h, Rh_pc)
+    v2 = Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2
 
     v = np.sqrt(v2)
 
@@ -820,18 +779,16 @@ def v_tot_Burket(r, params):
     '''
     A, Vin, SigD, Rd, rho0_h, Rh = params
 
-    if r == 0:
-        v2 = 0
-    else:
-        # Unit conversion
-        r_pc = r * 1000
-        Rd_pc = Rd * 1000
-        Rh_pc = Rh * 1000
 
-        Vbulge = vel_b(r_pc, A, Vin, Rd_pc)
-        Vdisk = disk_vel(r_pc, SigD, Rd_pc)
-        Vhalo = vel_h_Burket(r_pc, rho0_h, Rh_pc)
-        v2 = Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2
+    # Unit conversion
+    r_pc = r * 1000
+    Rd_pc = Rd * 1000
+    Rh_pc = Rh * 1000
+
+    Vbulge = vel_b(r_pc, A, Vin, Rd_pc)
+    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
+    Vhalo = vel_h_Burket(r_pc, rho0_h, Rh_pc)
+    v2 = Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2
 
     v = np.sqrt(v2)
 

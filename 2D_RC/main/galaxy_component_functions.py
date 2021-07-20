@@ -16,11 +16,99 @@ Msun = 1.989E30  # kg
 ####################################################################################
 
 ####################################################################################
-#
+# A bulge model (Di Paolo et al 2019), in need of a better one
 def bulge_vel(r, A, Vin, Rd):
     v2 = A * (Vin ** 2) * ((r / (0.2 * Rd)) ** -1)
     return np.sqrt(v2)
 ####################################################################################
+
+'''
+################################################################################
+# de Vaucouleur's bulge model
+#
+#-------------------------------------------------------------------------------
+gamma = 3.3308 # unitless
+kappa = gamma*ln(10) # unitless
+
+# surface density - sigma
+def sigma_b(x,SigBC,Rb):
+    """
+    parameters:
+    x (projected radius): The projected radius  (pc)
+    a (central density): The central density of the bulge (M_sol/pc^2)
+    b (central radius): The central radius of the bulge (kpc)
+
+    return: surface density of the bulge (g/pc^2)
+    """
+    return SigBC*np.exp(-1*kappa*((x/Rb)**0.25-1)) #M_sol/pc^2
+
+# derivative of sigma with respect to r
+def dsdx(x,SigBC,Rb):
+    """
+    parameters:
+    x (projected radius): The projected rdius  (pc)
+    a (central density): The central density of the bulge (M/pc^2)
+    b (central radius): The central radius of the bulge (kpc)
+
+    return: derivative of sigma (g/pc^3)
+    """
+    return sigma_b(x,SigBC,Rb)*(-0.25*kappa)*(Rb**-0.25)*(x**-0.75) # M_sol/pc^2
+
+# integrand for getting volume density
+def density_integrand(x,r,SigBC,Rb):
+    """
+    parameters:
+    x (projected radius): The projected radius  (pc)
+    r (radius): The a distance from the centre (pc)
+    a (central density): The central density of the bulge (M/pc^2)
+    b (central radius): The central radius of the bulge (kpc)
+
+    return: integrand for volume density of the bulge (g/pc^3)
+    """
+    return -(1/np.pi)*dsdx(x,SigBC,Rb)/np.sqrt(x**2-r**2)
+
+# mass integrand
+def mass_integrand(r,SigBC,Rb):
+    """
+    parameters:
+    x (projected radius): The projected rdius  (pc)   
+    r (radius): The a distance from the centre (pc)
+    a (central density): The central density of the bulge (M/pc^2)
+    b (central radius): The central radius of the bulge (kpc)
+
+    return: volume density of the bulge
+    """
+    # integrating for volume density
+    vol_den, vol_den_err = inte.quad(density_integrand, r, np.inf, args=(r,SigBC,Rb))
+    return 4*np.pi*vol_den*r**2
+
+# getting a velocity
+def bulge_vel_full(r,SigBC,Rb):
+    """
+    parameters:
+    r (radius): The a distance from the centre (pc)
+    a (central density): The central density of the bulge (M/pc^2)
+    b (central radius): The central radius of the bulge (kpc)
+
+    return: rotational velocity of the bulge (pc/s)
+    """
+    # integrating to get mass
+    if isinstance(r, float):
+        bulge_mass, m_err = inte.quad(mass_integrand, 0, r, args=(SigBC, Rb))
+    else:
+        bulge_mass = np.zeros(len(r))
+        err = np.zeros(len(r))
+
+        for i in range(len(r)):
+            bulge_mass[i],err[i] = inte.quad(mass_integrand, 0, r[i], args=(SigBC, Rb))
+
+    # v = sqrt(GM/r) for circular velocity
+    vel = np.sqrt(G*(bulge_mass*Msun)/(r*3.08E16))
+    vel /= 1000
+
+    return vel
+################################################################################
+'''
 
 ####################################################################################
 # Disk velocity from Sofue 2013
@@ -30,8 +118,8 @@ def bulge_vel(r, A, Vin, Rd):
 def disk_vel(r, SigD, Rd):
     '''
     :param SigD: Central surface density for the disk [M_sol/pc^2]
-    :param Rd: The scale radius of the disk [kpc]
-    :r: The distance from the centre [kpc]
+    :param Rd: The scale radius of the disk [pc]
+    :r: The distance from the centre [pc]
     :return: The rotational velocity of the disk [km/s]
     '''
     # SigD, Rd = params
@@ -57,7 +145,7 @@ def halo_vel_iso(r, rho0_h, Rh):
     :param Rh: The scale radius of the dark matter halo (pc)
     :return: rotational velocity
     '''
-    v_inf = np.sqrt((4 * np.pi * G * rho0_h * (Msun) * Rh ** 2) / (3.03E16))
+    v_inf = np.sqrt((4 * np.pi * G * rho0_h * (Msun) * Rh ** 2) / (3.08E16))
     if isinstance(r,float):
         # the part in the square root would be unitless
         vel = v_inf * np.sqrt(1 - ((Rh/r)*np.arctan2(r,Rh)))
@@ -112,10 +200,10 @@ def vel_tot_iso(r, params):
     Rd_pc = Rd * 1000
     Rh_pc = Rh * 1000
 
-    Vbulge = bulge_vel(r, A, Vin, Rd)
+    Vbulge = bulge_vel(r_pc, A, Vin, Rd_pc)
     Vdisk = disk_vel(r_pc, SigD, Rd_pc)
     Vhalo = halo_vel_iso(r_pc, rho0_h, Rh_pc)
-    v2 = Vbulge **2 + Vdisk ** 2 + Vhalo ** 2
+    v2 = Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2
 
     return np.sqrt(v2)
 #------------------------------------------------------------------------------------
@@ -127,7 +215,7 @@ def vel_tot_NFW(r, params):
     Rd_pc = Rd * 1000
     Rh_pc = Rh * 1000
 
-    Vbulge = bulge_vel(r, A, Vin, Rd)
+    Vbulge = bulge_vel(r_pc, A, Vin, Rd_pc)
     Vdisk = disk_vel(r_pc, SigD, Rd_pc)
     Vhalo = halo_vel_NFW(r_pc, rho0_h, Rh_pc)
     v2 = Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2
@@ -142,7 +230,7 @@ def vel_tot_bur(r, params):
     Rd_pc = Rd * 1000
     Rh_pc = Rh * 1000
 
-    Vbulge = bulge_vel(r, A, Vin, Rd)
+    Vbulge = bulge_vel(r_pc, A, Vin, Rd_pc)
     Vdisk = disk_vel(r_pc, SigD, Rd_pc)
     Vhalo = halo_vel_bur(r_pc, rho0_h, Rh_pc)
     v2 = Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2
