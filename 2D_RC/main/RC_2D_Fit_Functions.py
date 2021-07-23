@@ -13,7 +13,6 @@ from scipy.optimize import minimize
 
 import numdifftools as ndt
 
-
 # Import functions from other .py files
 from Velocity_Map_Functions import rot_incl_iso,\
                                    rot_incl_NFW, \
@@ -191,8 +190,6 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar):
 
     ig_iso = [0.4, 127, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess]#, lnf_nui]
 
-    print(ig_iso)
-
     bestfit_iso = minimize(nloglikelihood_iso,
                            ig_iso, 
                            args=(scale, shape, vmap, ivar),
@@ -286,7 +283,7 @@ def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar):
                   [y_guess-10, y_guess+10]] # center_y
                   # [-np.inf,np.inf]]  # center_y
 
-    lnf_nui = 0.5
+    #lnf_nui = 0.5
 
     ig_bur = [0.4, 127, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess] #, lnf_nui]
 
@@ -454,9 +451,9 @@ def Plotting_Isothermal(ID, shape, scale, fit_solution, mask):
     cbar = plt.colorbar()
     cbar.set_label('km/s')
 
-    plt.show()
-    #plt.savefig(ID + ' Isothermal.png', format='png')
-    #plt.close()
+    #plt.show()
+    plt.savefig(ID + ' Isothermal.png', format='png')
+    plt.close()
 
 # NFW
 def Plotting_NFW(ID, shape, scale, fit_solution, mask):
@@ -484,9 +481,9 @@ def Plotting_NFW(ID, shape, scale, fit_solution, mask):
     cbar = plt.colorbar()
     cbar.set_label('km/s')
 
-    plt.show()
-    #plt.savefig(ID + ' NFW.png', format='png')
-    #plt.close()
+    #plt.show()
+    plt.savefig(ID + ' NFW.png', format='png')
+    plt.close()
 
 
 
@@ -517,9 +514,9 @@ def Plotting_Burket(ID, shape, scale, fit_solution, mask):
     cbar = plt.colorbar()
     cbar.set_label('km/s')
 
-    plt.show()
-    #plt.savefig(ID + ' Burket.png', format='png')
-    #plt.close()
+    #plt.show()
+    plt.savefig(ID + ' Burket.png', format='png')
+    plt.close()
 
 
 
@@ -540,12 +537,12 @@ def Hessian_Calculation_Isothermal(fit_solution, scale, shape, vmap, ivar):
 
     mask = vmap.mask
     vmap_flat = vmap.compressed()
-    ivar_masked = ma.array(ivar,mask=mask)
+    ivar_masked = ma.array(ivar, mask=mask)
     ivar_flat = ivar_masked.compressed()
-    hessian_iso = ndt.Hessian(loglikelihood_iso_flat)
+    hessian_iso = ndt.Hessian(loglikelihood_iso_flat,step=0.01*fit_solution)
     hess_ll_iso = hessian_iso(fit_solution, scale, shape, vmap_flat, ivar_flat, mask)
     hess_inv_iso = np.linalg.inv(hess_ll_iso)
-    fit_err_iso = np.sqrt(np.diag(np.abs(hess_inv_iso)))
+    fit_err_iso = np.sqrt(np.diag(-hess_inv_iso))
     print('-------------------------------------------')
     print('Hessian matrix for Isothermal')
     print(fit_err_iso)
@@ -570,10 +567,10 @@ def Hessian_Calculation_NFW(fit_solution, scale, shape, vmap, ivar):
     vmap_flat = vmap.compressed()
     ivar_masked = ma.array(ivar, mask=mask)
     ivar_flat = ivar_masked.compressed()
-    hessian_NFW = ndt.Hessian(loglikelihood_NFW_flat)
+    hessian_NFW = ndt.Hessian(loglikelihood_NFW_flat,step=0.01*fit_solution)
     hess_ll_NFW = hessian_NFW(fit_solution, scale, shape, vmap_flat, ivar_flat, mask)
     hess_inv_NFW = np.linalg.inv(hess_ll_NFW)
-    fit_err_NFW = np.sqrt(np.diag(np.abs(hess_inv_NFW)))
+    fit_err_NFW = np.sqrt(np.diag(-hess_inv_NFW))
     print('-------------------------------------------')
     print('Hessian matrix for NFW')
     print(fit_err_NFW)
@@ -598,10 +595,10 @@ def Hessian_Calculation_Burket(fit_solution, scale, shape, vmap, ivar):
     vmap_flat = vmap.compressed()
     ivar_masked = ma.array(ivar, mask=mask)
     ivar_flat = ivar_masked.compressed()
-    hessian_bur = ndt.Hessian(loglikelihood_bur_flat)
+    hessian_bur = ndt.Hessian(loglikelihood_bur_flat,step=0.01*fit_solution)
     hess_ll_bur = hessian_bur(fit_solution, scale, shape, vmap_flat, ivar_flat, mask)
     hess_inv_bur = np.linalg.inv(hess_ll_bur)
-    fit_err_bur = np.sqrt(np.diag(np.abs(hess_inv_bur)))
+    fit_err_bur = np.sqrt(np.diag(-hess_inv_bur))
     print('-------------------------------------------')
     print('Hessian matrix for Burket')
     print(fit_err_bur)

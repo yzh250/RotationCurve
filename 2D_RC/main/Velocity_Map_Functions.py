@@ -76,7 +76,9 @@ def find_phi(center_coords, phi_angle, vel_map):
     '''
 
     # Convert phi_angle to radians
-    phi = phi_angle * np.pi / 180.
+    #phi = phi_angle * np.pi / 180.
+
+    phi = phi_angle
 
     # Extract "systemic" velocity (velocity at center spaxel)
     v_sys = vel_map[center_coords]
@@ -281,7 +283,7 @@ def nloglikelihood_iso_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
 def loglikelihood_NFW(params, scale, shape, vdata, inv_sigma2):
 
     # Construct the model
-    model = rot_incl_iso(shape, scale, params)#[:-1])
+    model = rot_incl_NFW(shape, scale, params)#[:-1])
 
     #lnf_nui = params[-1]
 
@@ -314,7 +316,7 @@ def nloglikelihood_NFW_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
 def loglikelihood_bur(params, scale, shape, vdata, inv_sigma2):
 
     # Construct the model
-    model = rot_incl_iso(shape, scale, params)#[:-1])
+    model = rot_incl_bur(shape, scale, params)#[:-1])
 
     #lnf_nui = params[-1]
 
