@@ -216,7 +216,7 @@ start_time = time.time()
 #-------------------------------------------------------------------------------
 # Isothermal
 
-full_vmap_iso = rot_incl_iso(gshape, scale, Isothermal_fit)
+full_vmap_iso = rot_incl_iso(gshape, scale, Isothermal_fit[:-1])
 
 # Masked array
 vmap_iso = ma.array(full_vmap_iso, mask=Ha_vel_mask)
@@ -229,13 +229,13 @@ nd_iso = np.sum(~vmap_iso.mask)
 chi2_iso = ma.sum(Ha_vel_ivar*(vmasked - vmap_iso)**2)
 
 #chi2_iso_norm = chi2_iso/(nd_iso - 8)
-chi2_iso_norm = chi2_iso/(nd_iso - len(Isothermal_fit))
+chi2_iso_norm = chi2_iso/(nd_iso - len(Isothermal_fit[:-1]))
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # NFW
 
-full_vmap_NFW = rot_incl_NFW(gshape, scale, NFW_fit)
+full_vmap_NFW = rot_incl_NFW(gshape, scale, NFW_fit[:-1])
 
 # Masked array
 vmap_NFW = ma.array(full_vmap_NFW, mask=Ha_vel_mask)
@@ -248,13 +248,13 @@ nd_NFW = np.sum(~vmap_NFW.mask)
 chi2_NFW = ma.sum(Ha_vel_ivar*(vmasked - vmap_NFW)**2)
 
 #chi2_NFW_norm = chi2_NFW/(nd_NFW - 8)
-chi2_NFW_norm = chi2_NFW/(nd_NFW - len(NFW_fit))
+chi2_NFW_norm = chi2_NFW/(nd_NFW - len(NFW_fit[:-1]))
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # Burket
 
-full_vmap_bur = rot_incl_bur(gshape, scale, Burket_fit)
+full_vmap_bur = rot_incl_bur(gshape, scale, Burket_fit[:-1])
 
 # Masked array
 vmap_bur = ma.array(full_vmap_bur, mask=Ha_vel_mask)
@@ -267,7 +267,7 @@ nd_bur = np.sum(~vmap_bur.mask)
 chi2_bur = ma.sum(Ha_vel_ivar*(vmasked - vmap_bur)**2)
 
 #chi2_bur_norm = chi2_bur/(nd_bur-8)
-chi2_bur_norm = chi2_bur/(nd_bur - len(Burket_fit))
+chi2_bur_norm = chi2_bur/(nd_bur - len(Burket_fit[:-1]))
 #-------------------------------------------------------------------------------
 print('Isothermal chi2:', chi2_iso_norm, time.time() - start_time)
 print('NFW chi2:', chi2_NFW_norm)

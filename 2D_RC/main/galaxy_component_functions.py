@@ -238,6 +238,7 @@ def vel_tot_bur(r, params):
     return np.sqrt(v2)
 ######################################################################################
 
+'''
 #####################################################################################
 # In lack of a bulge model that does not involve any complicated mathematics (integrals)
 # We only have total velocity functions that exclude the bulge
@@ -285,5 +286,5 @@ def vel_tot_bur_nb(r, params):
 
     return np.sqrt(v2)
 #####################################################################################
-
+'''
 

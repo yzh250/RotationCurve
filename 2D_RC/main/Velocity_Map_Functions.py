@@ -19,31 +19,6 @@ from galaxy_component_functions import bulge_vel,\
 ################################################################################
 
 ################################################################################
-# Isothermal model with bulge
-#-------------------------------------------------------------------------------
-def rot_incl_iso(shape, scale, params):
-
-    A, Vin, SigD, Rd, rho0_h, Rh, inclination, phi, center_x, center_y = params
-    rotated_inclined_map = np.zeros(shape)
-    
-    for i in range(shape[0]):
-        for j in range(shape[1]):
-
-            xb = ((i-center_x)*np.cos(np.pi/2) - np.sin(np.pi/2)*(j-center_y))
-            yb = ((i-center_x)*np.sin(np.pi/2) + np.cos(np.pi/2)*(j-center_y))
-
-            x = (xb*np.cos(phi) - yb*np.sin(phi))/np.cos(inclination)
-            y = (xb*np.sin(phi) + yb*np.cos(phi))
-            r = np.sqrt(x**2 + y**2)
-            theta = np.arctan2(x,y)
-            r_in_kpc = r*scale
-            v = vel_tot_iso(r_in_kpc,[A, Vin, SigD, Rd, rho0_h, Rh])*np.sin(inclination)*np.cos(theta)
-            rotated_inclined_map[i,j] = v
-
-    return rotated_inclined_map
-################################################################################
-
-################################################################################
 # borrowed from Prof. Kelly Douglass
 #-------------------------------------------------------------------------------
 def find_phi(center_coords, phi_angle, vel_map):
@@ -112,6 +87,31 @@ def find_phi(center_coords, phi_angle, vel_map):
     return phi_adjusted
 ################################################################################
 
+################################################################################
+# Isothermal model with bulge
+#-------------------------------------------------------------------------------
+def rot_incl_iso(shape, scale, params):
+
+    A, Vin, SigD, Rd, rho0_h, Rh, inclination, phi, center_x, center_y, vsys = params
+    rotated_inclined_map = np.zeros(shape)
+    
+    for i in range(shape[0]):
+        for j in range(shape[1]):
+
+            xb = ((i-center_x)*np.cos(np.pi/2) - np.sin(np.pi/2)*(j-center_y))
+            yb = ((i-center_x)*np.sin(np.pi/2) + np.cos(np.pi/2)*(j-center_y))
+
+            x = (xb*np.cos(phi) - yb*np.sin(phi))/np.cos(inclination)
+            y = (xb*np.sin(phi) + yb*np.cos(phi))
+            r = np.sqrt(x**2 + y**2)
+            theta = np.arctan2(x,y)
+            r_in_kpc = r*scale
+            v = vel_tot_iso(r_in_kpc,[A, Vin, SigD, Rd, rho0_h, Rh])*np.sin(inclination)*np.cos(theta)
+            rotated_inclined_map[i,j] = v + vsys
+
+    return rotated_inclined_map
+################################################################################
+
 
 '''
 ################################################################################
@@ -151,7 +151,7 @@ def rot_incl_iso_nb(shape,scale,params):
 #-------------------------------------------------------------------------------
 def rot_incl_NFW(shape,scale,params):
 
-    A, Vin, SigD, Rd, rho0_h, Rh, inclination, phi, center_x, center_y = params
+    A, Vin, SigD, Rd, rho0_h, Rh, inclination, phi, center_x, center_y, vsys = params
     rotated_inclined_map = np.zeros(shape)
     
     for i in range(shape[0]):
@@ -164,7 +164,7 @@ def rot_incl_NFW(shape,scale,params):
             theta = np.arctan2(x,y)
             r_in_kpc = r*scale
             v = vel_tot_NFW(r_in_kpc,[A,Vin,SigD,Rd,rho0_h,Rh])*np.sin(inclination)*np.cos(theta)
-            rotated_inclined_map[i,j] = v
+            rotated_inclined_map[i,j] = v + vsys
     return rotated_inclined_map
 ################################################################################
 
@@ -196,7 +196,7 @@ def rot_incl_NFW_nb(shape,scale,params):
 #-------------------------------------------------------------------------------
 def rot_incl_bur(shape,scale,params):
 
-    A, Vin,SigD,Rd,rho0_h,Rh,inclination,phi,center_x,center_y = params
+    A,Vin,SigD,Rd,rho0_h,Rh,inclination,phi,center_x,center_y,vsys = params
     rotated_inclined_map = np.zeros(shape)
     
     for i in range(shape[0]):
@@ -209,7 +209,7 @@ def rot_incl_bur(shape,scale,params):
             theta = np.arctan2(x,y)
             r_in_kpc = r*scale
             v = vel_tot_bur(r_in_kpc,[A,Vin,SigD,Rd,rho0_h,Rh])*np.sin(inclination)*np.cos(theta)
-            rotated_inclined_map[i,j] = v
+            rotated_inclined_map[i,j] = v + vsys
     return rotated_inclined_map
 ################################################################################
 
@@ -246,11 +246,7 @@ def rot_incl_bur_nb(shape,scale,params):
 def loglikelihood_iso(params, scale, shape, vdata, inv_sigma2):
 
     # Construct the model
-    model = rot_incl_iso(shape, scale, params)#[:-1])
-
-    #lnf_nui = params[-1]
-
-    #inv_sigma2 = 1/((1/inv_sigma2) + model **2 * np.exp(2 * lnf_nui))
+    model = rot_incl_iso(shape, scale, params)
 
     logL = -0.5 * ma.sum((vdata - model) ** 2 * inv_sigma2 - ma.log(inv_sigma2))
 
@@ -283,11 +279,7 @@ def nloglikelihood_iso_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
 def loglikelihood_NFW(params, scale, shape, vdata, inv_sigma2):
 
     # Construct the model
-    model = rot_incl_NFW(shape, scale, params)#[:-1])
-
-    #lnf_nui = params[-1]
-
-    #inv_sigma2 = 1 / ((1 / inv_sigma2) + model ** 2 * np.exp(2 * lnf_nui))
+    model = rot_incl_NFW(shape, scale, params)
 
     logL = -0.5 * ma.sum((vdata - model) ** 2 * inv_sigma2 - ma.log(inv_sigma2))
 
@@ -316,11 +308,7 @@ def nloglikelihood_NFW_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
 def loglikelihood_bur(params, scale, shape, vdata, inv_sigma2):
 
     # Construct the model
-    model = rot_incl_bur(shape, scale, params)#[:-1])
-
-    #lnf_nui = params[-1]
-
-    #inv_sigma2 = 1 / ((1 / inv_sigma2) + model ** 2 * np.exp(2 * lnf_nui))
+    model = rot_incl_bur(shape, scale, params)
 
     logL = -0.5 * ma.sum((vdata - model) ** 2 * inv_sigma2 - ma.log(inv_sigma2))
 
