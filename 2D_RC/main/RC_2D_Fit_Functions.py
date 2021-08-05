@@ -130,11 +130,18 @@ def Galaxy_Data(galaxy_ID):
     Ha_vel_ivar = cube['EMLINE_GVEL_IVAR'].data[18]
     Ha_vel_mask = cube['EMLINE_GVEL_MASK'].data[18]
 
+
     vmasked = ma.array(Ha_vel, mask=Ha_vel_mask)
     ivar_masked = ma.array(Ha_vel_ivar, mask=Ha_vel_mask)
 
     gshape = vmasked.shape
     ############################################################################
+
+    # Ha flux
+    Ha_flux = cube['EMLINE_GFLUX'].data[18]
+    Ha_flux_ivar = cube['EMLINE_GFLUX_IVAR'].data[18]
+    Ha_flux_mask = cube['EMLINE_GFLUX_MASK'].data[18]
+    Ha_flux_masked = ma.array(Ha_flux, mask = Ha_flux_mask)
 
 
     ############################################################################
@@ -147,11 +154,11 @@ def Galaxy_Data(galaxy_ID):
     ############################################################################
 
     #return scale, incl, ph, r_band, Ha_vel, Ha_vel_ivar, Ha_vel_mask, vmasked, gshape, x_center_guess, y_center_guess
-    return r_band, Ha_vel, Ha_vel_ivar, Ha_vel_mask, vmasked, ivar_masked, gshape, x_center_guess, y_center_guess
+    return r_band, Ha_vel, Ha_vel_ivar, Ha_vel_mask, Ha_flux, Ha_flux_ivar, Ha_flux_mask, vmasked, Ha_flux_masked, ivar_masked, gshape, x_center_guess, y_center_guess
 
 
 
-def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, gal_ID):
+def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar):
     '''
 
     :param params:
@@ -163,56 +170,6 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, gal_ID):
     '''
 
     incl, ph, x_guess, y_guess = params
-
-    '''
-    vmap_flat = vmap.compressed()
-    ivar_masked = ma.array(ivar,mask=mask)
-    ivar_flat = ivar_masked.compressed()
-    '''
-
-    center_coord = (x_guess, y_guess)
-    phi_guess = find_phi(center_coord, ph, vmap)
-
-    if gal_ID in ['8134-6102']:
-        phi_guess += 0.25 * np.pi
-
-    elif gal_ID in ['8932-12704', '8252-6103']:
-        phi_guess -= 0.25 * np.pi
-
-    elif gal_ID in ['8613-12703', '8726-1901', '8615-1901', '8325-9102',
-                    '8274-6101', '9027-12705', '9868-12702', '8135-1901',
-                    '7815-1901', '8568-1901', '8989-1902', '8458-3701',
-                    '9000-1901', '9037-3701', '8456-6101']:
-        phi_guess += 0.5 * np.pi
-
-    elif gal_ID in ['9864-3702', '8601-1902']:
-        phi_guess -= 0.5 * np.pi
-
-    elif gal_ID in ['9502-12702']:
-        phi_guess += 0.75 * np.pi
-
-    elif gal_ID in ['9029-12705', '8137-3701', '8618-3704', '8323-12701',
-                    '8942-3703', '8333-12701', '8615-6103', '9486-3704',
-                    '8937-1902', '9095-3704', '8466-1902', '9508-3702',
-                    '8727-3703', '8341-12704', '8655-6103']:
-        phi_guess += np.pi
-
-    elif gal_ID in ['7443-9101','7443-3704']:
-        phi_guess -= 1.06 * np.pi
-
-    elif gal_ID in ['8082-1901', '8078-3703', '8551-1902', '9039-3703',
-                    '8624-1902', '8948-12702', '8443-6102', '8259-1901']:
-        phi_guess += 1.5 * np.pi
-
-    elif gal_ID in ['8241-12705', '8326-6102']:
-        phi_guess += 1.75 * np.pi
-
-    #elif gal_ID in ['8655-1902', '7960-3701', '9864-9101', '8588-3703']:
-        #phi_guess = phi_EofN_deg * np.pi / 180.
-
-    phi_guess = phi_guess % (2 * np.pi)
-
-    print('The angle phi is ', phi_guess)
 
     # Isothermal Fitting
     bounds_iso = [[1e-9,1],  # Scale Factor
@@ -225,11 +182,11 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, gal_ID):
                   [0, 2 * np.pi],  # Phase angle
                   [x_guess-10, x_guess+10],  # center_x
                   [y_guess-10, y_guess+10], # center_y
-                  [-100,100]] # systemic velocity [km/s]
+                  [-100,100]] # systemic velocity
 
-    vsys_ig = 10
+    vsys = 0
 
-    ig_iso = [0.4, 127, 1000, 4, 0.006, 25, incl, phi_guess, x_guess, y_guess,vsys_ig]
+    ig_iso = [0.4, 127, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess, vsys]
 
     bestfit_iso = minimize(nloglikelihood_iso,
                            ig_iso, 
@@ -242,7 +199,7 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, gal_ID):
     return bestfit_iso.x
 
 
-def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar, gal_ID):
+def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar):
     '''
 
     :param params:
@@ -252,55 +209,8 @@ def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar, gal_ID):
     :param ivar:
     :return:
     '''
+
     incl, ph, x_guess, y_guess = params
-    '''
-    vmap_flat = vmap.compressed()
-    ivar_masked = ma.array(ivar, mask=mask)
-    ivar_flat = ivar_masked.compressed()
-    '''
-    center_coord = (x_guess, y_guess)
-    phi_guess = find_phi(center_coord, ph, vmap)
-
-    if gal_ID in ['8134-6102']:
-        phi_guess += 0.25 * np.pi
-
-    elif gal_ID in ['8932-12704', '8252-6103']:
-        phi_guess -= 0.25 * np.pi
-
-    elif gal_ID in ['8613-12703', '8726-1901', '8615-1901', '8325-9102',
-                    '8274-6101', '9027-12705', '9868-12702', '8135-1901',
-                    '7815-1901', '8568-1901', '8989-1902', '8458-3701',
-                    '9000-1901', '9037-3701', '8456-6101']:
-        phi_guess += 0.5 * np.pi
-
-    elif gal_ID in ['9864-3702', '8601-1902']:
-        phi_guess -= 0.5 * np.pi
-
-    elif gal_ID in ['9502-12702']:
-        phi_guess += 0.75 * np.pi
-
-    elif gal_ID in ['9029-12705', '8137-3701', '8618-3704', '8323-12701',
-                    '8942-3703', '8333-12701', '8615-6103', '9486-3704',
-                    '8937-1902', '9095-3704', '8466-1902', '9508-3702',
-                    '8727-3703', '8341-12704', '8655-6103']:
-        phi_guess += np.pi
-
-    elif gal_ID in ['7443-9101','7443-3704']:
-        phi_guess -= 1.06 * np.pi
-
-    elif gal_ID in ['8082-1901', '8078-3703', '8551-1902', '9039-3703',
-                    '8624-1902', '8948-12702', '8443-6102', '8259-1901']:
-        phi_guess += 1.5 * np.pi
-
-    elif gal_ID in ['8241-12705', '8326-6102']:
-        phi_guess += 1.75 * np.pi
-
-    #elif gal_ID in ['8655-1902', '7960-3701', '9864-9101', '8588-3703']:
-        #phi_guess = phi_EofN_deg * np.pi / 180.
-
-    phi_guess = phi_guess % (2 * np.pi)
-
-    print('The angle phi is ', phi_guess)
 
     # NFW Fitting
     bounds_NFW = [[1e-9,1],  # Scale Factor
@@ -313,11 +223,11 @@ def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar, gal_ID):
                   [0, 2 * np.pi],  # Phase angle
                   [x_guess-10, x_guess+10],  # center_x
                   [y_guess-10, y_guess+10], # center_y
-                  [-100,100]] # systemic velocity [km/s]
+                  [-100,100]] # systemic velocity
 
-    vsys_ig = 10
+    vsys = 0
 
-    ig_NFW = [0.4, 127, 1000, 4, 0.006, 25, incl, phi_guess, x_guess, y_guess,vsys_ig]
+    ig_NFW = [0.4, 127, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess, vsys]
 
     bestfit_NFW = minimize(nloglikelihood_NFW,
                            ig_NFW, 
@@ -330,7 +240,7 @@ def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar, gal_ID):
     return bestfit_NFW.x
 
 
-def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar, gal_ID):
+def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar):
     '''
 
     :param params:
@@ -341,57 +251,7 @@ def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar, gal_ID):
     :return:
     '''
 
-
     incl, ph, x_guess, y_guess = params
-    '''
-    vmap_flat = vmap.compressed()
-    ivar_masked = ma.array(ivar, mask=mask)
-    ivar_flat = ivar_masked.compressed()
-    '''
-
-    center_coord = (x_guess, y_guess)
-    phi_guess = find_phi(center_coord, ph, vmap)
-
-    if gal_ID in ['8134-6102']:
-        phi_guess += 0.25 * np.pi
-
-    elif gal_ID in ['8932-12704', '8252-6103']:
-        phi_guess -= 0.25 * np.pi
-
-    elif gal_ID in ['8613-12703', '8726-1901', '8615-1901', '8325-9102',
-                    '8274-6101', '9027-12705', '9868-12702', '8135-1901',
-                    '7815-1901', '8568-1901', '8989-1902', '8458-3701',
-                    '9000-1901', '9037-3701', '8456-6101']:
-        phi_guess += 0.5 * np.pi
-
-    elif gal_ID in ['9864-3702', '8601-1902']:
-        phi_guess -= 0.5 * np.pi
-
-    elif gal_ID in ['9502-12702']:
-        phi_guess += 0.75 * np.pi
-
-    elif gal_ID in ['9029-12705', '8137-3701', '8618-3704', '8323-12701',
-                    '8942-3703', '8333-12701', '8615-6103', '9486-3704',
-                    '8937-1902', '9095-3704', '8466-1902', '9508-3702',
-                    '8727-3703', '8341-12704', '8655-6103']:
-        phi_guess += np.pi
-
-    elif gal_ID in ['7443-9101','7443-3704']:
-        phi_guess -= 1.06 * np.pi
-
-    elif gal_ID in ['8082-1901', '8078-3703', '8551-1902', '9039-3703',
-                    '8624-1902', '8948-12702', '8443-6102', '8259-1901']:
-        phi_guess += 1.5 * np.pi
-
-    elif gal_ID in ['8241-12705', '8326-6102']:
-        phi_guess += 1.75 * np.pi
-
-    #elif gal_ID in ['8655-1902', '7960-3701', '9864-9101', '8588-3703']:
-       #phi_guess = phi_EofN_deg * np.pi / 180.
-
-    phi_guess = phi_guess % (2 * np.pi)
-
-    print('The angle phi is ', phi_guess)
 
     # Burket Fitting
     bounds_bur = [[1e-9,1],  # Scale Factor
@@ -404,11 +264,13 @@ def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar, gal_ID):
                   [0, 2 * np.pi],  # Phase angle
                   [x_guess-10, x_guess+10],  # center_x
                   [y_guess-10, y_guess+10], # center_y
-                  [-100,100]] # systemic velocity [km/s]
+                  [-100,100]] # systemic velocity
 
-    vsys_ig = 10
 
-    ig_bur = [0.4, 127, 1000, 4, 0.006, 25, incl, phi_guess, x_guess, y_guess,vsys_ig]
+
+    vsys = 0
+
+    ig_bur = [0.4, 127, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess, vsys]
 
     bestfit_bur = minimize(nloglikelihood_bur,
                            ig_bur, 

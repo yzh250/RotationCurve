@@ -22,10 +22,8 @@ def bulge_vel(r, A, Vin, Rd):
     return np.sqrt(v2)
 ####################################################################################
 
-'''
 ################################################################################
 # de Vaucouleur's bulge model
-#
 #-------------------------------------------------------------------------------
 gamma = 3.3308 # unitless
 kappa = gamma*ln(10) # unitless
@@ -108,7 +106,6 @@ def bulge_vel_full(r,SigBC,Rb):
 
     return vel
 ################################################################################
-'''
 
 ####################################################################################
 # Disk velocity from Sofue 2013
@@ -130,8 +127,6 @@ def disk_vel(r, SigD, Rd):
     vel2 = (4 * np.pi * G * SigD * y ** 2 * (Rd / (3.086E16)) * Msun) * bessel_component
 
     return np.sqrt(vel2) / 1000
-
-
 ####################################################################################
 
 ####################################################################################
@@ -237,54 +232,3 @@ def vel_tot_bur(r, params):
 
     return np.sqrt(v2)
 ######################################################################################
-
-'''
-#####################################################################################
-# In lack of a bulge model that does not involve any complicated mathematics (integrals)
-# We only have total velocity functions that exclude the bulge
-#------------------------------------------------------------------------------------
-# Isothermal
-def vel_tot_iso_nb(r, params):
-
-    SigD, Rd, rho0_h, Rh = params
-
-    r_pc = r * 1000
-    Rd_pc = Rd * 1000
-    Rh_pc = Rh * 1000
-
-    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
-    Vhalo = halo_vel_iso(r_pc, rho0_h, Rh_pc)
-    v2 = Vdisk ** 2 + Vhalo ** 2
-
-    return np.sqrt(v2)
-#------------------------------------------------------------------------------------
-# NFW
-def vel_tot_NFW_nb(r, params):
-    SigD, Rd, rho0_h, Rh = params
-
-    r_pc = r * 1000
-    Rd_pc = Rd * 1000
-    Rh_pc = Rh * 1000
-
-    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
-    Vhalo = halo_vel_NFW(r_pc, rho0_h, Rh_pc)
-    v2 = Vdisk ** 2 + Vhalo ** 2
-
-    return np.sqrt(v2)
-#------------------------------------------------------------------------------------
-# Burket
-def vel_tot_bur_nb(r, params):
-    SigD, Rd, rho0_h, Rh = params
-
-    r_pc = r * 1000
-    Rd_pc = Rd * 1000
-    Rh_pc = Rh * 1000
-
-    Vdisk = disk_vel(r_pc, SigD, Rd_pc)
-    Vhalo = halo_vel_bur(r_pc, rho0_h, Rh_pc)
-    v2 = Vdisk ** 2 + Vhalo ** 2
-
-    return np.sqrt(v2)
-#####################################################################################
-'''
-

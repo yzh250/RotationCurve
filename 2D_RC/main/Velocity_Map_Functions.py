@@ -5,6 +5,8 @@
 ################################################################################
 # Importing modules and functions
 #-------------------------------------------------------------------------------
+import time
+
 import numpy as np
 import numpy.ma as ma
 
@@ -76,6 +78,8 @@ def find_phi(center_coords, phi_angle, vel_map):
         # Check value along semi-major axis
         if vel_map.mask[tuple(semi_major_axis_spaxel)] == 0:
             checkpoint_masked = False
+        elif time.time() >= 1000:
+            checkpoint_masked = False
         else:
             f *= 0.9
 
@@ -111,7 +115,6 @@ def rot_incl_iso(shape, scale, params):
 
     return rotated_inclined_map
 ################################################################################
-
 
 '''
 ################################################################################
@@ -196,7 +199,7 @@ def rot_incl_NFW_nb(shape,scale,params):
 #-------------------------------------------------------------------------------
 def rot_incl_bur(shape,scale,params):
 
-    A,Vin,SigD,Rd,rho0_h,Rh,inclination,phi,center_x,center_y,vsys = params
+    A,Vin,SigD,Rd,rho0_h,Rh,inclination,phi,center_x,center_y, vsys = params
     rotated_inclined_map = np.zeros(shape)
     
     for i in range(shape[0]):
@@ -247,9 +250,7 @@ def loglikelihood_iso(params, scale, shape, vdata, inv_sigma2):
 
     # Construct the model
     model = rot_incl_iso(shape, scale, params)
-
     logL = -0.5 * ma.sum((vdata - model) ** 2 * inv_sigma2 - ma.log(inv_sigma2))
-
     return logL
 
 def nloglikelihood_iso(params, scale, shape, vdata, ivar):
@@ -259,16 +260,11 @@ def nloglikelihood_iso(params, scale, shape, vdata, ivar):
 
 def loglikelihood_iso_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
 
-    #print('Best-fit values in loglikelihood_iso_flat:', params)
-
     # Construct the model
-    #print('Printing params - loglikelihood')
-    #print(params)
     model = rot_incl_iso(shape, scale, params)
     model_masked = ma.array(model, mask=mask)
     model_flat = model_masked.compressed()
     logL = -0.5 * ma.sum((vdata_flat - model_flat) ** 2 * ivar_flat - np.log(ivar_flat))
-
     return logL
 
 def nloglikelihood_iso_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
@@ -280,9 +276,7 @@ def loglikelihood_NFW(params, scale, shape, vdata, inv_sigma2):
 
     # Construct the model
     model = rot_incl_NFW(shape, scale, params)
-
     logL = -0.5 * ma.sum((vdata - model) ** 2 * inv_sigma2 - ma.log(inv_sigma2))
-
     return logL
 
 def nloglikelihood_NFW(params, scale, shape, vdata, ivar):
@@ -297,7 +291,6 @@ def loglikelihood_NFW_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
     model_masked = ma.array(model, mask=mask)
     model_flat = model_masked.compressed()
     logL = -0.5 * ma.sum((vdata_flat - model_flat) ** 2 * ivar_flat - np.log(ivar_flat))
-
     return logL
 
 def nloglikelihood_NFW_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
@@ -309,9 +302,7 @@ def loglikelihood_bur(params, scale, shape, vdata, inv_sigma2):
 
     # Construct the model
     model = rot_incl_bur(shape, scale, params)
-
     logL = -0.5 * ma.sum((vdata - model) ** 2 * inv_sigma2 - ma.log(inv_sigma2))
-
     return logL
 
 def nloglikelihood_bur(params, scale, shape, vdata, ivar):
@@ -325,11 +316,7 @@ def loglikelihood_bur_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
     model = rot_incl_bur(shape, scale, params)
     model_masked = ma.array(model, mask=mask)
     model_flat = model_masked.compressed()
-    #ivar_masked = ma.array(inv_sigma2, mask=mask)
-    #ivar_flat = ivar_masked.compressed()
-    #print(ivar_flat,len(ivar_flat))
     logL = -0.5 * ma.sum((vdata_flat - model_flat) ** 2 * ivar_flat - np.log(ivar_flat))
-    
     return logL
 
 def nloglikelihood_bur_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
