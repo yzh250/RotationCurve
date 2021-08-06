@@ -101,12 +101,8 @@ def rot_incl_iso(shape, scale, params):
     
     for i in range(shape[0]):
         for j in range(shape[1]):
-
-            xb = ((i-center_x)*np.cos(np.pi/2) - np.sin(np.pi/2)*(j-center_y))
-            yb = ((i-center_x)*np.sin(np.pi/2) + np.cos(np.pi/2)*(j-center_y))
-
-            x = (xb*np.cos(phi) - yb*np.sin(phi))/np.cos(inclination)
-            y = (xb*np.sin(phi) + yb*np.cos(phi))
+            x =  (-(i-center_x)*np.sin(phi) - np.cos(phi)*(j-center_y))/np.cos(inclination)
+            y =  ((i-center_x)*np.cos(phi) - np.sin(phi)*(j-center_y))
             r = np.sqrt(x**2 + y**2)
             theta = np.arctan2(x,y)
             r_in_kpc = r*scale
@@ -159,10 +155,8 @@ def rot_incl_NFW(shape,scale,params):
     
     for i in range(shape[0]):
         for j in range(shape[1]):
-            xb = ((i-center_x)*np.cos(np.pi/2) - np.sin(np.pi/2)*(j-center_y))
-            yb = ((i-center_x)*np.sin(np.pi/2) + np.cos(np.pi/2)*(j-center_y))
-            x = (xb*np.cos(phi) - yb*np.sin(phi))/np.cos(inclination)
-            y = (xb*np.sin(phi) + yb*np.cos(phi))
+            x =  (-(i-center_x)*np.sin(phi) - np.cos(phi)*(j-center_y))/np.cos(inclination)
+            y =  ((i-center_x)*np.cos(phi) - np.sin(phi)*(j-center_y))
             r = np.sqrt(x**2+y**2)
             theta = np.arctan2(x,y)
             r_in_kpc = r*scale
@@ -204,10 +198,8 @@ def rot_incl_bur(shape,scale,params):
     
     for i in range(shape[0]):
         for j in range(shape[1]):
-            xb = ((i-center_x)*np.cos(np.pi/2) - np.sin(np.pi/2)*(j-center_y))
-            yb = ((i-center_x)*np.sin(np.pi/2) + np.cos(np.pi/2)*(j-center_y))
-            x = (xb*np.cos(phi) - yb*np.sin(phi))/np.cos(inclination)
-            y = (xb*np.sin(phi) + yb*np.cos(phi))
+            x =  (-(i-center_x)*np.sin(phi) - np.cos(phi)*(j-center_y))/np.cos(inclination)
+            y =  ((i-center_x)*np.cos(phi) - np.sin(phi)*(j-center_y))
             r = np.sqrt(x**2+y**2)
             theta = np.arctan2(x,y)
             r_in_kpc = r*scale
