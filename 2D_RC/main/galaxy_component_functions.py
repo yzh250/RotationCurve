@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from numpy import log as ln
 from astropy.table import QTable
 from scipy.optimize import minimize
+import scipy.special as sc
 import astropy.units as u
 from scipy.special import kn
 from scipy.special import iv
@@ -18,13 +19,51 @@ Msun = 1.989E30  # kg
 ####################################################################################
 # A bulge model (Di Paolo et al 2019), in need of a better one
 def bulge_vel(r, A, Vin, Rd):
-    v2 = A * (Vin ** 2) * ((r / (0.2 * Rd)) ** -1)
-    return np.sqrt(v2)
+    if isinstance(r, float):
+        if r < 0.2 * Rd:
+            v = np.sqrt(A*Vin**2*r/(0.2*Rd))
+        else:
+            v = np.sqrt(A * Vin **2 * (r/(0.2*Rd)) ** -1)
+    else:
+        v = np.zeros(len(r))
+        for i in range(len(r)):
+            if r[i] < 0.2 * Rd:
+                v[i] = np.sqrt(A*Vin**2*r[i]/(0.2*Rd))
+            else:
+                v[i] = np.sqrt(A * Vin **2 * (r[i]/(0.2*Rd)) ** -1)
+    return v
 ####################################################################################
 
 '''
+####################################################################################
+# de Vaucouleur's bulge model (Integrating surface mass density）
+gamma = 3.3308
+kappa = gamma * ln(10)
+
+def sigma_b(r, SigBE, Rb):
+    return SigBE * np.exp(-1 * kappa * ((r / Rb) ** 0.25 - 1))
+
+def mass_integrand(r, SigBE, Rb):
+    return 2*np.pi*sigma_b(r, SigBE, Rb) * r
+
+def vcir_bulge(r, SigBE, Rb):
+    if isinstance(r, float):
+        bulge_mass, m_err = inte.quad(mass_integrand, 0, r, args=(SigBE, Rb))
+    else:
+        bulge_mass = np.zeros(len(r))
+        err = np.zeros(len(r))
+
+        for i in range(len(r)):
+            bulge_mass[i],err[i] = inte.quad(mass_integrand, 0, r[i], args=(SigBE, Rb))
+    vel = np.sqrt(G*(bulge_mass*Msun)/(r*3.08E16))
+    vel /= 1000
+    return vel
+####################################################################################
+'''
+
+'''
 ################################################################################
-# de Vaucouleur's bulge model
+# de Vaucouleur's bulge model (Integrating volume mass density)
 #-------------------------------------------------------------------------------
 gamma = 3.3308 # unitless
 kappa = gamma*ln(10) # unitless
@@ -142,7 +181,7 @@ def halo_vel_iso(r, rho0_h, Rh):
     :param Rh: The scale radius of the dark matter halo (pc)
     :return: rotational velocity
     '''
-    v_inf = np.sqrt((4 * np.pi * G * rho0_h * (Msun) * Rh ** 2) / (3.08E16))
+    v_inf = np.sqrt((4 * np.pi * G * rho0_h * (Msun) * Rh ** 2) / (3.08E16))/1000
     if isinstance(r,float):
         # the part in the square root would be unitless
         vel = v_inf * np.sqrt(1 - ((Rh/r)*np.arctan2(r,Rh)))
@@ -150,7 +189,7 @@ def halo_vel_iso(r, rho0_h, Rh):
         vel = np.zeros(len(r))
         for i in range(len(r)):
             vel[i] = v_inf * np.sqrt(1 - ((Rh/r[i])*np.arctan2(r[i],Rh)))
-    return vel/1000
+    return vel
 
 #####################################################################################
 
@@ -185,7 +224,7 @@ def halo_vel_bur(r,rho0_h, Rh):
             halo_mass[i] = np.pi * (-rho0_h) * (Rh**3) * (-np.log(Rh**2 + r[i]**2) - 2*np.log(Rh + r[i]) + 2*np.arctan2(r[i], Rh) + np.log(Rh**2)\
                                                + 2*np.log(Rh) - 2*np.arctan2(0, Rh))
     vel2 = G * (halo_mass * Msun) / (r * 3.08E16)
-    return np.sqrt(vel2) / 1000
+    return np.sqrt(vel2)/1000
 #####################################################################################
 
 #####################################################################################
