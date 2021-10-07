@@ -79,17 +79,17 @@ for i in range(len(plate)):
         galaxy_ID.append(plate[i]+'-'+IFU[j])
 
 # Isothermal
-c_iso = open('iso_fit.csv','w')
+c_iso = open('iso.csv','w')
 writer_iso = csv.writer(c_iso)
 writer_iso.writerow(['galaxy_ID', 'A', 'Vin', 'SigD', 'Rd', 'rho0_h', 'Rh', 'incl', 'phi', 'x_cen', 'y_cen','Vsys','chi2'])
 
 # NFW
-c_nfw = open('nfw_fit.csv','w')
+c_nfw = open('nfw.csv','w')
 writer_nfw = csv.writer(c_nfw)
 writer_nfw.writerow(['galaxy_ID', 'A', 'Vin', 'SigD', 'Rd', 'rho0_h', 'Rh', 'incl', 'phi', 'x_cen', 'y_cen','Vsys','chi2'])
 
 # Burket
-c_bur = open('bur_fit.csv','w')
+c_bur = open('bur.csv','w')
 writer_bur = csv.writer(c_bur)
 writer_bur.writerow(['galaxy_ID', 'A', 'Vin', 'SigD', 'Rd', 'rho0_h', 'Rh', 'incl', 'phi', 'x_cen', 'y_cen','Vsys','chi2'])
 
