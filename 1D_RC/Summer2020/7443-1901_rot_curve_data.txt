@@ -1,0 +1,104 @@
+# %ECSV 0.9
+# ---
+# datatype:
+# - {name: deprojected_distance, unit: kpc, datatype: float64}
+# - {name: max_velocity, unit: km / s, datatype: float64}
+# - {name: max_velocity_error, unit: km / s, datatype: float64}
+# - {name: min_velocity, unit: km / s, datatype: float64}
+# - {name: min_velocity_error, unit: km / s, datatype: float64}
+# - {name: rot_vel_avg, unit: km / s, datatype: float64}
+# - {name: rot_vel_avg_error, unit: km / s, datatype: float64}
+# - {name: sMass_interior, unit: solMass, datatype: float64}
+# - {name: sVel_rot, unit: km / s, datatype: float64}
+# - {name: sVel_rot_error, unit: km / s, datatype: float64}
+# - {name: dmMass_interior, unit: solMass, datatype: float64}
+# - {name: dmMass_interior_error, unit: solMass, datatype: float64}
+# - {name: dmVel_rot, unit: km / s, datatype: float64}
+# - {name: dmVel_rot_error, unit: km / s, datatype: float64}
+# - {name: mass_interior, unit: solMass, datatype: float64}
+# - {name: mass_interior_error, unit: solMass, datatype: float64}
+# - {name: rot_curve_diff, unit: km / s, datatype: float64}
+# - {name: rot_curve_diff_error, unit: km / s, datatype: float64}
+# meta: !!omap
+# - __serialized_columns__:
+#     deprojected_distance:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: kpc}
+#       value: !astropy.table.SerializedColumn {name: deprojected_distance}
+#     dmMass_interior:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: &id001 !astropy.units.Unit {unit: solMass}
+#       value: !astropy.table.SerializedColumn {name: dmMass_interior}
+#     dmMass_interior_error:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: *id001
+#       value: !astropy.table.SerializedColumn {name: dmMass_interior_error}
+#     dmVel_rot:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: km / s}
+#       value: !astropy.table.SerializedColumn {name: dmVel_rot}
+#     dmVel_rot_error:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: km / s}
+#       value: !astropy.table.SerializedColumn {name: dmVel_rot_error}
+#     mass_interior:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: *id001
+#       value: !astropy.table.SerializedColumn {name: mass_interior}
+#     mass_interior_error:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: *id001
+#       value: !astropy.table.SerializedColumn {name: mass_interior_error}
+#     max_velocity:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: km / s}
+#       value: !astropy.table.SerializedColumn {name: max_velocity}
+#     max_velocity_error:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: km / s}
+#       value: !astropy.table.SerializedColumn {name: max_velocity_error}
+#     min_velocity:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: km / s}
+#       value: !astropy.table.SerializedColumn {name: min_velocity}
+#     min_velocity_error:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: km / s}
+#       value: !astropy.table.SerializedColumn {name: min_velocity_error}
+#     rot_curve_diff:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: km / s}
+#       value: !astropy.table.SerializedColumn {name: rot_curve_diff}
+#     rot_curve_diff_error:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: km / s}
+#       value: !astropy.table.SerializedColumn {name: rot_curve_diff_error}
+#     rot_vel_avg:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: km / s}
+#       value: !astropy.table.SerializedColumn {name: rot_vel_avg}
+#     rot_vel_avg_error:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: km / s}
+#       value: !astropy.table.SerializedColumn {name: rot_vel_avg_error}
+#     sMass_interior:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: *id001
+#       value: !astropy.table.SerializedColumn {name: sMass_interior}
+#     sVel_rot:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: km / s}
+#       value: !astropy.table.SerializedColumn {name: sVel_rot}
+#     sVel_rot_error:
+#       __class__: astropy.units.quantity.Quantity
+#       unit: !astropy.units.Unit {unit: km / s}
+#       value: !astropy.table.SerializedColumn {name: sVel_rot_error}
+# schema: astropy-2.0
+deprojected_distance max_velocity max_velocity_error min_velocity min_velocity_error rot_vel_avg rot_vel_avg_error sMass_interior sVel_rot sVel_rot_error dmMass_interior dmMass_interior_error dmVel_rot dmVel_rot_error mass_interior mass_interior_error rot_curve_diff rot_curve_diff_error
+0.27265884698320997 11.61407665634314 3.08258701646815 -11.017723678942955 3.01640863800489 11.315900167643047 4.312895058487805 318874821.19162005 70.92198159907477 0.0007969597740483059 -310757051.6149546 6187945.773588863 nan nan 8117769.576665487 6187945.773588863 0.5963529774001852 4.312895058487805
+0.5453176939664199 34.797480700758776 3.12077927957738 -28.46483186620447 3.04827730761482 31.631156283481623 4.362482992053834 1121272867.4750051 94.03973708632478 0.0010567370782665385 -994414640.6907657 34991882.91604134 nan nan 126858226.78423937 34991882.91604134 6.3326488345543055 4.362482992053834
+0.8179765409496299 52.63091672569663 3.07717964959568 -47.80320908288478 3.05393713843829 50.2170629042907 4.33538540863652 1881532916.2240279 99.46402512252324 0.001117690526975 -1401929380.6893291 82811142.95607932 nan nan 479603535.5346986 82811142.95607932 4.827707642811852 4.33538540863652
+1.0906353879328399 55.829020017050276 3.14056306712264 -59.03588912793029 3.08233510476053 57.432454572490286 4.400446122453253 2510287430.023705 99.49527976480252 0.0011180417395622296 -1673850398.921228 128174780.51998109 nan nan 836437031.102477 128174780.51998109 3.206869110880014 4.400446122453253
+1.36329423491605 60.831888163509326 4.7426723448581 -77.14663732296643 3.3976329757842 68.98926274323787 5.83411096987519 2967369550.3747816 96.75458694901243 0.0010872442085575916 -1458709059.4584663 255161236.62133265 nan nan 1508660490.9163153 255161236.62133265 16.3147491594571 5.83411096987519
+1.6359530818992598 61.64371478346402 3.80664293543868 -102.11314982722736 4.31144731756882 81.87843230534568 5.751444028250348 3294640107.762735 93.0677281973762 0.0010458144846355745 -744589537.6331711 358249978.60930717 nan nan 2550050570.129564 358249978.60930717 40.46943504376334 5.751444028250348
+1.9086119288824697 100.84408989621208 9.1355659123696 -151.49722988347034 17.4030366028418 126.1706598898412 19.65513285478124 3518232494.673549 89.0397629701516 0.001000551701715741 3546135170.4982295 2201004345.6448827 89.39214745858389 27.741822532417736 7064367665.171779 2201004345.6448827 50.65313998725826 19.65513285478124
