@@ -9,7 +9,7 @@ from astropy.table import QTable
 
 from scipy.optimize import minimize
 
-import numdifftools as ndt
+#import numdifftools as ndt
 from numpy import log as ln
 from scipy.special import kn
 from scipy.special import iv
@@ -51,7 +51,7 @@ def log_prior(params):
     rho_b,Rb,SigD,Rd,rho_h,Rh,inclination,phi,center_x,center_y,vsys= params
     logP = 0
     if 0 < rho_b < 100 and 0 < Rb < 5 and 100 < SigD < 3000 and 1 < Rd < 30\
-     and 1e-5 < rho_h < 0.1 and 0.01 < Rh< 500 and 0 < inclination < 1.57 and 0 < phi < 2*np.pi\
+     and 1e-5 < rho_h < 0.1 and 0.01 < Rh< 500 and 0 < inclination < np.pi*0.436 and 0 < phi < 2*np.pi\
      and 20 < center_x < 40 and 20 < center_y < 40 and -100 < vsys < 100:
         logP = 0
     # setting constraints on the radii
