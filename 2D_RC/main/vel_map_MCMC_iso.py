@@ -28,6 +28,9 @@ from galaxy_component_functions import vel_tot_iso,\
 from Velocity_Map_Functions import loglikelihood_iso,\
                                    loglikelihood_NFW, \
                                    loglikelihood_bur,\
+                                   loglikelihood_iso_flat,\
+                                   loglikelihood_NFW_flat, \
+                                   loglikelihood_bur_flat,\
                                    find_phi
 
 from RC_2D_Fit_Functions import Galaxy_Data    
@@ -48,30 +51,33 @@ def log_prior(params):
     rho_b,Rb,SigD,Rd,rho_h,Rh,inclination,phi,center_x,center_y,vsys= params
     logP = 0
     if 0 < rho_b < 100 and 0 < Rb < 5 and 100 < SigD < 3000 and 1 < Rd < 30\
-     and 1e-5 < rho_h < 0.1 and 0.01 < Rh< 500 and 0 < inclination < np.pi/2 and 0 < phi < (2.2)*np.pi\
-     and 0 < center_x < 40 and 0 < center_y < 40 and -100 < vsys < 100:
+     and 1e-5 < rho_h < 0.1 and 0.01 < Rh< 500 and 0 < inclination < np.pi/2 and 0 < phi < 2*np.pi\
+     and 20 < center_x < 40 and 20 < center_y < 40 and -100 < vsys < 100:
         logP = 0
+    # setting constraints on the radii
+    elif Rh < Rb or Rh < Rd or Rd < Rd:
+        logP = -np.inf
     else:
     	logP = -np.inf
     return logP
 
-def log_prob_iso(params, scale, shape, vdata, ivar):
+def log_prob_iso(params, scale, shape, vdata, ivar, mask):
     lp = log_prior(params)
     if not np.isfinite(lp):
         return -np.inf
-    return lp + loglikelihood_iso(params, scale, shape, vdata, ivar)
+    return lp + loglikelihood_iso_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
 
-def log_prob_NFW(params, scale, shape, vdata, ivar):
+def log_prob_NFW(params, scale, shape, vdata, ivar, mask):
     lp = log_prior(params)
     if not np.isfinite(lp):
         return -np.inf
-    return lp + loglikelihood_NFW(params, scale, shape, vdata, ivar)
+    return lp + loglikelihood_NFW_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
 
-def log_prob_bur(params, scale, shape, vdata, ivar):
+def log_prob_bur(params, scale, shape, vdata, ivar, mask):
     lp = log_prior(params)
     if not np.isfinite(lp):
         return -np.inf
-    return lp + loglikelihood_bur(params, scale, shape, vdata, ivar)
+    return lp + loglikelihood_bur_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
 ####################################################################
 
 ####################################################################
@@ -80,7 +86,7 @@ def log_prob_bur(params, scale, shape, vdata, ivar):
 pos = np.random.uniform(low=[0,1e-4,300,2,0.0001,0.1,0,0.01,30,30,-20], high=[50,5,2000,20,0.01,300,np.pi/2,2*np.pi,40,40,20], size=(64,11))
 nwalkers, ndim = pos.shape
 
-bad_sampler_iso = emcee.EnsembleSampler(nwalkers, ndim, log_prob_iso, args=(scale, gshape, vmasked, ivar_masked))
+bad_sampler_iso = emcee.EnsembleSampler(nwalkers, ndim, log_prob_iso, args=(scale, gshape, vmasked, ivar_masked, Ha_vel_mask))
 bad_sampler_iso.run_mcmc(pos, 5000, progress=True)
 
 good_walkers_iso = bad_sampler_iso.acceptance_fraction > 0
