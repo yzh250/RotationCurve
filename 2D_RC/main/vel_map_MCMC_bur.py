@@ -48,7 +48,7 @@ def log_prior(params):
     rho_b,Rb,SigD,Rd,rho_h,Rh,inclination,phi,center_x,center_y,vsys= params
     logP = 0
     if 0 < rho_b < 100 and 0 < Rb < 5 and 100 < SigD < 3000 and 1 < Rd < 30\
-     and 1e-5 < rho_h < 0.1 and 0.01 < Rh< 500 and 0 < inclination < np.pi/2 and 0 < phi < 2*np.pi\
+     and 1e-5 < rho_h < 0.1 and 0.01 < Rh< 500 and 0 < inclination < 0.436*np.pi and 0 < phi < 2*np.pi\
      and 20 < center_x < 40 and 20 < center_y < 40 and -100 < vsys < 100:
         logP = 0
     else:
@@ -111,7 +111,7 @@ flat_bad_samples_bur.shape
 
 ####################################################################
 corner.corner(flat_bad_samples_bur, labels=labels,
-                    range=[(0,90), (0,1), (0,2400),(1,12),(2e-6,0.01),(5,200),(0,np.pi/2),(0,1.5),(30,40),(30,40),(-100,100)], bins=30, #smooth=1,
+                    range=[(0,100), (0,5), (0,2000),(1,20),(0.0001,0.01),(5,200),(0,np.pi/2),(0,1.5),(30,40),(30,40),(-100,100)], bins=30, #smooth=1,
                     #truths=[, , ], truth_color='#ff4444',
                     levels=(1-np.exp(-0.5), 1-np.exp(-2)), quantiles=(0.16, 0.84),
                     hist_kwargs={'histtype':'stepfilled', 'alpha':0.3, 'density':True},
