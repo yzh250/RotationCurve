@@ -42,6 +42,7 @@ from os import path
 c = 3E5 # km * s ^1
 h = 1 # reduced hubble constant
 H_0 =  100 * h # km * s^-1 * Mpc^-1
+q0 = 0.2 # minimum inclination value
 ################################################################################
 
 ################################################################################
@@ -115,7 +116,12 @@ for i in range(len(galaxy_ID)):
     distance = (velocity / H_0) * 1E3 #kpc
     scale = 0.5 * (distance) / 206265
 
-    incl = np.arccos(rat[j])
+    #incl = np.arccos(rat[j])
+    cosi2 = (rat[j]**2 - q0**2)/(1-q0**2)
+    if cosi2 < 0:
+        cosi2 = 0
+
+    incl = np.arccos(np.sqrt(cosi2))
 
     ph = phi[j] * np.pi / 180
 
@@ -141,6 +147,7 @@ for i in range(len(galaxy_ID)):
             Ha_vel_mask = Ha_vel_mask + (SN_map < 5)
 
             vmasked = ma.array(Ha_vel, mask = Ha_vel_mask)
+            ivar_masked = ma.array(Ha_vel_ivar, mask = Ha_vel_mask)
 
             # NFW
 
@@ -209,19 +216,22 @@ for i in range(len(galaxy_ID)):
                                                     scale,
                                                     gshape,
                                                     vmasked,
-                                                    Ha_vel_ivar)
+                                                    ivar_masked,
+                                                    Ha_vel_mask)
 
                 NFW_fit = Galaxy_Fitting_NFW(parameters,
                                              scale,
                                              gshape,
                                              vmasked,
-                                             Ha_vel_ivar)
+                                             ivar_masked,
+                                             Ha_vel_mask)
 
                 Burket_fit = Galaxy_Fitting_bur(parameters,
                                                 scale,
                                                 gshape,
                                                 vmasked,
-                                                Ha_vel_ivar)
+                                                ivar_masked,
+                                                Ha_vel_mask)
 
                 print('Fit galaxy', time.time() - start_time)
                 # -------------------------------------------------------------------------------

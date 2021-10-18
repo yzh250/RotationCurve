@@ -262,7 +262,7 @@ def loglikelihood_iso_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
     model = rot_incl_iso(shape, scale, params)
     model_masked = ma.array(model, mask=mask)
     model_flat = model_masked.compressed()
-    logL = -0.5 * ma.sum((vdata_flat - model_flat) ** 2 * ivar_flat - np.log(ivar_flat))
+    logL = -0.5 * ma.sum((vdata_flat - model_flat) ** 2 * ivar_flat - ma.log(ivar_flat))
     #if params[3] >= params[5]:
         #logL += 1e7
     #elif params[1] >= params[5]:
@@ -317,12 +317,14 @@ def nloglikelihood_NFW_nb(params, scale, shape, vdata, ivar):
 # NFW model flat
 
 def loglikelihood_NFW_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
-
     # Construct the model
+    #print(len(vdata_flat))
+    #print(len(ivar_flat))
     model = rot_incl_NFW(shape, scale, params)
     model_masked = ma.array(model, mask=mask)
     model_flat = model_masked.compressed()
-    logL = -0.5 * ma.sum((vdata_flat - model_flat) ** 2 * ivar_flat - np.log(ivar_flat))
+    #print(len(model_flat))
+    logL = -0.5 * ma.sum((vdata_flat - model_flat) ** 2 * ivar_flat - ma.log(ivar_flat))
     #if params[3] >= params[5]:
         #logL += 1e7
     #elif params[1] >= params[5]:
@@ -379,10 +381,13 @@ def nloglikelihood_bur_nb(params, scale, shape, vdata, ivar):
 def loglikelihood_bur_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
 
     # Construct the model
+    #print(len(vdata_flat))
+    #print(len(ivar_flat))
     model = rot_incl_bur(shape, scale, params)
     model_masked = ma.array(model, mask=mask)
     model_flat = model_masked.compressed()
-    logL = -0.5 * ma.sum((vdata_flat - model_flat) ** 2 * ivar_flat - np.log(ivar_flat))
+    #print(len(model_flat))
+    logL = -0.5 * ma.sum((vdata_flat - model_flat) ** 2 * ivar_flat - ma.log(ivar_flat))
     #if params[3] >= params[5]:
         #logL += 1e7
     #elif params[1] >= params[5]:

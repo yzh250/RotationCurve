@@ -181,7 +181,7 @@ def getTidal(gal_ID):
         if galaxy['NAME'] == 'manga-'+gal_ID:
             return galaxy['TIDAL']
 
-def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar):
+def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, mask):
     '''
 
     :param params:
@@ -201,7 +201,7 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar):
                   [0.1, 30],  # Disk radius [kpc]
                   [0.000001, 0.1],  # Halo density [Msun/pc^2]
                   [0.1, 1000],  # Halo radius [kpc]
-                  [0.1, 0.5*np.pi],  # Inclination angle
+                  [0.1, 0.436*np.pi],  # Inclination angle
                   [0, 2.2 * np.pi],  # Phase angle
                   [x_guess-10, x_guess+10],  # center_x
                   [y_guess-10, y_guess+10], # center_y
@@ -211,9 +211,9 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar):
 
     ig_iso = [20, 1,1000, 4, 0.006, 25, incl, ph, x_guess, y_guess, vsys]
 
-    bestfit_iso = minimize(nloglikelihood_iso,
+    bestfit_iso = minimize(nloglikelihood_iso_flat,
                            ig_iso,
-                           args=(scale, shape, vmap, ivar),
+                           args=(scale, shape, vmap.compressed(), ivar.compressed(),mask),
                            method='Powell',
                            bounds=bounds_iso)
     print('---------------------------------------------------')
@@ -261,7 +261,7 @@ def Galaxy_Fitting_iso_nb(params, scale, shape, vmap, ivar):
     return bestfit_iso.x
 '''
 
-def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar):
+def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar, mask):
     '''
 
     :param params:
@@ -281,7 +281,7 @@ def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar):
                   [0.1, 30],  # Disk radius [kpc]
                   [0.000001, 0.1],  # Halo density [Msun/pc^2]
                   [0.1, 1000],  # Halo radius [kpc]
-                  [0.1, 0.5*np.pi],  # Inclination angle
+                  [0.1, 0.436*np.pi],  # Inclination angle
                   [0, 2.2 * np.pi],  # Phase angle
                   [x_guess-10, x_guess+10],  # center_x
                   [y_guess-10, y_guess+10], # center_y
@@ -291,9 +291,9 @@ def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar):
 
     ig_NFW = [20, 1, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess, vsys]
 
-    bestfit_NFW = minimize(nloglikelihood_NFW,
+    bestfit_NFW = minimize(nloglikelihood_NFW_flat,
                            ig_NFW, 
-                           args=(scale, shape, vmap, ivar),
+                           args=(scale, shape, vmap.compressed(), ivar.compressed(), mask),
                            method='Powell', 
                            bounds=bounds_NFW)
     print('---------------------------------------------------')
@@ -341,7 +341,7 @@ def Galaxy_Fitting_NFW_nb(params, scale, shape, vmap, ivar):
     return bestfit_NFW.x
 '''
 
-def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar):
+def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar, mask):
     '''
 
     :param params:
@@ -361,7 +361,7 @@ def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar):
                   [0.1, 30],  # Disk radius [kpc]
                   [0.000001, 0.1],  # Halo density [Msun/pc^2]
                   [0.1, 1000],  # Halo radius [kpc]
-                  [0.1, 0.5*np.pi],  # Inclination angle
+                  [0.1, 0.436*np.pi],  # Inclination angle
                   [0, 2.2 * np.pi],  # Phase angle
                   [x_guess-10, x_guess+10],  # center_x
                   [y_guess-10, y_guess+10], # center_y
@@ -373,9 +373,9 @@ def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar):
 
     ig_bur = [20, 1, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess, vsys]
 
-    bestfit_bur = minimize(nloglikelihood_bur,
+    bestfit_bur = minimize(nloglikelihood_bur_flat,
                            ig_bur, 
-                           args=(scale, shape, vmap, ivar),
+                           args=(scale, shape, vmap.compressed(), ivar.compressed(), mask),
                            method='Powell', 
                            bounds=bounds_bur)
     print('---------------------------------------------------')
