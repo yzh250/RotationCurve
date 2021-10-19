@@ -49,12 +49,16 @@ q0 = 0.2 # minimum inclination value
 # Used files
 #-------------------------------------------------------------------------------
 
-MANGA_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
-DRP_FILENAME = MANGA_FOLDER + 'redux/v2_4_3/drpall-v2_4_3.fits'
-VEL_MAP_FOLDER = MANGA_FOLDER + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
+MANGA_FOLDER_mac = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+MANGDA_FOLDER_bluehive = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+DRP_FILENAME_mac = MANGA_FOLDER_mac + 'redux/v2_4_3/drpall-v2_4_3.fits'
+DRP_FILENAME_bluehive = MANGDA_FOLDER_bluehive + 'redux/v2_4_3/drpall-v2_4_3.fits'
+VEL_MAP_FOLDER_mac = MANGA_FOLDER_mac + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
+VEL_MAP_FOLDER_bluehive = MANGA_FOLDER_bluehive + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
 #MORPH_file = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/2D_RC/manga_visual_morpho-1.0.1.fits'
 
-DTable =  Table.read(DRP_FILENAME, format='fits')
+DTable =  Table.read(DRP_FILENAME_mac, format='fits')
+#DTable = Table.read(DRP_FILENAME_bluehive, format='fits')
 #MTable =  Table.read(MORPH_file, format='fits')
 
 DRP_index = {}
@@ -107,7 +111,8 @@ for i in range(len(galaxy_ID)):
 
     plate, IFU = galaxy_ID[i].split('-')
 
-    data_file = VEL_MAP_FOLDER+plate+'/'+IFU+'/manga-'+galaxy_ID[i]+'-MAPS-HYB10-GAU-MILESHC.fits.gz'
+    data_file = VEL_MAP_FOLDER_mac+plate+'/'+IFU+'/manga-'+galaxy_ID[i]+'-MAPS-HYB10-GAU-MILESHC.fits.gz'
+    #data_file = VEL_MAP_FOLDER_bluehive+plate+'/'+IFU+'/manga-'+galaxy_ID[i]+'-MAPS-HYB10-GAU-MILESHC.fits.gz'
 
     j = DRP_index[galaxy_ID[i]]
 
