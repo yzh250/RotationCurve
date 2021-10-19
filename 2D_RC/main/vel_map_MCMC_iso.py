@@ -118,7 +118,7 @@ flat_bad_samples_iso.shape
 ####################################################################
 figure = corner.corner(flat_bad_samples_iso, labels=labels,
                     range=[(0,100), (0,5), (0,2000),(1,20),(0.0001,0.01),(5,200),(0,np.pi/2),(0,1.5),(30,40),(30,40),(-100,100)], bins=30, #smooth=1,
-                    #truths=[, , ], truth_color='#ff4444',
+                    truths=[0.048688757,2.549862293,748.5940907,5.617303041,0.002927534,0.100051148,1.070928683,0.699892835,36.61461409,37.68004929,11.37083843], truth_color='#ff4444',
                     levels=(1-np.exp(-0.5), 1-np.exp(-2)), 
                     quantiles=(0.16, 0.84),
                     hist_kwargs={'histtype':'stepfilled', 'alpha':0.3, 'density':True},
