@@ -81,7 +81,7 @@ pos = np.random.uniform(low=[0,1e-4,300,2,0.0001,0.1,0,0.01,30,30,-20], high=[50
 nwalkers, ndim = pos.shape
 
 bad_sampler_NFW = emcee.EnsembleSampler(nwalkers, ndim, log_prob_NFW, args=(scale, gshape, vmasked, ivar_masked))
-bad_sampler_NFW.run_mcmc(pos, 5000, progress=True)
+bad_sampler_NFW.run_mcmc(pos, 10000, progress=True)
 
 good_walkers_NFW = bad_sampler_NFW.acceptance_fraction > 0
 
@@ -92,8 +92,8 @@ bad_samples_NFW = bad_sampler_NFW.get_chain()[:,good_walkers_NFW,:]
 labels = ['rho_b','R_b', 'Sigma_d','R_d','rho_h','R_h','i','phi','x','y','vsys']
 for i in range(ndim):
     ax = axes_NFW[i]
-    ax.plot(bad_samples_NFW[:5000,:,i], 'k', alpha=0.3)
-    ax.set(xlim=(0,5000), ylabel=labels[i])
+    ax.plot(bad_samples_NFW[:10000,:,i], 'k', alpha=0.3)
+    ax.set(xlim=(0,10000), ylabel=labels[i])
     ax.yaxis.set_label_coords(-0.11, 0.5)
 
 axes_NFW[-1].set_xlabel('step number')
@@ -103,7 +103,7 @@ plt.close()
 ####################################################################
 
 ####################################################################
-bad_samples_NFW = bad_sampler_NFW.get_chain(discard=100)[:,good_walkers_NFW,:]
+bad_samples_NFW = bad_sampler_NFW.get_chain(discard=500)[:,good_walkers_NFW,:]
 ns_NFW, nw_NFW, nd_NFW = bad_samples_NFW.shape
 flat_bad_samples_NFW = bad_samples_NFW.reshape(ns_NFW*nw_NFW, nd_NFW)
 flat_bad_samples_NFW.shape
@@ -111,8 +111,8 @@ flat_bad_samples_NFW.shape
 
 ####################################################################
 corner.corner(flat_bad_samples_NFW, labels=labels,
-                    range=[(0,90), (0,1), (0,2400),(1,12),(2e-6,0.01),(5,200),(0,np.pi/2),(0,1.5),(30,40),(30,40),(-100,100)], bins=30, #smooth=1,
-                    #truths=[, , ], truth_color='#ff4444',
+                    range=[(0,100), (0,5), (0,2000),(1,20),(0.0001,0.01),(5,200),(0,np.pi/2),(0,1.5),(30,40),(30,40),(-100,100)], bins=30, #smooth=1,
+                    truths=[0.063326658,3.467219046,456.8635966,6.798370692,0.001518047,31.91162509,1.080563,0.698362228,36.63252193,37.66018439,11.59115735], truth_color='#ff4444',
                     levels=(1-np.exp(-0.5), 1-np.exp(-2)), quantiles=(0.16, 0.84),
                     hist_kwargs={'histtype':'stepfilled', 'alpha':0.3, 'density':True},
                     color='blue', plot_datapoints=False,
