@@ -87,7 +87,7 @@ pos = np.random.uniform(low=[0,1e-4,300,2,0.0001,0.1,0,0.01,30,30,-20], high=[50
 nwalkers, ndim = pos.shape
 
 bad_sampler_iso = emcee.EnsembleSampler(nwalkers, ndim, log_prob_iso, args=(scale, gshape, vmasked, ivar_masked, Ha_vel_mask))
-bad_sampler_iso.run_mcmc(pos, 5000, progress=True)
+bad_sampler_iso.run_mcmc(pos, 10000, progress=True)
 
 good_walkers_iso = bad_sampler_iso.acceptance_fraction > 0
 
@@ -98,8 +98,8 @@ bad_samples_iso = bad_sampler_iso.get_chain()[:,good_walkers_iso,:]
 labels = ['rho_b','R_b', 'Sigma_d','R_d','rho_h','R_h','i','phi','x','y','vsys']
 for i in range(ndim):
     ax = axes_iso[i]
-    ax.plot(bad_samples_iso[:5000,:,i], 'k', alpha=0.3)
-    ax.set(xlim=(0,5000), ylabel=labels[i])
+    ax.plot(bad_samples_iso[:10000,:,i], 'k', alpha=0.3)
+    ax.set(xlim=(0,10000), ylabel=labels[i])
     ax.yaxis.set_label_coords(-0.11, 0.5)
 
 axes_iso[-1].set_xlabel('step number')
@@ -109,7 +109,7 @@ plt.close()
 ####################################################################
 
 ####################################################################
-bad_samples_iso = bad_sampler_iso.get_chain(discard=100)[:,good_walkers_iso,:]
+bad_samples_iso = bad_sampler_iso.get_chain(discard=500)[:,good_walkers_iso,:]
 ns_iso, nw_iso, nd_iso = bad_samples_iso.shape
 flat_bad_samples_iso = bad_samples_iso.reshape(ns_iso*nw_iso, nd_iso)
 flat_bad_samples_iso.shape
