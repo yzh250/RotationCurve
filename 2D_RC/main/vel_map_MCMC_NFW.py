@@ -51,8 +51,11 @@ def log_prior(params):
      and 1e-5 < rho_h < 0.1 and 0.01 < Rh< 500 and 0 < inclination < 0.436*np.pi and 0 < phi < 2*np.pi\
      and 20 < center_x < 40 and 20 < center_y < 40 and -100 < vsys < 100:
         logP = 0
+    # setting constraints on the radii
+    elif Rh < Rb or Rh < Rd or Rd < Rd:
+        logP = -np.inf
     else:
-    	logP = -np.inf
+        logP = -np.inf
     return logP
 
 def log_prob_iso(params, scale, shape, vdata, ivar):
@@ -112,7 +115,7 @@ flat_bad_samples_NFW.shape
 ####################################################################
 corner.corner(flat_bad_samples_NFW, labels=labels,
                     range=[(0,100), (0,5), (0,2000),(1,20),(0.0001,0.01),(5,200),(0,np.pi/2),(0,1.5),(30,40),(30,40),(-100,100)], bins=30, #smooth=1,
-                    truths=[0.063326658,3.467219046,456.8635966,6.798370692,0.001518047,31.91162509,1.080563,0.698362228,36.63252193,37.66018439,11.59115735], truth_color='#ff4444',
+                    truths=[0.05812451  3.601276359 385.2756031 6.748078457 0.002449669 30.24921674 1.080172553 0.69825044  36.61004742 37.67680252 11.81343922], truth_color='#ff4444',
                     levels=(1-np.exp(-0.5), 1-np.exp(-2)), quantiles=(0.16, 0.84),
                     hist_kwargs={'histtype':'stepfilled', 'alpha':0.3, 'density':True},
                     color='blue', plot_datapoints=False,
