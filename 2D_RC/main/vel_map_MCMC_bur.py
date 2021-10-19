@@ -51,8 +51,11 @@ def log_prior(params):
      and 1e-5 < rho_h < 0.1 and 0.01 < Rh< 500 and 0 < inclination < 0.436*np.pi and 0 < phi < 2*np.pi\
      and 20 < center_x < 40 and 20 < center_y < 40 and -100 < vsys < 100:
         logP = 0
+    # setting constraints on the radii
+    elif Rh < Rb or Rh < Rd or Rd < Rd:
+        logP = -np.inf
     else:
-    	logP = -np.inf
+        logP = -np.inf
     return logP
 
 def log_prob_iso(params, scale, shape, vdata, ivar):
