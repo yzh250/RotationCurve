@@ -81,7 +81,7 @@ pos = np.random.uniform(low=[0,1e-4,300,2,0.0001,0.1,0,0.01,30,30,-20], high=[50
 nwalkers, ndim = pos.shape
 
 bad_sampler_bur = emcee.EnsembleSampler(nwalkers, ndim, log_prob_bur, args=(scale, gshape, vmasked, ivar_masked))
-bad_sampler_bur.run_mcmc(pos, 5000, progress=True)
+bad_sampler_bur.run_mcmc(pos, 10000, progress=True)
 
 good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
 
@@ -92,8 +92,8 @@ bad_samples_bur = bad_sampler_bur.get_chain()[:,good_walkers_bur,:]
 labels = ['rho_b','R_b', 'Sigma_d','R_d','rho_h','R_h','i','phi','x','y','vsys']
 for i in range(ndim):
     ax = axes_bur[i]
-    ax.plot(bad_samples_bur[:5000,:,i], 'k', alpha=0.3)
-    ax.set(xlim=(0,5000), ylabel=labels[i])
+    ax.plot(bad_samples_bur[:10000,:,i], 'k', alpha=0.3)
+    ax.set(xlim=(0,10000), ylabel=labels[i])
     ax.yaxis.set_label_coords(-0.11, 0.5)
 
 axes_bur[-1].set_xlabel('step number')
@@ -103,7 +103,7 @@ plt.close()
 ####################################################################
 
 ####################################################################
-bad_samples_bur = bad_sampler_bur.get_chain(discard=100)[:,good_walkers_bur,:]
+bad_samples_bur = bad_sampler_bur.get_chain(discard=500)[:,good_walkers_bur,:]
 ns_bur, nw_bur, nd_bur = bad_samples_bur.shape
 flat_bad_samples_bur = bad_samples_bur.reshape(ns_bur*nw_bur, nd_bur)
 flat_bad_samples_bur.shape
@@ -112,7 +112,7 @@ flat_bad_samples_bur.shape
 ####################################################################
 corner.corner(flat_bad_samples_bur, labels=labels,
                     range=[(0,100), (0,5), (0,2000),(1,20),(0.0001,0.01),(5,200),(0,np.pi/2),(0,1.5),(30,40),(30,40),(-100,100)], bins=30, #smooth=1,
-                    #truths=[, , ], truth_color='#ff4444',
+                    truths=[5.36E-05,2.811046162,978.7934831,6.493085395,4.10E-05,999.8669552,0.858228903,0.752910577,38.25051586,37.23417255,-0.685352448], truth_color='#ff4444',
                     levels=(1-np.exp(-0.5), 1-np.exp(-2)), quantiles=(0.16, 0.84),
                     hist_kwargs={'histtype':'stepfilled', 'alpha':0.3, 'density':True},
                     color='blue', plot_datapoints=False,
