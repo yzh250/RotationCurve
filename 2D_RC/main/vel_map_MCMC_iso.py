@@ -103,7 +103,7 @@ for i in range(ndim):
     ax.yaxis.set_label_coords(-0.11, 0.5)
 
 axes_iso[-1].set_xlabel('step number')
-fig_iso.tight_layout()
+#fig_iso.tight_layout()
 plt.savefig('mcmc_iso.png',format='png')
 plt.close()
 ####################################################################
@@ -127,6 +127,16 @@ figure = corner.corner(flat_bad_samples_iso, labels=labels,
 plt.savefig('corner_iso.png',format='png')
 plt.close()
 ####################################################################
+
+soln = [0.048688757,2.549862293,748.5940907,5.617303041,0.002927534,0.100051148,1.070928683,0.699892835,36.61461409,37.68004929,11.37083843]
+
+for i, label in enumerate(labels):
+    x = soln.x[i]
+    x16, x84 = np.percentile(flat_bad_samples_iso[:,i], [16,84])
+    dlo = x - x16
+    dhi = x84 - x
+    print('{:3s} = {:5.2f} + {:4.2f} - {:4.2f}'.format(label, x, dhi, dlo))
+    print('    = ({:5.2f}, {:5.2f})'.format(x16, x84))
 
 ####################################################################
 # Dumping out put
