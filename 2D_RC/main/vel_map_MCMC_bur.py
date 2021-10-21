@@ -28,6 +28,9 @@ from galaxy_component_functions import vel_tot_iso,\
 from Velocity_Map_Functions import loglikelihood_iso,\
                                    loglikelihood_NFW, \
                                    loglikelihood_bur,\
+                                   loglikelihood_iso_flat,\
+                                   loglikelihood_NFW_flat, \
+                                   loglikelihood_bur_flat,\
                                    find_phi
 
 from RC_2D_Fit_Functions import Galaxy_Data    
@@ -62,19 +65,19 @@ def log_prob_iso(params, scale, shape, vdata, ivar):
     lp = log_prior(params)
     if not np.isfinite(lp):
         return -np.inf
-    return lp + loglikelihood_iso(params, scale, shape, vdata, ivar)
+    return lp + loglikelihood_iso_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
 
 def log_prob_NFW(params, scale, shape, vdata, ivar):
     lp = log_prior(params)
     if not np.isfinite(lp):
         return -np.inf
-    return lp + loglikelihood_NFW(params, scale, shape, vdata, ivar)
+    return lp + loglikelihood_NFW_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
 
 def log_prob_bur(params, scale, shape, vdata, ivar):
     lp = log_prior(params)
     if not np.isfinite(lp):
         return -np.inf
-    return lp + loglikelihood_bur(params, scale, shape, vdata, ivar)
+    return lp + loglikelihood_bur_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
 ####################################################################
 
 ####################################################################
@@ -100,7 +103,7 @@ for i in range(ndim):
     ax.yaxis.set_label_coords(-0.11, 0.5)
 
 axes_bur[-1].set_xlabel('step number')
-fig_bur.tight_layout()
+#fig_bur.tight_layout()
 plt.savefig('mcmc_bur.png',format='png')
 plt.close()
 ####################################################################
@@ -123,6 +126,16 @@ corner.corner(flat_bad_samples_bur, labels=labels,
 corner.corner.savefig('corner_bur.png',format='png')
 plt.close()
 ####################################################################
+
+soln = [5.36E-05,2.811046162,978.7934831,6.493085395,4.10E-05,999.8669552,0.858228903,0.752910577,38.25051586,37.23417255,-0.685352448]
+
+for i, label in enumerate(labels):
+    x = soln.x[i]
+    x16, x84 = np.percentile(flat_bad_samples_iso[:,i], [16,84])
+    dlo = x - x16
+    dhi = x84 - x
+    print('{:3s} = {:5.2f} + {:4.2f} - {:4.2f}'.format(label, x, dhi, dlo))
+    print('    = ({:5.2f}, {:5.2f})'.format(x16, x84))
 
 ####################################################################
 # Dumping out put
