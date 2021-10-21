@@ -61,19 +61,19 @@ def log_prior(params):
         logP = -np.inf
     return logP
 
-def log_prob_iso(params, scale, shape, vdata, ivar):
+def log_prob_iso(params, scale, shape, vdata, ivar, mask):
     lp = log_prior(params)
     if not np.isfinite(lp):
         return -np.inf
     return lp + loglikelihood_iso_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
 
-def log_prob_NFW(params, scale, shape, vdata, ivar):
+def log_prob_NFW(params, scale, shape, vdata, ivar, mask):
     lp = log_prior(params)
     if not np.isfinite(lp):
         return -np.inf
     return lp + loglikelihood_NFW_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
 
-def log_prob_bur(params, scale, shape, vdata, ivar):
+def log_prob_bur(params, scale, shape, vdata, ivar, mask):
     lp = log_prior(params)
     if not np.isfinite(lp):
         return -np.inf
@@ -86,7 +86,7 @@ def log_prob_bur(params, scale, shape, vdata, ivar):
 pos = np.random.uniform(low=[0,1e-4,300,2,0.0001,0.1,0,0.01,30,30,-20], high=[50,5,2000,20,0.01,300,np.pi/2,2*np.pi,40,40,20], size=(64,11))
 nwalkers, ndim = pos.shape
 
-bad_sampler_NFW = emcee.EnsembleSampler(nwalkers, ndim, log_prob_NFW, args=(scale, gshape, vmasked, ivar_masked))
+bad_sampler_NFW = emcee.EnsembleSampler(nwalkers, ndim, log_prob_NFW, args=(scale, gshape, vmasked, ivar_masked, Ha_vel_mask))
 bad_sampler_NFW.run_mcmc(pos, 10000, progress=True)
 
 good_walkers_NFW = bad_sampler_NFW.acceptance_fraction > 0
