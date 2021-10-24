@@ -96,6 +96,7 @@ fig_bur, axes_bur = plt.subplots(11,1, figsize=(20, 14), sharex=True,
 bad_samples_bur = bad_sampler_bur.get_chain()[:,good_walkers_bur,:]
 
 labels = ['rho_b','R_b', 'Sigma_d','R_d','rho_h','R_h','i','phi','x','y','vsys']
+
 for i in range(ndim):
     ax = axes_bur[i]
     ax.plot(bad_samples_bur[:10000,:,i], 'k', alpha=0.3)
