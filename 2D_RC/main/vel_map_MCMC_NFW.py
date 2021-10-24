@@ -95,8 +95,9 @@ fig_NFW, axes_NFW = plt.subplots(11,1, figsize=(20, 14), sharex=True,
                          gridspec_kw={'hspace':0.1})
 bad_samples_NFW = bad_sampler_NFW.get_chain()[:,good_walkers_NFW,:]
 
-for i in range(ndim):
 labels = ['rho_b','R_b', 'Sigma_d','R_d','rho_h','R_h','i','phi','x','y','vsys']
+
+for i in range(ndim):
     ax = axes_NFW[i]
     ax.plot(bad_samples_NFW[:10000,:,i], 'k', alpha=0.3)
     ax.set(xlim=(0,10000), ylabel=labels[i])
@@ -127,7 +128,7 @@ plt.savefig('corner_NFW.png',format='png')
 plt.close()
 ####################################################################
 
-[0.05812451,3.601276359,385.2756031,6.748078457,0.002449669,30.24921674,1.080172553,0.69825044,36.61004742,37.67680252,11.81343922]
+soln = [0.05812451,3.601276359,385.2756031,6.748078457,0.002449669,30.24921674,1.080172553,0.69825044,36.61004742,37.67680252,11.81343922]
 
 for i, label in enumerate(labels):
     x = soln.x[i]
