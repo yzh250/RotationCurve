@@ -42,7 +42,7 @@ scale = 0.46886408261217366
 
 ####################################################################
 # 7443-12705
-r_band, Ha_vel, Ha_vel_ivar, Ha_vel_mask, Ha_flux, Ha_flux_ivar, Ha_flux_mask, vmasked, Ha_flux_masked, ivar_masked, gshape, x_center_guess, y_center_guess = Galaxy_Data('7443-12705')
+r_band, Ha_vel, Ha_vel_ivar, Ha_vel_mask, Ha_flux, Ha_flux_ivar, Ha_flux_mask, vmasked, Ha_flux_masked, ivar_masked, gshape, x_center_guess, y_center_guess = Galaxy_Data('7443-12705','bluehive')
 ####################################################################
 
 ####################################################################
@@ -95,8 +95,8 @@ fig_NFW, axes_NFW = plt.subplots(11,1, figsize=(20, 14), sharex=True,
                          gridspec_kw={'hspace':0.1})
 bad_samples_NFW = bad_sampler_NFW.get_chain()[:,good_walkers_NFW,:]
 
-labels = ['rho_b','R_b', 'Sigma_d','R_d','rho_h','R_h','i','phi','x','y','vsys']
 for i in range(ndim):
+labels = ['rho_b','R_b', 'Sigma_d','R_d','rho_h','R_h','i','phi','x','y','vsys']
     ax = axes_NFW[i]
     ax.plot(bad_samples_NFW[:10000,:,i], 'k', alpha=0.3)
     ax.set(xlim=(0,10000), ylabel=labels[i])
@@ -123,7 +123,7 @@ corner.corner(flat_bad_samples_NFW, labels=labels,
                     hist_kwargs={'histtype':'stepfilled', 'alpha':0.3, 'density':True},
                     color='blue', plot_datapoints=False,
                     fill_contours=True)
-corner.corner.savefig('corner_NFW.png',format='png')
+plt.savefig('corner_NFW.png',format='png')
 plt.close()
 ####################################################################
 
