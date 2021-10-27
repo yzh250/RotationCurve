@@ -96,7 +96,7 @@ def find_phi(center_coords, phi_angle, vel_map):
 #-------------------------------------------------------------------------------
 def rot_incl_iso(shape, scale, params):
 
-    rho_0, Rb, SigD, Rd, rho0_h, Rh, inclination, phi, center_x, center_y, vsys = params
+    log_rhob0, Rb, SigD, Rd, rho0_h, Rh, inclination, phi, center_x, center_y, vsys = params
     rotated_inclined_map = np.zeros(shape)
     
     for i in range(shape[0]):
@@ -106,7 +106,7 @@ def rot_incl_iso(shape, scale, params):
             r = np.sqrt(x**2 + y**2)
             theta = np.arctan2(-x,y)
             r_in_kpc = r*scale
-            v = vel_tot_iso(r_in_kpc,[rho_0, Rb, SigD, Rd, rho0_h, Rh])*np.sin(inclination)*np.cos(theta)
+            v = vel_tot_iso(r_in_kpc,[log_rhob0, Rb, SigD, Rd, rho0_h, Rh])*np.sin(inclination)*np.cos(theta)
             rotated_inclined_map[i,j] = v + vsys
 
     return rotated_inclined_map
@@ -140,7 +140,7 @@ def rot_incl_iso_nb(shape,scale,params):
 #-------------------------------------------------------------------------------
 def rot_incl_NFW(shape,scale,params):
 
-    rho_0, Rb, SigD, Rd, rho0_h, Rh, inclination, phi, center_x, center_y, vsys = params
+    log_rhob0, Rb, SigD, Rd, rho0_h, Rh, inclination, phi, center_x, center_y, vsys = params
     rotated_inclined_map = np.zeros(shape)
     
     for i in range(shape[0]):
@@ -150,7 +150,7 @@ def rot_incl_NFW(shape,scale,params):
             r = np.sqrt(x**2 + y**2)
             theta = np.arctan2(-x,y)
             r_in_kpc = r*scale
-            v = vel_tot_NFW(r_in_kpc,[rho_0,Rb,SigD,Rd,rho0_h,Rh])*np.sin(inclination)*np.cos(theta)
+            v = vel_tot_NFW(r_in_kpc,[log_rhob0,Rb,SigD,Rd,rho0_h,Rh])*np.sin(inclination)*np.cos(theta)
             rotated_inclined_map[i,j] = v + vsys
 
     return rotated_inclined_map
@@ -184,7 +184,7 @@ def rot_incl_NFW_nb(shape,scale,params):
 #-------------------------------------------------------------------------------
 def rot_incl_bur(shape,scale,params):
 
-    rho_0, Rb, SigD, Rd, rho0_h, Rh, inclination, phi, center_x, center_y, vsys = params
+    log_rhob0, Rb, SigD, Rd, rho0_h, Rh, inclination, phi, center_x, center_y, vsys = params
     rotated_inclined_map = np.zeros(shape) 
     
     for i in range(shape[0]):
@@ -194,7 +194,7 @@ def rot_incl_bur(shape,scale,params):
             r = np.sqrt(x**2 + y**2)
             theta = np.arctan2(-x,y)
             r_in_kpc = r*scale
-            v = vel_tot_bur(r_in_kpc,[rho_0,Rb,SigD,Rd,rho0_h,Rh])*np.sin(inclination)*np.cos(theta)
+            v = vel_tot_bur(r_in_kpc,[log_rhob0,Rb,SigD,Rd,rho0_h,Rh])*np.sin(inclination)*np.cos(theta)
             rotated_inclined_map[i,j] = v + vsys
              
     return rotated_inclined_map
@@ -262,11 +262,11 @@ def loglikelihood_iso_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
     model = rot_incl_iso(shape, scale, params)
     model_masked = ma.array(model, mask=mask)
     model_flat = model_masked.compressed()
-    logL = -0.5 * ma.sum((vdata_flat - model_flat) ** 2 * ivar_flat - ma.log(ivar_flat))
-    #if params[3] >= params[5]:
-        #logL += 1e7
-    #elif params[1] >= params[5]:
-        #logL += 1e7
+    logL = -0.5 * np.sum((vdata_flat - model_flat) ** 2 * ivar_flat - np.log(ivar_flat))
+    if params[3] >= params[5]:
+        logL += 1e7
+    elif params[1] >= params[5]:
+        logL += 1e7
     return logL
 
 def nloglikelihood_iso_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
@@ -324,11 +324,11 @@ def loglikelihood_NFW_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
     model_masked = ma.array(model, mask=mask)
     model_flat = model_masked.compressed()
     #print(len(model_flat))
-    logL = -0.5 * ma.sum((vdata_flat - model_flat) ** 2 * ivar_flat - ma.log(ivar_flat))
-    #if params[3] >= params[5]:
-        #logL += 1e7
-    #elif params[1] >= params[5]:
-        #logL += 1e7
+    logL = -0.5 * np.sum((vdata_flat - model_flat) ** 2 * ivar_flat - np.log(ivar_flat))
+    if params[3] >= params[5]:
+        logL += 1e7
+    elif params[1] >= params[5]:
+        logL += 1e7
     return logL
 
 def nloglikelihood_NFW_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
@@ -387,14 +387,14 @@ def loglikelihood_bur_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
     model_masked = ma.array(model, mask=mask)
     model_flat = model_masked.compressed()
     #print(len(model_flat))
-    logL = -0.5 * ma.sum((vdata_flat - model_flat) ** 2 * ivar_flat - ma.log(ivar_flat))
-    #if params[3] >= params[5]:
-        #logL += 1e7
-    #elif params[1] >= params[5]:
-        #logL += 1e7
+    logL = -0.5 * np.sum((vdata_flat - model_flat) ** 2 * ivar_flat - np.log(ivar_flat))
+    if params[3] >= params[5]:
+        logL += 1e7
+    elif params[1] >= params[5]:
+        logL += 1e7
     return logL
 
-def nloglikelihood_bur_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
+def nloglikelihood_bur_flat(params, s):
     return -loglikelihood_bur_flat(params, scale, shape, vdata_flat, ivar_flat, mask)
 
 # Burket no bulge flat
