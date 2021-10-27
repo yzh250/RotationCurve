@@ -50,8 +50,8 @@ r_band, Ha_vel, Ha_vel_ivar, Ha_vel_mask, Ha_flux, Ha_flux_ivar, Ha_flux_mask, v
 def log_prior(params):
     rho_b,Rb,SigD,Rd,rho_h,Rh,inclination,phi,center_x,center_y,vsys= params
     logP = 0
-    if 0 < rho_b < 100 and 0 < Rb < 5 and 100 < SigD < 3000 and 1 < Rd < 30\
-     and 1e-5 < rho_h < 0.1 and 0.01 < Rh< 500 and 0 < inclination < 0.436*np.pi and 0 < phi < 2*np.pi\
+    if -7 < log_rhob0 < 2 and 0 < Rb < 5 and 100 < SigD < 3000 and 1 < Rd < 30\
+     and 1e-5 < rho_h < 0.1 and 0.01 < Rh< 500 and 0 < inclination < np.pi*0.436 and 0 < phi < 2*np.pi\
      and 20 < center_x < 40 and 20 < center_y < 40 and -100 < vsys < 100:
         logP = 0
     # setting constraints on the radii
@@ -80,14 +80,16 @@ def log_prob_bur(params, scale, shape, vdata, ivar, mask):
     return lp + loglikelihood_bur_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
 ####################################################################
 
+mini_soln = [np.log10(0.05812451),3.601276359,385.2756031,6.748078457,0.002449669,30.24921674,1.080172553,0.69825044,36.61004742,37.67680252,11.81343922]
+
 ####################################################################
 # NFW
 
-pos = np.random.uniform(low=[0,1e-4,300,2,0.0001,0.1,0,0.01,30,30,-20], high=[50,5,2000,20,0.01,300,np.pi/2,2*np.pi,40,40,20], size=(64,11))
+pos = mini_soln + np.random.uniform(low=-0.1*mini_soln, high=0.1*mini_soln, size=(64,11))
 nwalkers, ndim = pos.shape
 
 bad_sampler_NFW = emcee.EnsembleSampler(nwalkers, ndim, log_prob_NFW, args=(scale, gshape, vmasked, ivar_masked, Ha_vel_mask))
-bad_sampler_NFW.run_mcmc(pos, 10000, progress=True)
+bad_sampler_NFW.run_mcmc(pos, 5000, progress=True)
 
 good_walkers_NFW = bad_sampler_NFW.acceptance_fraction > 0
 
@@ -99,8 +101,8 @@ labels = ['rho_b','R_b', 'Sigma_d','R_d','rho_h','R_h','i','phi','x','y','vsys']
 
 for i in range(ndim):
     ax = axes_NFW[i]
-    ax.plot(bad_samples_NFW[:10000,:,i], 'k', alpha=0.3)
-    ax.set(xlim=(0,10000), ylabel=labels[i])
+    ax.plot(bad_samples_NFW[:5000,:,i], 'k', alpha=0.3)
+    ax.set(xlim=(0,5000), ylabel=labels[i])
     ax.yaxis.set_label_coords(-0.11, 0.5)
 
 axes_NFW[-1].set_xlabel('step number')
@@ -118,8 +120,8 @@ flat_bad_samples_NFW.shape
 
 ####################################################################
 corner.corner(flat_bad_samples_NFW, labels=labels,
-                    range=[(0,100), (0,5), (0,2000),(1,20),(0.0001,0.01),(5,200),(0,np.pi/2),(0,1.5),(30,40),(30,40),(-100,100)], bins=30, #smooth=1,
-                    truths=[0.05812451,3.601276359,385.2756031,6.748078457,0.002449669,30.24921674,1.080172553,0.69825044,36.61004742,37.67680252,11.81343922], truth_color='#ff4444',
+                    range=[(-7,2), (0,5), (0,2000),(1,20),(0.0001,0.01),(5,200),(0,np.pi/2),(0,1.5),(30,40),(30,40),(-100,100)], bins=30, #smooth=1,
+                    truths=[np.log10(0.05812451),3.601276359,385.2756031,6.748078457,0.002449669,30.24921674,1.080172553,0.69825044,36.61004742,37.67680252,11.81343922], truth_color='#ff4444',
                     levels=(1-np.exp(-0.5), 1-np.exp(-2)), quantiles=(0.16, 0.84),
                     hist_kwargs={'histtype':'stepfilled', 'alpha':0.3, 'density':True},
                     color='blue', plot_datapoints=False,
@@ -128,10 +130,8 @@ plt.savefig('corner_NFW.png',format='png')
 plt.close()
 ####################################################################
 
-soln = [0.05812451,3.601276359,385.2756031,6.748078457,0.002449669,30.24921674,1.080172553,0.69825044,36.61004742,37.67680252,11.81343922]
-
 for i, label in enumerate(labels):
-    x = soln.x[i]
+    x = mini_soln[i]
     x16, x84 = np.percentile(flat_bad_samples_iso[:,i], [16,84])
     dlo = x - x16
     dhi = x84 - x
