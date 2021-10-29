@@ -48,7 +48,7 @@ r_band, Ha_vel, Ha_vel_ivar, Ha_vel_mask, Ha_flux, Ha_flux_ivar, Ha_flux_mask, v
 ####################################################################
 # loglikelihood
 def log_prior(params):
-    rho_b,Rb,SigD,Rd,rho_h,Rh,inclination,phi,center_x,center_y,vsys= params
+    log_rhob0,Rb,SigD,Rd,rho_h,Rh,inclination,phi,center_x,center_y,vsys= params
     logP = 0
     if -7 < log_rhob0 < 2 and 0 < Rb < 5 and 100 < SigD < 3000 and 1 < Rd < 30\
      and 1e-5 < rho_h < 0.1 and 0.01 < Rh< 500 and 0 < inclination < np.pi*0.436 and 0 < phi < 2*np.pi\
@@ -80,12 +80,12 @@ def log_prob_bur(params, scale, shape, vdata, ivar, mask):
     return lp + loglikelihood_bur_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
 ####################################################################
 
-mini_sol = [np.log10(0.048688757),2.549862293,748.5940907,5.617303041,0.002927534,0.100051148,1.070928683,0.699892835,36.61461409,37.68004929,11.37083843]
+mini_soln = [np.log10(0.048688757),2.549862293,748.5940907,5.617303041,0.002927534,0.100051148,1.070928683,0.699892835,36.61461409,37.68004929,11.37083843]
 
 ####################################################################
 # Isothermal
 
-pos = mini_soln + np.random.uniform(low=-0.1*mini_soln, high=0.1*mini_soln, size=(64,11))
+pos = np.array(mini_soln) + np.random.uniform(low=-0.1*np.array(mini_soln), high=0.1*np.array(mini_soln), size=(64,11))
 nwalkers, ndim = pos.shape
 
 bad_sampler_iso = emcee.EnsembleSampler(nwalkers, ndim, log_prob_iso, args=(scale, gshape, vmasked, ivar_masked, Ha_vel_mask))
