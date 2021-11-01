@@ -61,23 +61,13 @@ def log_prior(params):
         logP = -np.inf
     return logP
 
-def log_prob_iso(params, scale, shape, vdata, ivar, mask):
-    lp = log_prior(params)
-    if not np.isfinite(lp):
-        return -np.inf
-    return lp + loglikelihood_iso_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
-
 def log_prob_NFW(params, scale, shape, vdata, ivar, mask):
     lp = log_prior(params)
-    if not np.isfinite(lp):
-        return -np.inf
-    return lp + loglikelihood_NFW_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
-
-def log_prob_bur(params, scale, shape, vdata, ivar, mask):
-    lp = log_prior(params)
-    if not np.isfinite(lp):
-        return -np.inf
-    return lp + loglikelihood_bur_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
+    logL = loglikelihood_NFW_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
+    if not np.isfinite(lp) or not np.isfinite(logL):
+        return -np.inf 
+    else:
+        return lp + logL
 ####################################################################
 
 mini_soln = [np.log10(0.05812451),3.601276359,385.2756031,6.748078457,0.002449669,30.24921674,1.080172553,0.69825044,36.61004742,37.67680252,11.81343922]
