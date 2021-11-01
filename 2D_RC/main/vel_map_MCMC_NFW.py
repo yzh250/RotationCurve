@@ -85,7 +85,7 @@ mini_soln = [np.log10(0.05812451),3.601276359,385.2756031,6.748078457,0.00244966
 ####################################################################
 # NFW
 
-pos = np.array(mini_soln) + np.random.uniform(low=-0.001*np.array(mini_soln), high=0.001*np.array(mini_soln), size=(64,11))
+pos = np.array(mini_soln) + np.random.uniform(low=-0.000001*np.array(mini_soln), high=0.000001*np.array(mini_soln), size=(64,11))
 nwalkers, ndim = pos.shape
 
 bad_sampler_NFW = emcee.EnsembleSampler(nwalkers, ndim, log_prob_NFW, args=(scale, gshape, vmasked, ivar_masked, Ha_vel_mask))
