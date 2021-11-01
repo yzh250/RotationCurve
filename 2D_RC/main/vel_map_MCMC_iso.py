@@ -85,7 +85,7 @@ mini_soln = [np.log10(0.048688757),2.549862293,748.5940907,5.617303041,0.0029275
 ####################################################################
 # Isothermal
 
-pos = np.array(mini_soln) + np.random.uniform(low=-0.000001*np.array(mini_soln), high=0.000001*np.array(mini_soln), size=(64,11))
+pos = np.array(mini_soln) + np.random.uniform(low=-1e-6*np.ones(len(mini_soln)), high=1e-6*np.ones(len(mini_soln)), size=(64,11))
 nwalkers, ndim = pos.shape
 
 bad_sampler_iso = emcee.EnsembleSampler(nwalkers, ndim, log_prob_iso, args=(scale, gshape, vmasked, ivar_masked, Ha_vel_mask))
