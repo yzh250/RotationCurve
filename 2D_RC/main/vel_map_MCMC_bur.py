@@ -61,33 +61,25 @@ def log_prior(params):
         logP = -np.inf
     return logP
 
-def log_prob_iso(params, scale, shape, vdata, ivar, mask):
-    lp = log_prior(params)
-    if not np.isfinite(lp):
-        return -np.inf
-    return lp + loglikelihood_iso_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
-
-def log_prob_NFW(params, scale, shape, vdata, ivar, mask):
-    lp = log_prior(params)
-    if not np.isfinite(lp):
-        return -np.inf
-    return lp + loglikelihood_NFW_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
-
 def log_prob_bur(params, scale, shape, vdata, ivar, mask):
     lp = log_prior(params)
-    if not np.isfinite(lp):
-        return -np.inf
-    return lp + loglikelihood_bur_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
+    logL = loglikelihood_bur_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
+    if not np.isfinite(lp) or not np.isfinite(logL):
+        return -np.inf 
+    else:
+        return lp + logL
 ####################################################################
 
-####################################################################
-# Isothermal
+mini_soln = [np.log10(5.36E-05),2.811046162,978.7934831,6.493085395,4.10E-05,999.8669552,0.858228903,0.752910577,38.25051586,37.23417255,-0.685352448]
 
-pos = np.random.uniform(low=[0,1e-4,300,2,0.0001,0.1,0,0.01,30,30,-20], high=[50,5,2000,20,0.01,300,np.pi/2,2*np.pi,40,40,20], size=(64,11))
+####################################################################
+# Burket
+
+pos = np.array(mini_soln) + np.random.uniform(low=-1e-6*np.ones(len(mini_soln)), high=1e-6*np.ones(len(mini_soln)), size=(64,11))
 nwalkers, ndim = pos.shape
 
 bad_sampler_bur = emcee.EnsembleSampler(nwalkers, ndim, log_prob_bur, args=(scale, gshape, vmasked, ivar_masked, Ha_vel_mask))
-bad_sampler_bur.run_mcmc(pos, 10000, progress=True)
+bad_sampler_bur.run_mcmc(pos, 5000, progress=True)
 
 good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
 
@@ -99,8 +91,8 @@ labels = ['rho_b','R_b', 'Sigma_d','R_d','rho_h','R_h','i','phi','x','y','vsys']
 
 for i in range(ndim):
     ax = axes_bur[i]
-    ax.plot(bad_samples_bur[:10000,:,i], 'k', alpha=0.3)
-    ax.set(xlim=(0,10000), ylabel=labels[i])
+    ax.plot(bad_samples_bur[:5000,:,i], 'k', alpha=0.3)
+    ax.set(xlim=(0,5000), ylabel=labels[i])
     ax.yaxis.set_label_coords(-0.11, 0.5)
 
 axes_bur[-1].set_xlabel('step number')
@@ -119,7 +111,7 @@ flat_bad_samples_bur.shape
 ####################################################################
 corner.corner(flat_bad_samples_bur, labels=labels,
                     range=[(0,100), (0,5), (0,2000),(1,20),(0.0001,0.01),(5,200),(0,np.pi/2),(0,1.5),(30,40),(30,40),(-100,100)], bins=30, #smooth=1,
-                    truths=[5.36E-05,2.811046162,978.7934831,6.493085395,4.10E-05,999.8669552,0.858228903,0.752910577,38.25051586,37.23417255,-0.685352448], truth_color='#ff4444',
+                    truths=[np.log10(5.36E-05),2.811046162,978.7934831,6.493085395,4.10E-05,999.8669552,0.858228903,0.752910577,38.25051586,37.23417255,-0.685352448], truth_color='#ff4444',
                     levels=(1-np.exp(-0.5), 1-np.exp(-2)), quantiles=(0.16, 0.84),
                     hist_kwargs={'histtype':'stepfilled', 'alpha':0.3, 'density':True},
                     color='blue', plot_datapoints=False,
@@ -128,10 +120,8 @@ plt.savefig('corner_bur.png',format='png')
 plt.close()
 ####################################################################
 
-soln = [5.36E-05,2.811046162,978.7934831,6.493085395,4.10E-05,999.8669552,0.858228903,0.752910577,38.25051586,37.23417255,-0.685352448]
-
 for i, label in enumerate(labels):
-    x = soln.x[i]
+    x = mini_soln[i]
     x16, x84 = np.percentile(flat_bad_samples_iso[:,i], [16,84])
     dlo = x - x16
     dhi = x84 - x
