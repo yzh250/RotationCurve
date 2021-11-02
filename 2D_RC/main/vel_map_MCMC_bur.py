@@ -112,7 +112,8 @@ flat_bad_samples_bur.shape
 corner.corner(flat_bad_samples_bur, labels=labels,
                     range=[(0,100), (0,5), (0,2000),(1,20),(0.0001,0.01),(5,200),(0,np.pi/2),(0,1.5),(30,40),(30,40),(-100,100)], bins=30, #smooth=1,
                     truths=[np.log10(5.36E-05),2.811046162,978.7934831,6.493085395,4.10E-05,999.8669552,0.858228903,0.752910577,38.25051586,37.23417255,-0.685352448], truth_color='#ff4444',
-                    levels=(1-np.exp(-0.5), 1-np.exp(-2)), quantiles=(0.16, 0.84),
+                    levels=(1-np.exp(-0.5), 1-np.exp(-2)), 
+                    quantiles=(0.16, 0.84),
                     hist_kwargs={'histtype':'stepfilled', 'alpha':0.3, 'density':True},
                     color='blue', plot_datapoints=False,
                     fill_contours=True)
