@@ -41,7 +41,8 @@ def bulge_vel(r, A, Vin, Rd):
 
 ####################################################################################
 # Exponential bulge model (Feng2014)
-def bulge_vel(r,rho_0,Rb):
+def bulge_vel(r,log_rhob0,Rb):
+    rho_0 = 10**log_rhob0
     if isinstance(r,float):
         mass_b = 4 * np.pi * rho_0 * ((-1/3*Rb**3*np.exp(-(r/Rb)**3)+(1/3)*(Rb**3)))
     else:
@@ -221,14 +222,14 @@ def halo_vel_bur(r,rho0_h, Rh):
 #####################################################################################
 # Isothermal
 def vel_tot_iso(r, params):
-    rho_0, Rb, SigD, Rd, rho0_h, Rh = params
+    log_rhob0, Rb, SigD, Rd, rho0_h, Rh = params
 
     r_pc = r * 1000
     Rb_pc = Rb * 1000
     Rd_pc = Rd * 1000
     Rh_pc = Rh * 1000
 
-    Vbulge = bulge_vel(r_pc, rho_0, Rb_pc)
+    Vbulge = bulge_vel(r_pc, log_rhob0, Rb_pc)
     Vdisk = disk_vel(r_pc, SigD, Rd_pc)
     Vhalo = halo_vel_iso(r_pc, rho0_h, Rh_pc)
     v2 = Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2
@@ -237,14 +238,14 @@ def vel_tot_iso(r, params):
 #------------------------------------------------------------------------------------
 # NFW
 def vel_tot_NFW(r, params):
-    rho_0, Rb, SigD, Rd, rho0_h, Rh = params
+    log_rhob0, Rb, SigD, Rd, rho0_h, Rh = params
 
     r_pc = r * 1000
     Rb_pc = Rb * 1000
     Rd_pc = Rd * 1000
     Rh_pc = Rh * 1000
 
-    Vbulge = bulge_vel(r_pc, rho_0, Rb_pc)
+    Vbulge = bulge_vel(r_pc, log_rhob0, Rb_pc)
     Vdisk = disk_vel(r_pc, SigD, Rd_pc)
     Vhalo = halo_vel_NFW(r_pc, rho0_h, Rh_pc)
     v2 = Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2
@@ -253,14 +254,14 @@ def vel_tot_NFW(r, params):
 #------------------------------------------------------------------------------------
 # Burket
 def vel_tot_bur(r, params):
-    rho_0, Rb, SigD, Rd, rho0_h, Rh = params
+    log_rhob0, Rb, SigD, Rd, rho0_h, Rh = params
 
     r_pc = r * 1000
     Rb_pc = Rb * 1000
     Rd_pc = Rd * 1000
     Rh_pc = Rh * 1000
 
-    Vbulge = bulge_vel(r_pc, rho_0, Rb_pc)
+    Vbulge = bulge_vel(r_pc, log_rhob0, Rb_pc)
     Vdisk = disk_vel(r_pc, SigD, Rd_pc)
     Vhalo = halo_vel_bur(r_pc, rho0_h, Rh_pc)
     v2 = Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2

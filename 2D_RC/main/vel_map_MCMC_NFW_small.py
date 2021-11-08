@@ -61,6 +61,7 @@ def log_prior(params):
         logP = -np.inf
     return logP
 
+@profile
 def log_prob_NFW(params, scale, shape, vdata, ivar, mask):
     lp = log_prior(params)
     logL = loglikelihood_NFW_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
@@ -80,7 +81,7 @@ pos = np.array(mini_soln) + np.random.uniform(low=-1e-6*np.ones(len(mini_soln)),
 nwalkers, ndim = pos.shape
 
 bad_sampler_NFW = emcee.EnsembleSampler(nwalkers, ndim, log_prob_NFW, args=(scale, gshape, vmasked, ivar_masked, Ha_vel_mask))
-bad_sampler_NFW.run_mcmc(pos, 5000, progress=True)
+bad_sampler_NFW.run_mcmc(pos, 100, progress=True)
 
 good_walkers_NFW = bad_sampler_NFW.acceptance_fraction > 0
 
@@ -93,8 +94,8 @@ labels = ['rho_b','R_b', 'Sigma_d','R_d','rho_h','R_h','i','phi','x','y','vsys']
 
 for i in range(ndim):
     ax = axes_NFW[i]
-    ax.plot(bad_samples_NFW[:5000,:,i], 'k', alpha=0.3)
-    ax.set(xlim=(0,5000), ylabel=labels[i])
+    ax.plot(bad_samples_NFW[:100,:,i], 'k', alpha=0.3)
+    ax.set(xlim=(0,100), ylabel=labels[i])
     ax.yaxis.set_label_coords(-0.11, 0.5)
 
 axes_NFW[-1].set_xlabel('step number')
@@ -104,7 +105,7 @@ plt.close()
 ####################################################################
 
 ####################################################################
-bad_samples_NFW = bad_sampler_NFW.get_chain(discard=500)[:,good_walkers_NFW,:]
+bad_samples_NFW = bad_sampler_NFW.get_chain(discard=10)[:,good_walkers_NFW,:]
 np.save('bad_samples_NFW.npy',bad_samples_NFW)
 ns_NFW, nw_NFW, nd_NFW = bad_samples_NFW.shape
 flat_bad_samples_NFW = bad_samples_NFW.reshape(ns_NFW*nw_NFW, nd_NFW)
@@ -127,7 +128,7 @@ plt.close()
 
 for i, label in enumerate(labels):
     x = mini_soln[i]
-    x16, x84 = np.percentile(flat_bad_samples_iso[:,i], [16,84])
+    x16, x84 = np.percentile(flat_bad_samples_NFW[:,i], [16,84])
     dlo = x - x16
     dhi = x84 - x
     print('{:3s} = {:5.2f} + {:4.2f} - {:4.2f}'.format(label, x, dhi, dlo))

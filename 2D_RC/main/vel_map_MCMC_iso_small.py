@@ -9,7 +9,7 @@ from astropy.table import QTable
 
 from scipy.optimize import minimize
 
-import numdifftools as ndt
+#import numdifftools as ndt
 from numpy import log as ln
 from scipy.special import kn
 from scipy.special import iv
@@ -58,70 +58,65 @@ def log_prior(params):
     elif Rh < Rb or Rh < Rd or Rd < Rd:
         logP = -np.inf
     else:
-        logP = -np.inf
+    	logP = -np.inf
     return logP
 
-def log_prob_NFW(params, scale, shape, vdata, ivar, mask):
+def log_prob_iso(params, scale, shape, vdata, ivar, mask):
     lp = log_prior(params)
-    logL = loglikelihood_NFW_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
+    logL = loglikelihood_iso_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
     if not np.isfinite(lp) or not np.isfinite(logL):
         return -np.inf 
     else:
         return lp + logL
 ####################################################################
 
-mini_soln = [np.log10(0.05812451),3.601276359,385.2756031,6.748078457,0.002449669,30.24921674,1.080172553,0.69825044,36.61004742,37.67680252,11.81343922]
+mini_soln = [np.log10(0.048688757),2.549862293,748.5940907,5.617303041,0.002927534,0.100051148,1.070928683,0.699892835,36.61461409,37.68004929,11.37083843]
 
 ####################################################################
-# NFW
+# Isothermal
 
 pos = np.array(mini_soln) + np.random.uniform(low=-1e-6*np.ones(len(mini_soln)), high=1e-6*np.ones(len(mini_soln)), size=(64,11))
-
 nwalkers, ndim = pos.shape
 
-bad_sampler_NFW = emcee.EnsembleSampler(nwalkers, ndim, log_prob_NFW, args=(scale, gshape, vmasked, ivar_masked, Ha_vel_mask))
-bad_sampler_NFW.run_mcmc(pos, 5000, progress=True)
+bad_sampler_iso = emcee.EnsembleSampler(nwalkers, ndim, log_prob_iso, args=(scale, gshape, vmasked, ivar_masked, Ha_vel_mask))
+bad_sampler_iso.run_mcmc(pos, 5000, progress=True)
 
-good_walkers_NFW = bad_sampler_NFW.acceptance_fraction > 0
+good_walkers_iso = bad_sampler_iso.acceptance_fraction > 0
 
-fig_NFW, axes_NFW = plt.subplots(11,1, figsize=(20, 14), sharex=True,
+fig_iso, axes_iso = plt.subplots(11,1, figsize=(20, 14), sharex=True,
                          gridspec_kw={'hspace':0.1})
-bad_samples_NFW = bad_sampler_NFW.get_chain()[:,good_walkers_NFW,:]
-np.save('bad_samples_NFW.npy',bad_samples_NFW)
+bad_samples_iso = bad_sampler_iso.get_chain()[:,good_walkers_iso,:]
 
 labels = ['rho_b','R_b', 'Sigma_d','R_d','rho_h','R_h','i','phi','x','y','vsys']
-
 for i in range(ndim):
-    ax = axes_NFW[i]
-    ax.plot(bad_samples_NFW[:5000,:,i], 'k', alpha=0.3)
+    ax = axes_iso[i]
+    ax.plot(bad_samples_iso[:5000,:,i], 'k', alpha=0.3)
     ax.set(xlim=(0,5000), ylabel=labels[i])
     ax.yaxis.set_label_coords(-0.11, 0.5)
 
-axes_NFW[-1].set_xlabel('step number')
-#fig_NFW.tight_layout()
-plt.savefig('mcmc_NFW.png',format='png')
+axes_iso[-1].set_xlabel('step number')
+#fig_iso.tight_layout()
+plt.savefig('mcmc_iso.png',format='png')
 plt.close()
 ####################################################################
 
 ####################################################################
-bad_samples_NFW = bad_sampler_NFW.get_chain(discard=500)[:,good_walkers_NFW,:]
-np.save('bad_samples_NFW.npy',bad_samples_NFW)
-ns_NFW, nw_NFW, nd_NFW = bad_samples_NFW.shape
-flat_bad_samples_NFW = bad_samples_NFW.reshape(ns_NFW*nw_NFW, nd_NFW)
-np.save('flat_bad_samples_NFW.npy',flat_bad_samples_NFW)
-flat_bad_samples_NFW.shape
+bad_samples_iso = bad_sampler_iso.get_chain(discard=500)[:,good_walkers_iso,:]
+ns_iso, nw_iso, nd_iso = bad_samples_iso.shape
+flat_bad_samples_iso = bad_samples_iso.reshape(ns_iso*nw_iso, nd_iso)
+flat_bad_samples_iso.shape
 ####################################################################
 
 ####################################################################
-corner.corner(flat_bad_samples_NFW, labels=labels,
+corner.corner(flat_bad_samples_iso, labels=labels,
                     range=[(-7,2), (0,5), (0,2000),(1,20),(0.0001,0.01),(5,200),(0,np.pi/2),(0,1.5),(30,40),(30,40),(-100,100)], bins=30, #smooth=1,
-                    truths=[np.log10(0.05812451),3.601276359,385.2756031,6.748078457,0.002449669,30.24921674,1.080172553,0.69825044,36.61004742,37.67680252,11.81343922], truth_color='#ff4444',
+                    truths=[np.log10(0.048688757),2.549862293,748.5940907,5.617303041,0.002927534,0.100051148,1.070928683,0.699892835,36.61461409,37.68004929,11.37083843], truth_color='#ff4444',
                     levels=(1-np.exp(-0.5), 1-np.exp(-2)), 
                     quantiles=(0.16, 0.84),
                     hist_kwargs={'histtype':'stepfilled', 'alpha':0.3, 'density':True},
                     color='blue', plot_datapoints=False,
                     fill_contours=True)
-plt.savefig('corner_NFW.png',format='png')
+plt.savefig('corner_iso.png',format='png')
 plt.close()
 ####################################################################
 
