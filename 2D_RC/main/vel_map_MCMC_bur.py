@@ -82,6 +82,7 @@ bad_sampler_bur = emcee.EnsembleSampler(nwalkers, ndim, log_prob_bur, args=(scal
 bad_sampler_bur.run_mcmc(pos, 5000, progress=True)
 
 good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
+np.save('good_walkers_bur.npy',good_walkers_bur)
 
 fig_bur, axes_bur = plt.subplots(11,1, figsize=(20, 14), sharex=True,
                          gridspec_kw={'hspace':0.1})

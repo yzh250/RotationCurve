@@ -82,6 +82,7 @@ bad_sampler_NFW = emcee.EnsembleSampler(nwalkers, ndim, log_prob_NFW, args=(scal
 bad_sampler_NFW.run_mcmc(pos, 5000, progress=True)
 
 good_walkers_NFW = bad_sampler_NFW.acceptance_fraction > 0
+np.save('good_walkers_NFW.npy',good_walkers_NFW)
 
 fig_NFW, axes_NFW = plt.subplots(11,1, figsize=(20, 14), sharex=True,
                          gridspec_kw={'hspace':0.1})
