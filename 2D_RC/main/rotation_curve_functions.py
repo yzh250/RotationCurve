@@ -15,8 +15,12 @@ import astropy.units as u
 from scipy.special import kn
 from scipy.special import iv
 
+from galaxy_component_functions import disk_vel, halo_vel_iso
+
+'''
 import warnings
 warnings.filterwarnings('error')
+'''
 ################################################################################
 
 
@@ -57,8 +61,7 @@ def vel_b(r, A, Vin, Rd):
 
     v2 = A * (Vin ** 2) / (r / (0.2 * Rd))
     
-    #v = np.sqrt(np.abs(v2))
-    
+    '''
     try:
         v = np.sqrt(v2)
         
@@ -69,7 +72,11 @@ def vel_b(r, A, Vin, Rd):
         print('r =', r)
         print('Vin =', Vin)
         print('Rd =', Rd)
-    
+    '''
+
+    #v = np.sqrt(np.abs(v2))
+    v = np.sqrt(v2)
+
     return v
 
 
@@ -290,20 +297,11 @@ def v_d(r, Mdisk, Rd):
     Mdisk_kg = Mdisk * Msun
 
     bessel_component = (iv(0, r / (2 * Rd)) * kn(0, r / (2 * Rd)) - iv(1, r / (2 * Rd)) * kn(1, r / (2 * Rd)))
-    vel2 = ((0.5) * G * Mdisk_kg * (r / Rd) ** 2 / (Rd * 3.08E16)) * bessel_component
+    vel2 = ((0.5) * G * Mdisk_kg * (r / Rd) ** 2 / (Rd * 3.086E16)) * bessel_component
 
     return np.sqrt(vel2) / 1000
 
 
-################################################################################
-
-
-
-
-
-################################################################################
-# Disk velocity from Paolo et al. 2019
-#-------------------------------------------------------------------------------
 # Fitting for central surface density
 #def disk_vel(params, r):
 def disk_vel(r, SigD, Rd):
@@ -318,10 +316,11 @@ def disk_vel(r, SigD, Rd):
     y = r / (2 * Rd)
 
     bessel_component = (iv(0, y) * kn(0, y) - iv(1, y) * kn(1, y))
-    vel2 = (4 *np.pi * G * SigD * y ** 2 * (Rd/(3.086E16))*Msun) * bessel_component
+    vel2 = (4 *np.pi * G * SigD * y ** 2 * ((Rd*1000)/3.086E16)*Msun) * bessel_component
 
     return np.sqrt(vel2) / 1000
 ################################################################################
+
 
 
 
@@ -349,7 +348,9 @@ def rho_iso(r, Vinf, Rh):
 
     return: volume density of the isothermal halo (g/pc^3)
     '''
+
     rho_0 = rho0_iso(Vinf, Rh / 1000)
+
     return rho_0 / (1 + (r / Rh) ** 2)
 
 
@@ -804,33 +805,79 @@ def v_tot_iso(r, params):
       - (scale radius): The scale radius of the dark matter halo (kpc)
     '''
 
+    ############################################################################
+    # Parse the fit parameters
+    #---------------------------------------------------------------------------
     A, Vin, SigD, Rd, Vinf, Rh = params
+
     #print('A in v_tot_iso:', A)
     #print('Vin in v_tot_iso:', Vin)
+    ############################################################################
 
+
+    ############################################################################
+    # Calculate the square of the velocity at the orbital radius
+    #---------------------------------------------------------------------------
     if r == 0:
+        ########################################################################
+        # The velocity should go to 0 as r goes to 0.  The current model for the 
+        # bulge, though, does not follow this behavior, so we need to fix this 
+        # particular value.
+        #-----------------------------------------------------------------------
         v2 = 0
+        ########################################################################
     else:
+        ########################################################################
         # Unit conversion
+        #-----------------------------------------------------------------------
         r_pc = r * 1000
         Rd_pc = Rd * 1000
         Rh_pc = Rh * 1000
+        ########################################################################
 
+
+        ########################################################################
+        # Velocity due to the bulge
+        #-----------------------------------------------------------------------
         Vbulge = vel_b(r_pc, A, Vin, Rd_pc)
         #Vbulge2 = vel_b2(r_pc, A, Vin, Rd_pc)
+        ########################################################################
+
+
+        ########################################################################
+        # Velocity due to the disk
+        #-----------------------------------------------------------------------
         Vdisk = disk_vel(r_pc, SigD, Rd_pc)
+        ########################################################################
+
+
+        ########################################################################
+        # Velocity due to the halo
+        #-----------------------------------------------------------------------
         Vhalo = vel_h_iso(r_pc, Vinf, Rh_pc)
+        #Vhalo = halo_vel_iso(r_pc, , Rh_pc)
+        ########################################################################
         
-        v2 = Vbulge ** 2 + Vdisk ** 2 + Vhalo ** 2
+
+        ########################################################################
+        # Total velocity from all three components
+        #-----------------------------------------------------------------------
+        v2 = Vbulge**2 + Vdisk**2 + Vhalo**2
         #v2 = Vbulge2 + Vdisk**2 + Vhalo**2
-        
+        ########################################################################
+    ############################################################################
     
+
+    ############################################################################
+    # Calculate the velocity (instead of the square of the velocity)
+    #---------------------------------------------------------------------------
     try:
         v = np.sqrt(v2)
     except RuntimeWarning:
         print('Vbulge2:', Vbulge2)
         print('Vdisk2:', Vdisk**2)
         print('Vhalo2:', Vhalo**2)
+    ############################################################################
 
     return v  # km/s
 #-------------------------------------------------------------------------------

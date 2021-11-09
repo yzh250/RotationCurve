@@ -10,17 +10,17 @@
 import numpy as np
 import numpy.ma as ma
 
-from rotation_curve_functions_mod import vel_b, \
-                                         disk_vel, \
-                                         vel_h_iso, \
-                                         vel_h_NFW, \
-                                         vel_h_Burket, \
-                                         v_tot_iso, \
-                                         v_tot_iso_nb, \
-                                         v_tot_NFW, \
-                                         v_tot_NFW_nb, \
-                                         v_tot_Burket, \
-                                         v_tot_Burket_nb
+from rotation_curve_functions import vel_b, \
+                                     disk_vel, \
+                                     vel_h_iso, \
+                                     vel_h_NFW, \
+                                     vel_h_Burket, \
+                                     v_tot_iso, \
+                                     v_tot_iso_nb, \
+                                     v_tot_NFW, \
+                                     v_tot_NFW_nb, \
+                                     v_tot_Burket, \
+                                     v_tot_Burket_nb
 ################################################################################
 
 
@@ -223,8 +223,8 @@ def loglikelihood_iso_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
 
 def nloglikelihood_iso_flat(params, scale, shape, vdata_flat, inv_sigma2, mask):
 
-    print('Printing params - nloglikelihood')
-    print(params)
+    #print('Printing params - nloglikelihood')
+    #print(params)
     
     return -loglikelihood_iso_flat(params, 
                                    scale, 

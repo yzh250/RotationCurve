@@ -16,16 +16,16 @@ from Velocity_Map_Functions import rot_incl_iso,\
                                    rot_incl_NFW, \
                                    rot_incl_bur
 
-from RC_2D_Fit_Functions_mod import Galaxy_Data, \
-                                    Galaxy_Fitting_iso,\
-                                    Galaxy_Fitting_NFW, \
-                                    Galaxy_Fitting_bur, \
-                                    Hessian_Calculation_Isothermal,\
-                                    Hessian_Calculation_NFW,\
-                                    Hessian_Calculation_Burket,\
-                                    Plotting_Isothermal,\
-                                    Plotting_NFW,\
-                                    Plotting_Burket
+from RC_2D_Fit_Functions import Galaxy_Data, \
+                                Galaxy_Fitting_iso,\
+                                Galaxy_Fitting_NFW, \
+                                Galaxy_Fitting_bur, \
+                                Hessian_Calculation_Isothermal,\
+                                Hessian_Calculation_NFW,\
+                                Hessian_Calculation_Burket,\
+                                Plotting_Isothermal,\
+                                Plotting_NFW,\
+                                Plotting_Burket
 ################################################################################
 
 
@@ -130,14 +130,18 @@ start_time = time.time()
 
 
 parameters = [incl, ph, x_center_guess, y_center_guess]
-
+'''
 Isothermal_fit = Galaxy_Fitting_iso(parameters, 
                                     scale, 
                                     gshape, 
                                     vmasked,
                                     Ha_vel_ivar,
                                     Ha_vel_mask)
-
+'''
+Isothermal_fit = np.array([6.61069614e-05, 1.50047354e-03, 8.08017590e+02, 
+                           4.91770884e+00, 2.94022574e+03, 6.44015087e+01, 
+                           1.09815441e+00, 6.94704060e-01, 3.69745071e+01, 
+                           3.73633906e+01])
 '''
 NFW_fit = Galaxy_Fitting_NFW(parameters, 
                              scale, 
@@ -156,18 +160,18 @@ Burket_Fit = Galaxy_Fitting_bur(parameters,
                                 Ha_vel_mask)
 '''
 
-print('Fit galaxy', time.time() - start_time)
+#print('Fit galaxy', time.time() - start_time)
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # Plotting
 #-------------------------------------------------------------------------------
-Plotting_Isothermal(galaxy_ID, gshape, scale, Isothermal_fit, Ha_vel_mask)
+#Plotting_Isothermal(galaxy_ID, gshape, scale, Isothermal_fit, Ha_vel_mask)
 #Plotting_NFW(galaxy_ID,gshape, scale, NFW_fit, Ha_vel_mask)
 #Plotting_Burket(galaxy_ID,gshape, scale, Burket_Fit,Ha_vel_mask)
 #-------------------------------------------------------------------------------
 
-
+'''
 #-------------------------------------------------------------------------------
 # Calculating Chi2
 #-------------------------------------------------------------------------------
@@ -193,7 +197,7 @@ chi2_iso = ma.sum(Ha_vel_ivar*(vmasked - vmap_iso)**2)
 chi2_iso_norm = chi2_iso/(nd_iso - len(Isothermal_fit))
 #-------------------------------------------------------------------------------
 print('Isothermal chi2:', chi2_iso_norm, time.time() - start_time)
-
+'''
 '''
 #-------------------------------------------------------------------------------
 # NFW

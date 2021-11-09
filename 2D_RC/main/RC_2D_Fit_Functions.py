@@ -16,19 +16,19 @@ import numdifftools as ndt
 
 
 # Import functions from other .py files
-from Velocity_Map_Functions_mod import rot_incl_iso,\
-                                       rot_incl_NFW, \
-                                       rot_incl_bur, \
-                                       nloglikelihood_iso,\
-                                       nloglikelihood_NFW, \
-                                       nloglikelihood_bur,\
-                                       loglikelihood_iso_flat,\
-                                       loglikelihood_NFW_flat, \
-                                       loglikelihood_bur_flat,\
-                                       nloglikelihood_iso_flat,\
-                                       nloglikelihood_NFW_flat,\
-                                       nloglikelihood_bur_flat,\
-                                       chi2_iso_flat
+from Velocity_Map_Functions import rot_incl_iso,\
+                                   rot_incl_NFW, \
+                                   rot_incl_bur, \
+                                   nloglikelihood_iso,\
+                                   nloglikelihood_NFW, \
+                                   nloglikelihood_bur,\
+                                   loglikelihood_iso_flat,\
+                                   loglikelihood_NFW_flat, \
+                                   loglikelihood_bur_flat,\
+                                   nloglikelihood_iso_flat,\
+                                   nloglikelihood_NFW_flat,\
+                                   nloglikelihood_bur_flat,\
+                                   chi2_iso_flat
 ################################################################################
 
 
@@ -209,18 +209,17 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, mask):
     print("All initial guesses within bounds: ", initial_guess_within_bounds)
     '''
     
-    
-    #bestfit_iso = minimize(nloglikelihood_iso_flat,
-    bestfit_iso = minimize_powell(nloglikelihood_iso_flat, 
+    #bestfit_iso = minimize_powell(nloglikelihood_iso_flat, 
+    bestfit_iso = minimize(nloglikelihood_iso_flat,
                            ig_iso, 
                            args=(scale, shape, vmap_flat, ivar_flat, mask),
-                           #method='Powell', #'Nelder-Mead',
+                           method='Powell', #'Nelder-Mead',
                            bounds=bounds_iso, 
-                           #options={#'direc':np.identity(len(ig_iso)), 
-                                    #'return_all':True, 
-                                    #'disp':3})
-                            disp=True, 
-                            return_all=True)
+                           options={'direc':np.identity(len(ig_iso)), 
+                                    'return_all':True, 
+                                    'disp':3})
+    #                        disp=True, 
+    #                        return_all=True)
     
     print('---------------------------------------------------')
     print(bestfit_iso)
@@ -432,15 +431,20 @@ def Hessian_Calculation_Isothermal(fit_solution, scale, shape, vmap, ivar):
     print('Best-fit values in Hessian_Calculation_Isothermal:', fit_solution)
 
     mask = vmap.mask
+
     vmap_flat = vmap.compressed()
+
     ivar_masked = ma.array(ivar,mask=mask)
     ivar_flat = ivar_masked.compressed()
+
     #print('Calculating Hessian')
-    hessian_iso = ndt.Hessian(loglikelihood_iso_flat)#, method='forward', order=1)
+    hessian_iso = ndt.Hessian(loglikelihood_iso_flat, step=0.01*fit_solution)#, method='forward', order=1)
+
     #print('Evaluating Hessian at solution')
     hess_ll_iso = hessian_iso(fit_solution,scale,shape,vmap_flat,ivar_flat,mask)
     hess_inv_iso = np.linalg.inv(hess_ll_iso)
-    fit_err_iso = np.sqrt(np.diag(np.abs(hess_inv_iso)))
+    fit_err_iso = np.sqrt(np.diag(-hess_inv_iso))
+
     print('-------------------------------------------')
     print('Hessian matrix for Isothermal')
     print(fit_err_iso)
