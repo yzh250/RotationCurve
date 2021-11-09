@@ -56,20 +56,20 @@ H_0 =  100 * h # km * s^-1 * Mpc^-1
 ################################################################################
 
 # Local machine directories
-#MANGA_FOLDER_mac = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
-#VEL_MAP_FOLDER_mac = MANGA_FOLDER_mac + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
-#MORPH_file_mac = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/manga_visual_morpho-1.0.1.fits'
-#Mfile_mac = fits.open(MORPH_file_mac)
-#Mdata_mac = Mfile_mac[1].data
-#RC_FILE_FOLDER_mac = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/data/DRP-rot_curve_data_files/'
+MANGA_FOLDER_mac = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+VEL_MAP_FOLDER_mac = MANGA_FOLDER_mac + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
+MORPH_file_mac = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/manga_visual_morpho-1.0.1.fits'
+Mfile_mac = fits.open(MORPH_file_mac)
+Mdata_mac = Mfile_mac[1].data
+RC_FILE_FOLDER_mac = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/data/DRP-rot_curve_data_files/'
 
 # Bluehive directories
-MANGA_FOLDER_bluehive = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
-VEL_MAP_FOLDER_bluehive = MANGA_FOLDER_bluehive + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
-MORPH_file_bluehive = '/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/manga_visual_morpho-1.0.1.fits'
-Mfile_bluehive = fits.open(MORPH_file_bluehive)
-Mdata_bluehive = Mfile_bluehive[1].data
-RC_FILE_FOLDER_bluehive = '/home/yzh250/Documents/UR_Stuff/Research_UR/data/DRP-rot_curve_data_files/'
+#MANGA_FOLDER_bluehive = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+#VEL_MAP_FOLDER_bluehive = MANGA_FOLDER_bluehive + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
+#MORPH_file_bluehive = '/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/manga_visual_morpho-1.0.1.fits'
+#Mfile_bluehive = fits.open(MORPH_file_bluehive)
+#Mdata_bluehive = Mfile_bluehive[1].data
+#RC_FILE_FOLDER_bluehive = '/home/yzh250/Documents/UR_Stuff/Research_UR/data/DRP-rot_curve_data_files/'
 
 '''
 ################################################################################
@@ -152,7 +152,7 @@ def Galaxy_Data(galaxy_ID):#, flag):
     #cube = fits.open(VEL_MAP_FOLDER_bluehive + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
 
     #if flag == 'mac':
-    cube = fits.open(VEL_MAP_FOLDER_bluehive + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
+    cube = fits.open(VEL_MAP_FOLDER_mac + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
 
     r_band = cube['SPX_MFLUX'].data
     Ha_vel = cube['EMLINE_GVEL'].data[18]
