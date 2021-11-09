@@ -159,23 +159,25 @@ def Galaxy_Data(galaxy_ID, MANGA_FOLDER):
     #cube = fits.open('manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
     cube = fits.open(VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
 
-    r_band = cube['SPX_MFLUX'].data
-    Ha_vel = cube['EMLINE_GVEL'].data[18]
-    Ha_vel_ivar = cube['EMLINE_GVEL_IVAR'].data[18]
-    Ha_vel_mask = cube['EMLINE_GVEL_MASK'].data[18]
+    maps = {}
+
+    maps['r_band'] = cube['SPX_MFLUX'].data
+    maps['Ha_vel'] = cube['EMLINE_GVEL'].data[18]
+    maps['Ha_vel_ivar'] = cube['EMLINE_GVEL_IVAR'].data[18]
+    maps['Ha_vel_mask'] = cube['EMLINE_GVEL_MASK'].data[18]
 
 
-    vmasked = ma.array(Ha_vel, mask=Ha_vel_mask)
-    ivar_masked = ma.array(Ha_vel_ivar, mask=Ha_vel_mask)
+    maps['vmasked'] = ma.array(Ha_vel, mask=Ha_vel_mask)
+    maps['ivar_masked'] = ma.array(Ha_vel_ivar, mask=Ha_vel_mask)
 
     gshape = vmasked.shape
     ############################################################################
 
     # Ha flux
-    Ha_flux = cube['EMLINE_GFLUX'].data[18]
-    Ha_flux_ivar = cube['EMLINE_GFLUX_IVAR'].data[18]
-    Ha_flux_mask = cube['EMLINE_GFLUX_MASK'].data[18]
-    Ha_flux_masked = ma.array(Ha_flux, mask = Ha_flux_mask)
+    maps['Ha_flux'] = cube['EMLINE_GFLUX'].data[18]
+    maps['Ha_flux_ivar'] = cube['EMLINE_GFLUX_IVAR'].data[18]
+    maps['Ha_flux_mask'] = cube['EMLINE_GFLUX_MASK'].data[18]
+    maps['Ha_flux_masked'] = ma.array(Ha_flux, mask = Ha_flux_mask)
 
 
     ############################################################################
@@ -187,7 +189,8 @@ def Galaxy_Data(galaxy_ID, MANGA_FOLDER):
     y_center_guess = center_guess[1]
     ############################################################################
 
-    return r_band, Ha_vel, Ha_vel_ivar, Ha_vel_mask, Ha_flux, Ha_flux_ivar, Ha_flux_mask, vmasked, Ha_flux_masked, ivar_masked, gshape, x_center_guess, y_center_guess
+    #return r_band, Ha_vel, Ha_vel_ivar, Ha_vel_mask, Ha_flux, Ha_flux_ivar, Ha_flux_mask, vmasked, Ha_flux_masked, ivar_masked, gshape, x_center_guess, y_center_guess
+    return maps, gshape, x_center_guess, y_center_guess
 
 
 def getTidal(gal_ID):

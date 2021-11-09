@@ -4,6 +4,7 @@
 *.txt
 *.csv
 *.fits
+*.pdf
 */.ipynb_checkpoints/
 */__pycache__/
 *.getkeep
