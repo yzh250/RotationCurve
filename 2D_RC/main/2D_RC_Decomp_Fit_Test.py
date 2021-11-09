@@ -20,12 +20,17 @@ from RC_2D_Fit_Functions import Galaxy_Data, \
                                 Galaxy_Fitting_iso,\
                                 Galaxy_Fitting_NFW, \
                                 Galaxy_Fitting_bur, \
+                                Galaxy_Fitting_iso_flat,\
+                                Galaxy_Fitting_NFW_flat,\
+                                Galaxy_Fitting_bur_flat,\
                                 Hessian_Calculation_Isothermal,\
                                 Hessian_Calculation_NFW,\
                                 Hessian_Calculation_Burket,\
                                 Plotting_Isothermal,\
                                 Plotting_NFW,\
                                 Plotting_Burket
+
+from mapSmoothness_functions import how_smooth
 ################################################################################
 
 
@@ -121,9 +126,15 @@ rband, Ha_vel, Ha_vel_ivar, Ha_vel_mask, vmasked, ivar_masked, gshape, x_center_
                                                                                                                     MANGA_FOLDER)
 #-------------------------------------------------------------------------------
 
+################################################################################
+# Smoothness Check
+#-------------------------------------------------------------------------------
+map_max_smoothness = 1.85
+
+################################################################################
 
 #-------------------------------------------------------------------------------
-# Fit the galaxy
+# Fit the galaxy (normal likelihood)
 #-------------------------------------------------------------------------------
 print('Fitting galaxy')
 start_time = time.time()
@@ -143,32 +154,65 @@ Isothermal_fit = np.array([6.61069614e-05, 1.50047354e-03, 8.08017590e+02,
                            1.09815441e+00, 6.94704060e-01, 3.69745071e+01, 
                            3.73633906e+01])
 '''
+
 NFW_fit = Galaxy_Fitting_NFW(parameters, 
                              scale, 
                              gshape, 
                              vmasked, 
-                             Ha_vel_ivar,
-                             Ha_vel_mask)
-'''
+                             Ha_vel_ivar)
 
-'''
-Burket_Fit = Galaxy_Fitting_bur(parameters, 
+Burket_fit = Galaxy_Fitting_bur(parameters,
                                 scale, 
                                 gshape, 
                                 vmasked, 
-                                Ha_vel_ivar,
-                                Ha_vel_mask)
-'''
+                                Ha_vel_ivar)
 
 #print('Fit galaxy', time.time() - start_time)
 #-------------------------------------------------------------------------------
 
+'''
+#-------------------------------------------------------------------------------
+# Fit the galaxy (flattened likelihood)
+#-------------------------------------------------------------------------------
+print('Fitting galaxy - Flattened')
+start_time = time.time()
+
+Isothermal_fit_flat = Galaxy_Fitting_iso_flat(parameters,
+                                              scale,
+                                              gshape,
+                                              vmasked,
+                                              Ha_vel_ivar,
+                                              Ha_vel_mask)
+
+NFW_fit_flat = Galaxy_Fitting_NFW_flat(parameters,
+                                       scale,
+                                       gshape,
+                                       vmasked,
+                                       Ha_vel_ivar,
+                                       Ha_vel_mask)
+
+Burket_Fit_flat = Galaxy_Fitting_bur_flat(parameters,
+                                          scale,
+                                          gshape,
+                                          vmasked,
+                                          Ha_vel_ivar,
+                                          Ha_vel_mask)
+
+print('Fit galaxy - Flattened', time.time() - start_time)
+#-------------------------------------------------------------------------------
+'''
 #-------------------------------------------------------------------------------
 # Plotting
 #-------------------------------------------------------------------------------
+# Non-flattened loglikelihood
 #Plotting_Isothermal(galaxy_ID, gshape, scale, Isothermal_fit, Ha_vel_mask)
-#Plotting_NFW(galaxy_ID,gshape, scale, NFW_fit, Ha_vel_mask)
-#Plotting_Burket(galaxy_ID,gshape, scale, Burket_Fit,Ha_vel_mask)
+#Plotting_NFW(galaxy_ID, gshape, scale, NFW_fit, Ha_vel_mask)
+#Plotting_Burket(galaxy_ID, gshape, scale, Burket_fit, Ha_vel_mask)
+
+# Flattened loglikelihood
+#Plotting_Isothermal(galaxy_ID, gshape, scale, Isothermal_fit_flat, Ha_vel_mask)
+#Plotting_NFW(galaxy_ID, gshape, scale, NFW_fit_flat, Ha_vel_mask)
+#Plotting_Burket(galaxy_ID, gshape, scale, Burket_Fit_flat,Ha_vel_mask)
 #-------------------------------------------------------------------------------
 
 '''
@@ -181,7 +225,7 @@ start_time = time.time()
 #-------------------------------------------------------------------------------
 # Isothermal
 
-full_vmap_iso = rot_incl_iso(gshape, scale, Isothermal_fit)
+full_vmap_iso = rot_incl_iso(gshape, scale, Isothermal_fit[:-1])
 
 # Masked array
 vmap_iso = ma.array(full_vmap_iso, mask=Ha_vel_mask)
@@ -194,7 +238,7 @@ nd_iso = np.sum(~vmap_iso.mask)
 chi2_iso = ma.sum(Ha_vel_ivar*(vmasked - vmap_iso)**2)
 
 #chi2_iso_norm = chi2_iso/(nd_iso - 8)
-chi2_iso_norm = chi2_iso/(nd_iso - len(Isothermal_fit))
+chi2_iso_norm = chi2_iso/(nd_iso - len(Isothermal_fit[:-1]))
 #-------------------------------------------------------------------------------
 print('Isothermal chi2:', chi2_iso_norm, time.time() - start_time)
 '''
@@ -202,7 +246,7 @@ print('Isothermal chi2:', chi2_iso_norm, time.time() - start_time)
 #-------------------------------------------------------------------------------
 # NFW
 
-full_vmap_NFW = rot_incl_NFW(gshape, scale, NFW_fit)
+full_vmap_NFW = rot_incl_NFW(gshape, scale, NFW_fit[:-1])
 
 # Masked array
 vmap_NFW = ma.array(full_vmap_NFW, mask=Ha_vel_mask)
@@ -215,7 +259,7 @@ nd_NFW = np.sum(~vmap_NFW.mask)
 chi2_NFW = ma.sum(Ha_vel_ivar*(vmasked - vmap_NFW)**2)
 
 #chi2_NFW_norm = chi2_NFW/(nd_NFW - 8)
-chi2_NFW_norm = chi2_NFW/(nd_NFW - len(NFW_fit))
+chi2_NFW_norm = chi2_NFW/(nd_NFW - len(NFW_fit[:-1]))
 #-------------------------------------------------------------------------------
 print('NFW chi2:', chi2_NFW_norm)
 '''
@@ -223,7 +267,7 @@ print('NFW chi2:', chi2_NFW_norm)
 #-------------------------------------------------------------------------------
 # Burket
 
-full_vmap_bur = rot_incl_bur(gshape, scale, Burket_Fit)
+full_vmap_bur = rot_incl_bur(gshape, scale, Burket_fit[:-1])
 
 # Masked array
 vmap_bur = ma.array(full_vmap_bur, mask=Ha_vel_mask)
@@ -236,12 +280,82 @@ nd_bur = np.sum(~vmap_bur.mask)
 chi2_bur = ma.sum(Ha_vel_ivar*(vmasked - vmap_bur)**2)
 
 #chi2_bur_norm = chi2_bur/(nd_bur-8)
-chi2_bur_norm = chi2_bur/(nd_bur - len(Burket_Fit))
+chi2_bur_norm = chi2_bur/(nd_bur - len(Burket_fit[:-1]))
 #-------------------------------------------------------------------------------
+print('Isothermal chi2:', chi2_iso_norm, time.time() - start_time)
+print('NFW chi2:', chi2_NFW_norm)
 print('Burket chi2:', chi2_bur_norm)
-'''
 #-------------------------------------------------------------------------------
 
+'''
+#-------------------------------------------------------------------------------
+# Calculating Chi2 flat
+#-------------------------------------------------------------------------------
+print('Calculating flat chi2')
+start_time = time.time()
+
+#-------------------------------------------------------------------------------
+# Isothermal
+
+full_vmap_iso = rot_incl_iso(gshape, scale, Isothermal_fit_flat)
+
+# Masked array
+vmap_iso = ma.array(full_vmap_iso, mask=Ha_vel_mask)
+
+# need to calculate number of data points in the fitted map
+#nd_iso = vmap_iso.shape[0]*vmap_iso.shape[1] - np.sum(vmap_iso.mask)
+nd_iso = np.sum(~vmap_iso.mask)
+
+#chi2_iso = np.nansum((vmasked - vmap_iso) ** 2 * Ha_vel_ivar)
+chi2_iso = ma.sum(Ha_vel_ivar*(vmasked - vmap_iso)**2)
+
+#chi2_iso_norm = chi2_iso/(nd_iso - 8)
+chi2_iso_norm = chi2_iso/(nd_iso - len(Isothermal_fit_flat))
+#-------------------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------------------
+# NFW
+
+full_vmap_NFW = rot_incl_NFW(gshape, scale, NFW_fit_flat)
+
+# Masked array
+vmap_NFW = ma.array(full_vmap_NFW, mask=Ha_vel_mask)
+
+# need to calculate number of data points in the fitted map
+#nd_NFW = vmap_NFW.shape[0]*vmap_NFW.shape[1] - np.sum(vmap_NFW.mask)
+nd_NFW = np.sum(~vmap_NFW.mask)
+
+#chi2_NFW = np.nansum((vmasked - vmap_NFW) ** 2 * Ha_vel_ivar)
+chi2_NFW = ma.sum(Ha_vel_ivar*(vmasked - vmap_NFW)**2)
+
+#chi2_NFW_norm = chi2_NFW/(nd_NFW - 8)
+chi2_NFW_norm = chi2_NFW/(nd_NFW - len(NFW_fit_flat))
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+# Burket
+
+full_vmap_bur = rot_incl_bur(gshape, scale, Burket_Fit_flat)
+
+# Masked array
+vmap_bur = ma.array(full_vmap_bur, mask=Ha_vel_mask)
+
+# need to calculate number of data points in the fitted map
+#nd_bur = vmap_bur.shape[0]*vmap_bur.shape[1] - np.sum(vmap_bur.mask)
+nd_bur = np.sum(~vmap_bur.mask)
+
+#chi2_bur = np.nansum((vmasked - vmap_bur) ** 2 * Ha_vel_ivar)
+chi2_bur = ma.sum(Ha_vel_ivar*(vmasked - vmap_bur)**2)
+
+#chi2_bur_norm = chi2_bur/(nd_bur-8)
+chi2_bur_norm = chi2_bur/(nd_bur - len(Burket_Fit_flat))
+#-------------------------------------------------------------------------------
+print('flat Isothermal chi2:', chi2_iso_norm, time.time() - start_time)
+print('flat NFW chi2:', chi2_NFW_norm)
+print('flat Burket chi2:', chi2_bur_norm)
+#-------------------------------------------------------------------------------
+'''
 
 #-------------------------------------------------------------------------------
 # Calculating the Hessian Matrix
@@ -255,23 +369,21 @@ Hessian_iso = Hessian_Calculation_Isothermal(Isothermal_fit,
                                              vmasked, 
                                              Ha_vel_ivar)
 
-'''
 Hessian_NFW = Hessian_Calculation_NFW(NFW_fit,
                                       scale, 
                                       gshape, 
                                       vmasked, 
                                       Ha_vel_ivar)
-'''
 
-'''
-Hessian_bur = Hessian_Calculation_Burket(Burket_Fit,
+Hessian_bur = Hessian_Calculation_Burket(Burket_fit,
                                          scale, 
                                          gshape, 
                                          vmasked, 
                                          Ha_vel_ivar)
-'''
+
 print('Calculated Hessian', time.time() - start_time)
 #-------------------------------------------------------------------------------
+
 ################################################################################
 
 
