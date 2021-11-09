@@ -86,7 +86,9 @@ good_walkers_iso = bad_sampler_iso.acceptance_fraction > 0
 fig_iso, axes_iso = plt.subplots(11,1, figsize=(20, 14), sharex=True,
                          gridspec_kw={'hspace':0.1})
 bad_samples_iso = bad_sampler_iso.get_chain()[:,good_walkers_iso,:]
+np.save('bad_samples_iso.npy',bad_samples_iso)
 
+'''
 labels = ['rho_b','R_b', 'Sigma_d','R_d','rho_h','R_h','i','phi','x','y','vsys']
 for i in range(ndim):
     ax = axes_iso[i]
@@ -102,8 +104,10 @@ plt.close()
 
 ####################################################################
 bad_samples_iso = bad_sampler_iso.get_chain(discard=500)[:,good_walkers_iso,:]
+np.save('bad_samples_iso.npy',bad_samples_iso)
 ns_iso, nw_iso, nd_iso = bad_samples_iso.shape
 flat_bad_samples_iso = bad_samples_iso.reshape(ns_iso*nw_iso, nd_iso)
+np.save('flat_bad_samples_iso.npy',flat_bad_samples_iso)
 flat_bad_samples_iso.shape
 ####################################################################
 
@@ -134,6 +138,6 @@ for i, label in enumerate(labels):
 #temp_outfile = open(out_directory + 'results.pickle', 'wb')
 #pickle.dump((flat_bad_samples_iso, flat_bad_samples_NFW, flat_bad_samples_bur), temp_outfile)
 #temp_outfile.close()
-
+'''
 
 

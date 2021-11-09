@@ -88,6 +88,7 @@ fig_bur, axes_bur = plt.subplots(11,1, figsize=(20, 14), sharex=True,
 bad_samples_bur = bad_sampler_bur.get_chain()[:,good_walkers_bur,:]
 np.save('bad_samples_bur.npy',bad_samples_bur)
 
+'''
 labels = ['rho_b','R_b', 'Sigma_d','R_d','rho_h','R_h','i','phi','x','y','vsys']
 
 for i in range(ndim):
@@ -138,6 +139,6 @@ for i, label in enumerate(labels):
 #temp_outfile = open(out_directory + 'results.pickle', 'wb')
 #pickle.dump((flat_bad_samples_iso, flat_bad_samples_NFW, flat_bad_samples_bur), temp_outfile)
 #temp_outfile.close()
-
+'''
 
 

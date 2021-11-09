@@ -78,7 +78,6 @@ mini_soln = [np.log10(0.05812451),3.601276359,385.2756031,6.748078457,0.00244966
 pos = np.array(mini_soln) + np.random.uniform(low=-1e-6*np.ones(len(mini_soln)), high=1e-6*np.ones(len(mini_soln)), size=(64,11))
 
 nwalkers, ndim = pos.shape
-
 bad_sampler_NFW = emcee.EnsembleSampler(nwalkers, ndim, log_prob_NFW, args=(scale, gshape, vmasked, ivar_masked, Ha_vel_mask))
 bad_sampler_NFW.run_mcmc(pos, 5000, progress=True)
 
@@ -89,6 +88,7 @@ fig_NFW, axes_NFW = plt.subplots(11,1, figsize=(20, 14), sharex=True,
 bad_samples_NFW = bad_sampler_NFW.get_chain()[:,good_walkers_NFW,:]
 np.save('bad_samples_NFW.npy',bad_samples_NFW)
 
+'''
 labels = ['rho_b','R_b', 'Sigma_d','R_d','rho_h','R_h','i','phi','x','y','vsys']
 
 for i in range(ndim):
@@ -139,6 +139,6 @@ for i, label in enumerate(labels):
 #temp_outfile = open(out_directory + 'results.pickle', 'wb')
 #pickle.dump((flat_bad_samples_iso, flat_bad_samples_NFW, flat_bad_samples_bur), temp_outfile)
 #temp_outfile.close()
-
+'''
 
 
