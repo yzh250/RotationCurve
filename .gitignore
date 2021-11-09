@@ -1,0 +1,9 @@
+.DS_Store
+*.pyc
+*.png
+*.txt
+*.csv
+*.fits
+*/.ipynb_checkpoints/
+*/__pycache__/
+*.getkeep
