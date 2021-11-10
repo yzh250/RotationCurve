@@ -11,14 +11,7 @@ import numpy as np
 
 from libc.math cimport sqrt, exp, log
 
-from typedefs cimport DTYPE_CP128_t, \
-                      DTYPE_CP64_t, \
-                      DTYPE_F64_t, \
-                      DTYPE_F32_t, \
-                      DTYPE_B_t, \
-                      ITYPE_t, \
-                      DTYPE_INT32_t, \
-                      DTYPE_INT64_t
+from typedefs cimport DTYPE_F32_t
 
 from scipy.special.cython_special cimport i0, i1, k0, k1
 
