@@ -227,23 +227,16 @@ def halo_vel_iso(r, rho0_h, Rh):
 def halo_vel_NFW(r, rho0_h, Rh):
     '''
     if isinstance(r, float):
-<<<<<<< HEAD
-        halo_mass = 4*np.pi*rho0_h*Rh**3*((Rh/(Rh+r)) + np.log(Rh + r) - 1 - np.log(Rh))
-=======
 
-        halo_mass = 4*np.pi*rho0_h*Rh**3*((-r/(Rh+r)) + np.log(Rh + r) - np.log(Rh))
+        halo_mass = 4 * np.pi * rho0_h * Rh**3 * ((Rh/(Rh+r)) + np.log(Rh + r) - 1 - np.log(Rh))
 
->>>>>>> dd4e7bafd015bf53423898567149428e85042e8b
     else:
 
         halo_mass = np.zeros(len(r))
 
         for i in range(len(r)):
-<<<<<<< HEAD
-            halo_mass[i] = 4*np.pi*rho0_h*Rh**3*((Rh/(Rh+r[i])) + np.log(Rh + r[i]) - 1 - np.log(Rh))
-=======
 
-            halo_mass[i] = 4 * np.pi * rho0_h * Rh**3 * ((-r[i]/(Rh + r[i])) + np.log(Rh + r[i]) - np.log(Rh))
+            halo_mass[i] = 4*np.pi*rho0_h*Rh**3*((Rh/(Rh+r[i])) + np.log(Rh + r[i]) - 1 - np.log(Rh))
     '''
     halo_mass = 4 * np.pi * rho0_h * Rh**3 * ((Rh/(Rh + r)) + np.log(Rh + r) - 1 - np.log(Rh))
 

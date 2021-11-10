@@ -167,24 +167,25 @@ def Galaxy_Data(galaxy_ID, MANGA_FOLDER):
     maps['Ha_vel_mask'] = cube['EMLINE_GVEL_MASK'].data[18]
 
 
-    maps['vmasked'] = ma.array(Ha_vel, mask=Ha_vel_mask)
-    maps['ivar_masked'] = ma.array(Ha_vel_ivar, mask=Ha_vel_mask)
+    maps['vmasked'] = ma.array(maps['Ha_vel'], mask=maps['Ha_vel_mask'])
+    maps['ivar_masked'] = ma.array(maps['Ha_vel_ivar'], mask=maps['Ha_vel_mask'])
 
-    gshape = vmasked.shape
+    gshape = maps['vmasked'].shape
     ############################################################################
 
     # Ha flux
     maps['Ha_flux'] = cube['EMLINE_GFLUX'].data[18]
     maps['Ha_flux_ivar'] = cube['EMLINE_GFLUX_IVAR'].data[18]
     maps['Ha_flux_mask'] = cube['EMLINE_GFLUX_MASK'].data[18]
-    maps['Ha_flux_masked'] = ma.array(Ha_flux, mask = Ha_flux_mask)
+    maps['Ha_flux_masked'] = ma.array(maps['Ha_flux'], mask=maps['Ha_flux_mask'])
 
 
     ############################################################################
     # Finding the center
     #---------------------------------------------------------------------------
-    center_guess = np.unravel_index(ma.argmin(np.abs(vmasked), axis=None), 
-                                        vmasked.shape)
+    center_guess = np.unravel_index(ma.argmin(np.abs(maps['vmasked']), 
+                                              axis=None), 
+                                    gshape)
     x_center_guess = center_guess[0]
     y_center_guess = center_guess[1]
     ############################################################################
