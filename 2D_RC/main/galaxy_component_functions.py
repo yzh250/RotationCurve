@@ -192,11 +192,11 @@ def halo_vel_iso(r, rho0_h, Rh):
 # integral form can be seen from "rotation_curve_functions.py"
 def halo_vel_NFW(r, rho0_h, Rh):
     if isinstance(r, float):
-        halo_mass = 4*np.pi*rho0_h*Rh**3*((-r/(Rh+r)) + np.log(Rh + r) - np.log(Rh))
+        halo_mass = 4*np.pi*rho0_h*Rh**3*((Rh/(Rh+r)) + np.log(Rh + r) - 1 - np.log(Rh))
     else:
         halo_mass = np.zeros(len(r))
         for i in range(len(r)):
-            halo_mass[i] = 4*np.pi*rho0_h*Rh**3*((-r[i]/(Rh+r[i])) + np.log(Rh + r[i]) - np.log(Rh))
+            halo_mass[i] = 4*np.pi*rho0_h*Rh**3*((Rh/(Rh+r[i])) + np.log(Rh + r[i]) - 1 - np.log(Rh))
     vel2 = G * (halo_mass * Msun) / (r * 3.086e16)
     return np.sqrt(vel2)/1000
 #####################################################################################
