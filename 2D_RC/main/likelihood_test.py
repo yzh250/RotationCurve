@@ -42,7 +42,8 @@ from RC_2D_Fit_Functions import Galaxy_Data
 
 
 #from galaxy_component_functions_cython import bulge_vel, disk_vel, halo_vel_NFW
-from galaxy_component_functions_cython import vel_tot_NFW
+#from galaxy_component_functions_cython import vel_tot_NFW
+from Velocity_Map_Functions_cython import rot_incl_NFW
 
 G = 6.674E-11  # m^3 kg^-1 s^-2
 Msun = 1.989E30  # kg
@@ -73,7 +74,7 @@ max_likelihood_params = [np.log10(0.05812451),
                          37.67680252, 
                          11.81343922]
 
-
+"""
 @profile
 def rot_incl_NFW(shape, scale, params):
 
@@ -100,8 +101,12 @@ def rot_incl_NFW(shape, scale, params):
             rotated_inclined_map[i,j] = v + vsys
 
     return rotated_inclined_map
+"""
+@profile
+def rot_incl_NFW_profile(shape, scale, params):
+    rot_incl_NFW(shape, scale, params)
 
-rot_incl_NFW(gshape, scale, max_likelihood_params)
+rot_incl_NFW_profile(gshape, scale, max_likelihood_params)
 
 '''
 @profile

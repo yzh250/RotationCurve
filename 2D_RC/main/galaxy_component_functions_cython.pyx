@@ -205,19 +205,12 @@ cpdef DTYPE_F32_t vel_tot_NFW(DTYPE_F32_t r,
 
     Vtot : The total velocity from the bulge, disk, and NFW halo [km/s]
     '''
-
+    
     cdef DTYPE_F32_t Vbulge
     cdef DTYPE_F32_t Vdisk
     cdef DTYPE_F32_t Vhalo
     cdef DTYPE_F32_t v2
     cdef DTYPE_F32_t Vtot
-
-    '''
-    r_pc = r * 1000
-    Rb_pc = Rb * 1000
-    Rd_pc = Rd * 1000
-    Rh_pc = Rh * 1000
-    '''
 
     Vbulge = bulge_vel(r * 1000.0, log_rhob0, Rb * 1000.0)
     Vdisk = disk_vel(r * 1000.0, SigD, Rd * 1000.0)

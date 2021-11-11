@@ -51,8 +51,12 @@ setup(
     setup_requires=['Cython', 'numpy'],
     ext_modules = [
           Extension('galaxy_component_functions_cython',
-                    ['galaxy_component_functions_cython.pyx'],
-                    library_dirs=['m'])
+                    ['galaxy_component_functions_cython.pyx'], 
+                    library_dirs=['m']), 
+          Extension('Velocity_Map_Functions_cython', 
+                    ['Velocity_Map_Functions_cython.pyx'], 
+                    library_dirs=['m'], 
+                    include_dirs=['.'])
     ],
 
     cmdclass={'build_ext':build_ext}
