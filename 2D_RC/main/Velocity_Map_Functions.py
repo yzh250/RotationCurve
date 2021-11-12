@@ -112,7 +112,7 @@ def rot_incl_iso(shape, scale, params):
             
             r_in_kpc = r*scale
             
-            v_rot = v_tot_iso(r_in_kpc, [log_rhob0, Rb, SigD, Rd, rho0_h, Rh])
+            v_rot = vel_tot_iso(r_in_kpc, [log_rhob0, Rb, SigD, Rd, rho0_h, Rh])
             
             v = v_rot*np.sin(inclination)*np.cos(theta)
             
