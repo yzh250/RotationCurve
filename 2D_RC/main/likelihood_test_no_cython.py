@@ -21,13 +21,14 @@ import emcee
 import corner
 
 import pickle
+'''
 
-from galaxy_component_functions import vel_tot_iso,\
-                                       vel_tot_NFW,\
-                                       vel_tot_bur,\
-                                       bulge_vel,\
+from galaxy_component_functions import bulge_vel,\
                                        disk_vel,\
-                                       halo_vel_NFW
+                                       halo_vel_NFW,\
+                                       vel_tot_iso,\
+                                       vel_tot_NFW,\
+                                       vel_tot_bur
 
 from Velocity_Map_Functions import loglikelihood_iso,\
                                    loglikelihood_NFW, \
@@ -36,14 +37,16 @@ from Velocity_Map_Functions import loglikelihood_iso,\
                                    loglikelihood_NFW_flat, \
                                    loglikelihood_bur_flat,\
                                    find_phi,\
-                                   rot_incl_NFW
-'''
+                                   rot_incl_NFW,\
+                                   rot_incl_iso,\
+                                   rot_incl_bur
+
 from RC_2D_Fit_Functions import Galaxy_Data    
 
 
 #from galaxy_component_functions_cython import bulge_vel, disk_vel, halo_vel_NFW
-from galaxy_component_functions_cython import vel_tot_iso, vel_tot_NFW, vel_tot_bur 
-from Velocity_Map_Functions_cython import rot_incl_iso, rot_incl_NFW, rot_incl_bur
+#from galaxy_component_functions_cython import vel_tot_NFW
+#from Velocity_Map_Functions_cython import rot_incl_NFW
 
 G = 6.674E-11  # m^3 kg^-1 s^-2
 Msun = 1.989E30  # kg
@@ -74,50 +77,29 @@ max_likelihood_params = [np.log10(0.05812451),
                          37.67680252, 
                          11.81343922]
 
-'''
+"""
 @profile
-def vel_tot_iso_profile(params):
+def vel_tot_iso_profile(r, params):
+    vel_tot_iso(r, params[:6])
 
-    vel_tot_iso(13.5, 
-                params[0], 
-                params[1], 
-                params[2], 
-                params[3], 
-                params[4], 
-                params[5])
+vel_tot_iso_profile(13.5, max_likelihood_params)
+"""
 
-vel_tot_iso_profile(max_likelihood_params)
-'''
-
-'''
+"""
 @profile
-def vel_tot_NFW_profile(params):
+def vel_tot_NFW_profile(r, params):
+    vel_tot_NFW(r, params[:6])
 
-    vel_tot_NFW(13.5, 
-                params[0], 
-                params[1], 
-                params[2], 
-                params[3], 
-                params[4], 
-                params[5])
+vel_tot_NFW_profile(13.5, max_likelihood_params)
+"""
 
-vel_tot_NFW_profile(max_likelihood_params)
-'''
-
-'''
+"""
 @profile
-def vel_tot_bur_profile(params):
+def vel_tot_bur_profile(r, params):
+    vel_tot_bur(r, params[:6])
 
-    vel_tot_bur(13.5, 
-                params[0], 
-                params[1], 
-                params[2], 
-                params[3], 
-                params[4], 
-                params[5])
-
-vel_tot_bur_profile(max_likelihood_params)
-'''
+vel_tot_bur_profile(13.5, max_likelihood_params)
+"""
 
 """
 @profile
@@ -143,24 +125,6 @@ def rot_incl_bur_profile(shape, scale, params):
 rot_incl_bur_profile(gshape, scale, max_likelihood_params)
 """
 
-"""
-@profile
-def disk_vel(r, SigD, Rd):
-    '''
-    :param SigD: Central surface density for the disk [M_sol/pc^2]
-    :param Rd: The scale radius of the disk [pc]
-    :r: The distance from the centre [pc]
-    :return: The rotational velocity of the disk [km/s]
-    '''
-    # SigD, Rd = params
-
-    y = r / (2 * Rd)
-
-    bessel_component = i0(y) * k0(y) - i1(y) * k1(y)
-    vel2 = (4 * np.pi * G * SigD * y ** 2 * (Rd / (3.086e16)) * Msun) * bessel_component
-
-    return np.sqrt(vel2) / 1000
-"""
 '''
 @profile
 def disk_vel_profile():
@@ -168,7 +132,3 @@ def disk_vel_profile():
 
 disk_vel_profile()
 '''
-
-
-
-
