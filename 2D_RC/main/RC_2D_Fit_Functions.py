@@ -10,7 +10,7 @@ from astropy.io import fits
 from astropy.table import QTable
 
 from scipy.optimize import minimize, Bounds
-from scipy_minimize_custom import minimize_powell
+#from scipy_minimize_custom import minimize_powell
 
 import numdifftools as ndt
 
