@@ -251,6 +251,28 @@ cpdef np.ndarray rot_incl_bur(shape,
     return rotated_inclined_map
 ################################################################################
 
+cpdef DTYPE_F32_t loglikelihood_iso_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
+
+    #print('Best-fit values in loglikelihood_iso_flat:', params)
+
+    ############################################################################
+    # Construct the model
+    #---------------------------------------------------------------------------
+    model = rot_incl_iso(shape, scale, params)
+    model_masked = ma.array(model, mask=mask)
+    model_flat = model_masked.compressed()
+    ############################################################################
+    
+    
+    logL = -0.5 * np.sum((vdata_flat - model_flat)**2 * ivar_flat \
+                         - np.log(ivar_flat))
+
+    if params[3] >= params[5]:
+        logL += 1e7
+    elif params[1] >= params[5]:
+        logL += 1e7
+
+    return logL
 
 
 
