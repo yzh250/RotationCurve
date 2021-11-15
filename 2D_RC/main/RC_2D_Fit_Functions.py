@@ -9,7 +9,8 @@ import numpy.ma as ma
 from astropy.io import fits
 from astropy.table import QTable
 
-from scipy.optimize import minimize
+from scipy.optimize import minimize, Bounds
+#from scipy_minimize_custom import minimize_powell
 
 import numdifftools as ndt
 
@@ -39,9 +40,6 @@ from galaxy_component_functions import vel_tot_iso,\
                                        halo_vel_iso,\
                                        halo_vel_NFW,\
                                        halo_vel_bur
-
-import os.path
-from os import path
 ################################################################################
 
 
@@ -50,11 +48,13 @@ from os import path
 ################################################################################
 # Physics Constants
 #-------------------------------------------------------------------------------
-c = 3E5 # km * s ^1
+c = 3E5 # km/s
 h = 1 # reduced hubble constant
 H_0 =  100 * h # km * s^-1 * Mpc^-1
 ################################################################################
 
+
+'''
 # Local machine directories
 #MANGA_FOLDER_mac = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
 #VEL_MAP_FOLDER_mac = MANGA_FOLDER_mac + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
@@ -70,6 +70,8 @@ MORPH_file_bluehive = '/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve
 Mfile_bluehive = fits.open(MORPH_file_bluehive)
 Mdata_bluehive = Mfile_bluehive[1].data
 RC_FILE_FOLDER_bluehive = '/home/yzh250/Documents/UR_Stuff/Research_UR/data/DRP-rot_curve_data_files/'
+'''
+
 
 '''
 ################################################################################
@@ -96,13 +98,16 @@ r50_ang = DTable2['nsa_elpetro_th50_r'].data
 
 
 
-def Galaxy_Data(galaxy_ID):#, flag):
+def Galaxy_Data(galaxy_ID, MANGA_FOLDER):
     '''
     PARAMETERS
     ==========
 
     galaxy_ID : string
         'Plate-IFU'
+        
+    MANGA_FOLDER : string
+        Location of the MaNGA data on the current computer system
 
 
     RETURNS
@@ -111,6 +116,7 @@ def Galaxy_Data(galaxy_ID):#, flag):
     physical properties & data of the galaxy
 
     '''
+    
     plate, IFU = galaxy_ID.split('-')
     '''
     ############################################################################
@@ -148,41 +154,44 @@ def Galaxy_Data(galaxy_ID):#, flag):
     ############################################################################
     # Obtaining Data Cubes, Inverse Variances, and Masks
     #---------------------------------------------------------------------------
-    #if flag == 'bluehive':
-    #cube = fits.open(VEL_MAP_FOLDER_bluehive + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
+    VEL_MAP_FOLDER = MANGA_FOLDER + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
+    
+    #cube = fits.open('manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
+    cube = fits.open(VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
 
-    #if flag == 'mac':
-    cube = fits.open(VEL_MAP_FOLDER_bluehive + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
+    maps = {}
 
-    r_band = cube['SPX_MFLUX'].data
-    Ha_vel = cube['EMLINE_GVEL'].data[18]
-    Ha_vel_ivar = cube['EMLINE_GVEL_IVAR'].data[18]
-    Ha_vel_mask = cube['EMLINE_GVEL_MASK'].data[18]
+    maps['r_band'] = cube['SPX_MFLUX'].data
+    maps['Ha_vel'] = cube['EMLINE_GVEL'].data[18]
+    maps['Ha_vel_ivar'] = cube['EMLINE_GVEL_IVAR'].data[18]
+    maps['Ha_vel_mask'] = cube['EMLINE_GVEL_MASK'].data[18]
 
 
-    vmasked = ma.array(Ha_vel, mask=Ha_vel_mask)
-    ivar_masked = ma.array(Ha_vel_ivar, mask=Ha_vel_mask)
+    maps['vmasked'] = ma.array(maps['Ha_vel'], mask=maps['Ha_vel_mask'])
+    maps['ivar_masked'] = ma.array(maps['Ha_vel_ivar'], mask=maps['Ha_vel_mask'])
 
-    gshape = vmasked.shape
+    gshape = maps['vmasked'].shape
     ############################################################################
 
     # Ha flux
-    Ha_flux = cube['EMLINE_GFLUX'].data[18]
-    Ha_flux_ivar = cube['EMLINE_GFLUX_IVAR'].data[18]
-    Ha_flux_mask = cube['EMLINE_GFLUX_MASK'].data[18]
-    Ha_flux_masked = ma.array(Ha_flux, mask = Ha_flux_mask)
+    maps['Ha_flux'] = cube['EMLINE_GFLUX'].data[18]
+    maps['Ha_flux_ivar'] = cube['EMLINE_GFLUX_IVAR'].data[18]
+    maps['Ha_flux_mask'] = cube['EMLINE_GFLUX_MASK'].data[18]
+    maps['Ha_flux_masked'] = ma.array(maps['Ha_flux'], mask=maps['Ha_flux_mask'])
 
 
     ############################################################################
     # Finding the center
     #---------------------------------------------------------------------------
-    center_guess = np.unravel_index(ma.argmin(np.abs(vmasked), axis=None), 
-                                        vmasked.shape)
+    center_guess = np.unravel_index(ma.argmin(np.abs(maps['vmasked']), 
+                                              axis=None), 
+                                    gshape)
     x_center_guess = center_guess[0]
     y_center_guess = center_guess[1]
     ############################################################################
 
-    return r_band, Ha_vel, Ha_vel_ivar, Ha_vel_mask, Ha_flux, Ha_flux_ivar, Ha_flux_mask, vmasked, Ha_flux_masked, ivar_masked, gshape, x_center_guess, y_center_guess
+    #return r_band, Ha_vel, Ha_vel_ivar, Ha_vel_mask, Ha_flux, Ha_flux_ivar, Ha_flux_mask, vmasked, Ha_flux_masked, ivar_masked, gshape, x_center_guess, y_center_guess
+    return maps, gshape, x_center_guess, y_center_guess
 
 
 def getTidal(gal_ID):
@@ -200,7 +209,12 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, mask):
     :param ivar:
     :return:
     '''
-
+    '''
+    plt.figure()
+    plt.imshow(ma.array(vmap, mask=mask), cmap='RdBu_r', origin='lower')
+    plt.colorbar()
+    plt.show()
+    '''
     incl, ph, x_guess, y_guess = params
 
     # Isothermal Fitting
@@ -222,7 +236,10 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, mask):
 
     bestfit_iso = minimize(nloglikelihood_iso_flat,
                            ig_iso,
-                           args=(scale, shape, vmap.compressed(), ivar.compressed(),mask),
+                           args=(scale, 
+                                 shape, 
+                                 vmap.compressed(), 
+                                 ivar.compressed(),mask),
                            method='Powell',
                            bounds=bounds_iso)
     print('---------------------------------------------------')
@@ -526,18 +543,27 @@ def Plotting_Burket(ID, shape, scale, fit_solution, mask, ax=None):
 def deproject_spaxel(coords, center, phi, i_angle):
     '''
     Calculate the deprojected radius for the given coordinates in the map.
+
+
     PARAMETERS
     ==========
+
     coords : length-2 tuple
         (i,j) coordinates of the current spaxel
+
     center : length-2 tuple
         (i,j) coordinates of the galaxy's center
+
     phi : float
         Rotation angle (in radians) east of north of the semi-major axis.
+
     i_angle : float
         Inclination angle (in radians) of the galaxy.
+
+
     RETURNS
     =======
+
     r : float
         De-projected radius from the center of the galaxy for the given spaxel 
         coordinates.
@@ -562,6 +588,10 @@ def deproject_spaxel(coords, center, phi, i_angle):
     return r, theta
 ################################################################################
 
+
+
+
+
 ################################################################################
 def plot_rot_curve(mHa_vel, 
                    mHa_vel_ivar,
@@ -574,28 +604,39 @@ def plot_rot_curve(mHa_vel,
                    ax=None):
     '''
     Plot the galaxy rotation curve.
+
+
     PARAMETERS
     ==========
+
     mHa_vel : numpy ndarray of shape (n,n)
         Masked H-alpha velocity array
+
     mHa_vel_ivar : numpy ndarray of shape (n,n)
         Masked array of the inverse variance of the H-alpha velocity 
         measurements
+
     best_fit_values : dictionary
         Best-fit values for the velocity map
+
     scale : float
         Pixel scale (to convert from pixels to kpc)
+
     gal_ID : string
         MaNGA <plate>-<IFU> for the current galaxy
+
     fit_function : string
         Determines which function to use for the velocity.  Options are 'BB' and 
         'tanh'.
+
     IMAGE_DIR : str
         Path of directory in which to store plot.
         Default is None (image will not be saved)
+
     IMAGE_FORMAT : str
         Format of saved plot
         Default is 'eps'
+
     ax : matplotlib.pyplot figure axis object
         Axis handle on which to create plot
     '''
@@ -673,6 +714,7 @@ def plot_rot_curve(mHa_vel,
     v_d = np.zeros(len(r))
     v_h = np.zeros(len(r))
     v = np.zeros(len(r))
+
     for i in range(len(r)):
         if r[i] > 0:
             v_b[i] = bulge_vel(r[i]*1000,best_fit_values[0],best_fit_values[1]*1000)
@@ -794,22 +836,31 @@ def plot_diagnostic_panel( ID, shape, scale, Isothermal_Fit, NFW_Fit, Burket_Fit
     masked H-alpha array, the masked H-alpha array containing ovals of the 
     spaxels processed in the algorithm, and the averaged max and min rotation 
     curves along with the stellar mass rotation curve.
-    Parameters:
-    ===========
+
+
+    Parameters
+    ==========
+
     gal_ID : string
         MaNGA plate number - MaNGA fiberID number
+
     r_band : numpy array of shape (n,n)
         r_band flux map
+
     masked_Ha_vel : numpy array of shape (n,n)
         Masked H-alpha velocity map
+
     masked_vel_contour_plot : numpy array of shape (n,n)
         Masked H-alpha velocity map showing only those spaxels within annuli
+
     data_table : Astropy QTable
         Table containing measured rotational velocities at given deprojected 
         radii
+
     IMAGE_DIR : string
         Path of directory to store images.  Default is None (does not save 
         figure)
+
     IMAGE_FORMAT : string
         Format of saved image.  Default is 'eps'
     '''
@@ -857,13 +908,24 @@ def Hessian_Calculation_Isothermal(fit_solution, scale, shape, vmap, ivar):
     print('Best-fit values in Hessian_Calculation_Isothermal:', fit_solution)
 
     mask = vmap.mask
+
     vmap_flat = vmap.compressed()
-    ivar_masked = ma.array(ivar, mask=mask)
+
+    ivar_masked = ma.array(ivar,mask=mask)
     ivar_flat = ivar_masked.compressed()
-    hessian_iso = ndt.Hessian(loglikelihood_iso_flat,step=0.01*fit_solution)
-    hess_ll_iso = hessian_iso(fit_solution, scale, shape, vmap_flat, ivar_flat, mask)
+
+    #print('Calculating Hessian')
+    hessian_iso = ndt.Hessian(loglikelihood_iso_flat, step=0.01*fit_solution)#, method='forward', order=1)
+
+    #print('Evaluating Hessian at solution')
+    hess_ll_iso = hessian_iso(fit_solution, 
+                              scale, 
+                              shape, 
+                              vmap_flat, 
+                              ivar_flat,mask)
     hess_inv_iso = np.linalg.inv(hess_ll_iso)
     fit_err_iso = np.sqrt(np.diag(-hess_inv_iso))
+
     print('-------------------------------------------')
     print('Hessian matrix for Isothermal')
     print(fit_err_iso)

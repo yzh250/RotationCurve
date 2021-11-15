@@ -56,7 +56,8 @@ DTable1 = QTable.read('Master_Table.txt',format='ascii.commented_header')
 DTable2 = QTable.read('DRPall-master_file.txt',format='ascii.ecsv')
 '''
 
-MANGA_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+#MANGA_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+MANGA_FOLDER = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/spectro/'
 DRP_FILENAME = MANGA_FOLDER + 'redux/v2_4_3/drpall-v2_4_3.fits'
 
 DTable =  Table.read(DRP_FILENAME, format='fits')
@@ -121,7 +122,8 @@ incl = np.arccos(rat[i])
 ph = phi[i] * np.pi / 180
 
 #scale, incl, ph, rband, Ha_vel, Ha_vel_ivar, Ha_vel_mask, vmasked, gshape, x_center_guess, y_center_guess = Galaxy_Data(galaxy_ID)
-rband, Ha_vel, Ha_vel_ivar, Ha_vel_mask, vmasked, ivar_masked, gshape, x_center_guess, y_center_guess = Galaxy_Data(galaxy_ID)
+rband, Ha_vel, Ha_vel_ivar, Ha_vel_mask, vmasked, ivar_masked, gshape, x_center_guess, y_center_guess = Galaxy_Data(galaxy_ID, 
+                                                                                                                    MANGA_FOLDER)
 #-------------------------------------------------------------------------------
 
 ################################################################################
@@ -139,12 +141,19 @@ start_time = time.time()
 
 
 parameters = [incl, ph, x_center_guess, y_center_guess]
-
+'''
 Isothermal_fit = Galaxy_Fitting_iso(parameters, 
                                     scale, 
                                     gshape, 
                                     vmasked,
-                                    Ha_vel_ivar)
+                                    Ha_vel_ivar,
+                                    Ha_vel_mask)
+'''
+Isothermal_fit = np.array([6.61069614e-05, 1.50047354e-03, 8.08017590e+02, 
+                           4.91770884e+00, 2.94022574e+03, 6.44015087e+01, 
+                           1.09815441e+00, 6.94704060e-01, 3.69745071e+01, 
+                           3.73633906e+01])
+'''
 
 NFW_fit = Galaxy_Fitting_NFW(parameters, 
                              scale, 
@@ -158,7 +167,7 @@ Burket_fit = Galaxy_Fitting_bur(parameters,
                                 vmasked, 
                                 Ha_vel_ivar)
 
-print('Fit galaxy', time.time() - start_time)
+#print('Fit galaxy', time.time() - start_time)
 #-------------------------------------------------------------------------------
 
 '''
@@ -206,7 +215,7 @@ print('Fit galaxy - Flattened', time.time() - start_time)
 #Plotting_Burket(galaxy_ID, gshape, scale, Burket_Fit_flat,Ha_vel_mask)
 #-------------------------------------------------------------------------------
 
-
+'''
 #-------------------------------------------------------------------------------
 # Calculating Chi2
 #-------------------------------------------------------------------------------
@@ -231,7 +240,9 @@ chi2_iso = ma.sum(Ha_vel_ivar*(vmasked - vmap_iso)**2)
 #chi2_iso_norm = chi2_iso/(nd_iso - 8)
 chi2_iso_norm = chi2_iso/(nd_iso - len(Isothermal_fit[:-1]))
 #-------------------------------------------------------------------------------
-
+print('Isothermal chi2:', chi2_iso_norm, time.time() - start_time)
+'''
+'''
 #-------------------------------------------------------------------------------
 # NFW
 
@@ -250,7 +261,9 @@ chi2_NFW = ma.sum(Ha_vel_ivar*(vmasked - vmap_NFW)**2)
 #chi2_NFW_norm = chi2_NFW/(nd_NFW - 8)
 chi2_NFW_norm = chi2_NFW/(nd_NFW - len(NFW_fit[:-1]))
 #-------------------------------------------------------------------------------
-
+print('NFW chi2:', chi2_NFW_norm)
+'''
+'''
 #-------------------------------------------------------------------------------
 # Burket
 
@@ -273,7 +286,6 @@ print('Isothermal chi2:', chi2_iso_norm, time.time() - start_time)
 print('NFW chi2:', chi2_NFW_norm)
 print('Burket chi2:', chi2_bur_norm)
 #-------------------------------------------------------------------------------
-
 
 '''
 #-------------------------------------------------------------------------------
@@ -300,6 +312,7 @@ chi2_iso = ma.sum(Ha_vel_ivar*(vmasked - vmap_iso)**2)
 #chi2_iso_norm = chi2_iso/(nd_iso - 8)
 chi2_iso_norm = chi2_iso/(nd_iso - len(Isothermal_fit_flat))
 #-------------------------------------------------------------------------------
+
 
 #-------------------------------------------------------------------------------
 # NFW
