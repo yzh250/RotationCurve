@@ -10,14 +10,16 @@ import time
 import numpy as np
 import numpy.ma as ma
 
-from galaxy_component_functions import bulge_vel,\
-                                       disk_vel,\
-                                       halo_vel_iso,\
-                                       halo_vel_NFW,\
-                                       halo_vel_bur,\
-                                       vel_tot_iso,\
-                                       vel_tot_NFW,\
-                                       vel_tot_bur
+from galaxy_component_functions_cython import bulge_vel,\
+                                              disk_vel,\
+                                              halo_vel_iso,\
+                                              halo_vel_NFW,\
+                                              halo_vel_bur,\
+                                              vel_tot_iso,\
+                                              vel_tot_NFW,\
+                                              vel_tot_bur
+
+from Velocity_Map_Functions_cython import rot_incl_iso, rot_incl_NFW, rot_incl_bur                                      
 ################################################################################
 
 ################################################################################
@@ -91,6 +93,7 @@ def find_phi(center_coords, phi_angle, vel_map):
     return phi_adjusted
 ################################################################################
 
+"""
 ################################################################################
 # Isothermal model with bulge
 #-------------------------------------------------------------------------------
@@ -120,6 +123,7 @@ def rot_incl_iso(shape, scale, params):
 
     return rotated_inclined_map
 ################################################################################
+"""
 
 '''
 ################################################################################
@@ -144,6 +148,7 @@ def rot_incl_iso_nb(shape,scale,params):
 ################################################################################
 '''
 
+"""
 ################################################################################
 # NFW model with bulge
 #-------------------------------------------------------------------------------
@@ -164,6 +169,7 @@ def rot_incl_NFW(shape,scale,params):
 
     return rotated_inclined_map
 ################################################################################
+"""
 
 '''
 ################################################################################
@@ -188,6 +194,7 @@ def rot_incl_NFW_nb(shape,scale,params):
 ################################################################################
 '''
 
+"""
 ################################################################################
 # Burket model with bulge
 #-------------------------------------------------------------------------------
@@ -208,6 +215,7 @@ def rot_incl_bur(shape,scale,params):
              
     return rotated_inclined_map
 ################################################################################
+"""
 
 '''
 ################################################################################
@@ -230,6 +238,7 @@ def rot_incl_bur_nb(shape,scale,params):
 
 ##############################################################################
 '''
+
 
 ################################################################################
 # Loglikelihood Functions
@@ -268,6 +277,7 @@ def loglikelihood_iso_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
 
     #print('Best-fit values in loglikelihood_iso_flat:', params)
 
+    params = np.ndarray.tolist(params)
     ############################################################################
     # Construct the model
     #---------------------------------------------------------------------------
@@ -307,79 +317,6 @@ def nloglikelihood_iso_flat_nb(params, scale, shape, vdata_flat, ivar_flat, mask
     return -loglikelihood_iso_flat_nb(params, scale, shape, vdata_flat, ivar_flat, mask)
 #-------------------------------------------------------------------------------
 
-
-
-
-def chi2_iso_flat(params, scale, shape, vdata_flat, inv_sigma2, mask):
-    '''
-    chi2 of the velocity map with the Isothermal halo model
-    
-    
-    PARAMETERS
-    ==========
-    
-    params : list of floats
-        Best-fit parameter values
-        
-    scale : float
-    
-    shape : length-2 tuple
-        shape of the velocity map
-        
-    vdata_flat : ndarray of shape (N,)
-        Flattened velocity data map; contains only non-masked spaxels
-        
-    inv_sigma2 : ndarray of shape (n,n)
-        Inverse variance data map
-        
-    mask : ndarray of shape (n,n)
-        Bit-mask
-        
-        
-    RETURNS
-    =======
-    
-    chi2_norm : float
-        chi-squared value of the model normalized by the number of data points 
-        (minus the number of free parameters)
-    '''
-    
-    ############################################################################
-    # Construct the model
-    #---------------------------------------------------------------------------
-    model = rot_incl_iso(shape, scale, params)
-    
-    model_masked = ma.array(model, mask=mask)
-    
-    model_flat = model_masked.compressed()
-    ############################################################################
-    
-    
-    ############################################################################
-    # Flatten the inverse variance map
-    #---------------------------------------------------------------------------
-    ivar_masked = ma.array(inv_sigma2, mask=mask)
-    
-    ivar_flat = ivar_masked.compressed()
-    ############################################################################
-    
-    
-    ############################################################################
-    # Calculate chi2 of current fit
-    #---------------------------------------------------------------------------
-    chi2 = np.sum(ivar_flat*(model_flat - vdata_flat)**2)
-    
-    chi2_norm = chi2/(len(vdata_flat) - len(params))
-    ############################################################################
-    
-    
-    return chi2_norm
-################################################################################
-
-
-
-
-
 ################################################################################
 # NFW model with bulge
 #-------------------------------------------------------------------------------
@@ -412,18 +349,26 @@ def nloglikelihood_NFW_nb(params, scale, shape, vdata, ivar):
 # NFW model flat
 
 def loglikelihood_NFW_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
+    #print('Best-fit values in loglikelihood_NFW_flat:', params)
+
+    params = np.ndarray.tolist(params)
+    ############################################################################
     # Construct the model
-    #print(len(vdata_flat))
-    #print(len(ivar_flat))
+    #---------------------------------------------------------------------------
     model = rot_incl_NFW(shape, scale, params)
     model_masked = ma.array(model, mask=mask)
     model_flat = model_masked.compressed()
-    #print(len(model_flat))
-    logL = -0.5 * np.sum((vdata_flat - model_flat) ** 2 * ivar_flat - np.log(ivar_flat))
+    ############################################################################
+    
+    
+    logL = -0.5 * np.sum((vdata_flat - model_flat)**2 * ivar_flat \
+                         - np.log(ivar_flat))
+
     if params[3] >= params[5]:
         logL += 1e7
     elif params[1] >= params[5]:
         logL += 1e7
+
     return logL
 
 def nloglikelihood_NFW_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
@@ -475,18 +420,26 @@ def nloglikelihood_bur_nb(params, scale, shape, vdata, ivar):
 
 def loglikelihood_bur_flat(params, scale, shape, vdata_flat, ivar_flat, mask):
 
+    #print('Best-fit values in loglikelihood_iso_flat:', params)
+
+    params = np.ndarray.tolist(params)
+    ############################################################################
     # Construct the model
-    #print(len(vdata_flat))
-    #print(len(ivar_flat))
-    model = rot_incl_bur(shape, scale, params)
+    #---------------------------------------------------------------------------
+    model = rot_incl_NFW(shape, scale, params)
     model_masked = ma.array(model, mask=mask)
     model_flat = model_masked.compressed()
-    #print(len(model_flat))
-    logL = -0.5 * np.sum((vdata_flat - model_flat) ** 2 * ivar_flat - np.log(ivar_flat))
+    ############################################################################
+    
+    
+    logL = -0.5 * np.sum((vdata_flat - model_flat)**2 * ivar_flat \
+                         - np.log(ivar_flat))
+
     if params[3] >= params[5]:
         logL += 1e7
     elif params[1] >= params[5]:
         logL += 1e7
+
     return logL
 
 def nloglikelihood_bur_flat(params, s):

@@ -151,7 +151,7 @@ cpdef DTYPE_F32_t halo_vel_iso(DTYPE_F32_t r,
     cdef DTYPE_F32_t sterm
     cdef DTYPE_F32_t Vh
     
-    Vinf = sqrt(4*pi*G*rho0_h*Rh**2)
+    Vinf = sqrt((4 * pi * G * rho0_h * Msun * Rh**2) / 3.086e16)/1000
     sterm = sqrt(1 - (Rh/r) * atan2(r,Rh))
     Vh = Vinf * sterm
 

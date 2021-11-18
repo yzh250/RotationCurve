@@ -1,37 +1,16 @@
 ####################################################################
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 import numpy as np
-import numpy.ma as ma
 
-from astropy.io import fits
-from astropy.table import QTable
+import numdifftools as ndt
 
-from scipy.optimize import minimize
-
-#import numdifftools as ndt
-from numpy import log as ln
-from scipy.special import kn
-from scipy.special import iv
-
-from scipy import integrate as inte
 import emcee
 import corner
 
 import pickle
 
-from galaxy_component_functions import vel_tot_iso,\
-                                       vel_tot_NFW,\
-                                       vel_tot_bur
-
-
-from Velocity_Map_Functions import loglikelihood_iso,\
-                                   loglikelihood_NFW, \
-                                   loglikelihood_bur,\
-                                   loglikelihood_iso_flat,\
-                                   loglikelihood_NFW_flat, \
-                                   loglikelihood_bur_flat,\
-                                   find_phi
+from Velocity_Map_Functions import loglikelihood_iso_flat
 
 from RC_2D_Fit_Functions import Galaxy_Data    
 
@@ -40,9 +19,12 @@ Msun = 1.989E30  # kg
 scale = 0.46886408261217366                                                                    
 ####################################################################
 
+#manga = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+manga =  '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+
 ####################################################################
 # 7443-12705
-r_band, Ha_vel, Ha_vel_ivar, Ha_vel_mask, Ha_flux, Ha_flux_ivar, Ha_flux_mask, vmasked, Ha_flux_masked, ivar_masked, gshape, x_center_guess, y_center_guess = Galaxy_Data('7443-12705')#,'bluehive')
+data_maps, gshape, x_center_guess, y_center_guess = Galaxy_Data('7443-6101',manga)
 ####################################################################
 
 ####################################################################
@@ -52,7 +34,7 @@ def log_prior(params):
     logP = 0
     if -7 < log_rhob0 < 2 and 0 < Rb < 5 and 100 < SigD < 3000 and 1 < Rd < 30\
      and 1e-5 < rho_h < 0.1 and 0.01 < Rh< 500 and 0 < inclination < np.pi*0.436 and 0 < phi < 2*np.pi\
-     and 20 < center_x < 40 and 20 < center_y < 40 and -100 < vsys < 100:
+     and 10 < center_x < 50 and 10 < center_y < 50 and -100 < vsys < 100:
         logP = 0
     # setting constraints on the radii
     elif Rh < Rb or Rh < Rd or Rd < Rd:
@@ -70,24 +52,30 @@ def log_prob_iso(params, scale, shape, vdata, ivar, mask):
         return lp + logL
 ####################################################################
 
-mini_soln = [np.log10(0.048688757),2.549862293,748.5940907,5.617303041,0.002927534,0.100051148,1.070928683,0.699892835,36.61461409,37.68004929,11.37083843]
+mini_soln = [np.log10(11.66291723),2.69E-05,1031.023329,1.838768634,0.083546044,0.102759719,0.553854733,1.951500683,26.37172472,27.44266793,0.907424538]
 
 ####################################################################
 # Isothermal
 
-pos = np.array(mini_soln) + np.random.uniform(low=-1e-6*np.ones(len(mini_soln)), high=1e-6*np.ones(len(mini_soln)), size=(64,11))
+pos = np.array(mini_soln) + np.random.uniform(low=-1e-4*np.ones(len(mini_soln)), high=1e-4*np.ones(len(mini_soln)), size=(64,11))
+#pos = np.random.uniform(low=[-6,0.00001,200,0.1,2e-5,0.1,0,0,15,15,-50], high=[2,5,2500,25,0.1,500,0.436*np.pi,2*np.pi,45,45,50], size=(64,11))
+
 nwalkers, ndim = pos.shape
 
-bad_sampler_iso = emcee.EnsembleSampler(nwalkers, ndim, log_prob_iso, args=(scale, gshape, vmasked, ivar_masked, Ha_vel_mask))
+bad_sampler_iso = emcee.EnsembleSampler(nwalkers, ndim, log_prob_iso, args=(scale, gshape, data_maps['vmasked'], data_maps['ivar_masked'], data_maps['Ha_vel_mask']))
 bad_sampler_iso.run_mcmc(pos, 5000, progress=True)
-
+bad_samples_iso = bad_sampler_iso.get_chain()
 good_walkers_iso = bad_sampler_iso.acceptance_fraction > 0
+np.save('bad_samples_iso.npy',bad_samples_iso)
 np.save('good_walkers_iso.npy',good_walkers_iso)
 
-fig_iso, axes_iso = plt.subplots(11,1, figsize=(20, 14), sharex=True,
-                         gridspec_kw={'hspace':0.1})
-bad_samples_iso = bad_sampler_iso.get_chain()[:,good_walkers_iso,:]
-np.save('bad_samples_iso.npy',bad_samples_iso)
+#good_walkers_iso = bad_sampler_iso.acceptance_fraction > 0
+#np.save('good_walkers_iso.npy',good_walkers_iso)
+
+#fig_iso, axes_iso = plt.subplots(11,1, figsize=(20, 14), sharex=True,
+                         #gridspec_kw={'hspace':0.1})
+#bad_samples_iso = bad_sampler_iso.get_chain()[:,good_walkers_iso,:]
+#np.save('bad_samples_iso.npy',bad_samples_iso)
 
 '''
 labels = ['rho_b','R_b', 'Sigma_d','R_d','rho_h','R_h','i','phi','x','y','vsys']

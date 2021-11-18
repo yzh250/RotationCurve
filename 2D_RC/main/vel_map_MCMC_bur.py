@@ -1,43 +1,22 @@
 ####################################################################
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 import numpy as np
-import numpy.ma as ma
-
-from astropy.io import fits
-from astropy.table import QTable
-
-from scipy.optimize import minimize
 
 import numdifftools as ndt
-from numpy import log as ln
-from scipy.special import kn
-from scipy.special import iv
 
-from scipy import integrate as inte
 import emcee
 import corner
 
 import pickle
 
-from galaxy_component_functions import vel_tot_iso,\
-                                       vel_tot_NFW,\
-                                       vel_tot_bur
-
-
-from Velocity_Map_Functions import loglikelihood_iso,\
-                                   loglikelihood_NFW, \
-                                   loglikelihood_bur,\
-                                   loglikelihood_iso_flat,\
-                                   loglikelihood_NFW_flat, \
-                                   loglikelihood_bur_flat,\
-                                   find_phi
+from Velocity_Map_Functions import loglikelihood_bur_flat
 
 from RC_2D_Fit_Functions import Galaxy_Data    
 
 G = 6.674E-11  # m^3 kg^-1 s^-2
 Msun = 1.989E30  # kg
-scale = 0.46886408261217366                                                                    
+scale = 0.46886408261217366                                                                     
 ####################################################################
 
 ####################################################################
@@ -78,7 +57,7 @@ mini_soln = [np.log10(5.36E-05),2.811046162,978.7934831,6.493085395,4.10E-05,999
 pos = np.array(mini_soln) + np.random.uniform(low=-1e-6*np.ones(len(mini_soln)), high=1e-6*np.ones(len(mini_soln)), size=(64,11))
 nwalkers, ndim = pos.shape
 
-bad_sampler_bur = emcee.EnsembleSampler(nwalkers, ndim, log_prob_bur, args=(scale, gshape, vmasked, ivar_masked, Ha_vel_mask))
+bad_sampler_bur = emcee.EnsembleSampler(nwalkers, ndim, log_prob_bur, args=(scale, gshape, data_maps['vmasked'], data_maps['ivar_masked'], data_maps['Ha_vel_mask']))
 bad_sampler_bur.run_mcmc(pos, 5000, progress=True)
 
 good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
