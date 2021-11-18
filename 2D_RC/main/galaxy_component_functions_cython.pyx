@@ -62,7 +62,7 @@ cpdef DTYPE_F32_t bulge_vel(DTYPE_F32_t r,
 
     rho_0 = 10.0**log_rhob0
 
-    mass_b = 4.0 * pi * rho_0 * (((-1.0/3.0) * Rb**3 * exp(-(r/Rb)**3) + (1.0/3.0) * (Rb**3)))
+    mass_b = (4.0/3.0) * pi * rho_0 * Rb**3 * ( 1 - exp(-(r/Rb)**3) )
     
     vel = sqrt((G * mass_b * Msun) / (r * 3.086e16))
 
