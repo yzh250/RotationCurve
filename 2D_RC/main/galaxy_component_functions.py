@@ -3,7 +3,7 @@
 #-------------------------------------------------------------------------------
 from scipy import integrate as inte
 from scipy.optimize import minimize
-from scipy.special import kn, iv
+from scipy.special import k0, k1, i0, i1 #kn, iv
 
 import numpy as np
 
@@ -52,15 +52,21 @@ def bulge_vel(r, A, Vin, Rd):
 
 ################################################################################
 # Exponential bulge model (Feng2014)
-def bulge_vel(r,log_rhob0,Rb):
+def bulge_vel(r, log_rhob0, Rb):
+
     rho_0 = 10**log_rhob0
+    '''
     if isinstance(r,float):
         mass_b = 4 * np.pi * rho_0 * ((-1/3*Rb**3*np.exp(-(r/Rb)**3)+(1/3)*(Rb**3)))
     else:
         mass_b = np.zeros(len(r))
         for i in range(len(r)):
             mass_b[i] = 4 * np.pi * rho_0 * ((-(1/3)*(Rb**3)*np.exp(-(r[i]/Rb)**3)+(1/3)*(Rb**3)))
+    '''
+    mass_b = (4./3.) * np.pi * rho_0 * Rb**3 * (1 - np.exp(-(r/Rb)**3))
+
     vel = np.sqrt((G * mass_b * Msun) / (r * 3.086e16))
+
     return vel/1000
 ################################################################################
 
@@ -168,7 +174,8 @@ def disk_vel(r, SigD, Rd):
 
     y = r / (2 * Rd)
 
-    bessel_component = (iv(0, y) * kn(0, y) - iv(1, y) * kn(1, y))
+    bessel_component = i0(y) * k0(y) - i1(y) * k1(y)
+    
     vel2 = (4 * np.pi * G * SigD * y ** 2 * (Rd / (3.086e16)) * Msun) * bessel_component
 
     return np.sqrt(vel2) / 1000

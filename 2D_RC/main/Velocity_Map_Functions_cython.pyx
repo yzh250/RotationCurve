@@ -86,7 +86,6 @@ cpdef np.ndarray rot_incl_iso(shape,
             theta = atan2(-x, y)
 
             vTot = vel_tot_iso(r, log_rhob0, Rb, SigD, Rd, rho0_h, Rh)
-            #vTot = vel_tot_NFW(r, log_rhob0, Rb, SigD, Rd, rho0_h)
             
             v = vTot*sin(inclination)*cos(theta)
 
@@ -94,6 +93,9 @@ cpdef np.ndarray rot_incl_iso(shape,
 
     return rotated_inclined_map
 ################################################################################
+
+
+
 
 ################################################################################
 # NFW model with bulge
@@ -164,7 +166,6 @@ cpdef np.ndarray rot_incl_NFW(shape,
             theta = atan2(-x, y)
 
             vTot = vel_tot_NFW(r, log_rhob0, Rb, SigD, Rd, rho0_h, Rh)
-            #vTot = vel_tot_NFW(r, log_rhob0, Rb, SigD, Rd, rho0_h)
             
             v = vTot*sin(inclination)*cos(theta)
 
@@ -172,6 +173,10 @@ cpdef np.ndarray rot_incl_NFW(shape,
 
     return rotated_inclined_map
 ################################################################################
+
+
+
+
 
 ################################################################################
 # Burket model with bulge
@@ -242,7 +247,6 @@ cpdef np.ndarray rot_incl_bur(shape,
             theta = atan2(-x, y)
 
             vTot = vel_tot_bur(r, log_rhob0, Rb, SigD, Rd, rho0_h, Rh)
-            #vTot = vel_tot_NFW(r, log_rhob0, Rb, SigD, Rd, rho0_h)
             
             v = vTot*sin(inclination)*cos(theta)
 
