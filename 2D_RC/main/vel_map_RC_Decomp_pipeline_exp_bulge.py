@@ -11,10 +11,7 @@ import time
 
 
 # Import functions from other .py files
-from Velocity_Map_Functions import rot_incl_iso,\
-                                   rot_incl_NFW, \
-                                   rot_incl_bur,\
-                                   find_phi
+from Velocity_Map_Functions import find_phi
 
 from RC_2D_Fit_Functions import Galaxy_Data, \
                                 Galaxy_Fitting_iso,\
@@ -30,6 +27,10 @@ from RC_2D_Fit_Functions import Galaxy_Data, \
                                 deproject_spaxel,\
                                 plot_rot_curve,\
                                 plot_diagnostic_panel
+
+from Velocity_Map_Functions_cython import rot_incl_iso,\
+                                          rot_incl_NFW, \
+                                          rot_incl_bur
 
 from mapSmoothness_functions import how_smooth
 import os.path
@@ -50,11 +51,11 @@ q0 = 0.2 # minimum inclination value
 #-------------------------------------------------------------------------------
 
 MANGA_FOLDER_mac = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
-MANGDA_FOLDER_bluehive = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+#MANGDA_FOLDER_bluehive = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
 DRP_FILENAME_mac = MANGA_FOLDER_mac + 'redux/v2_4_3/drpall-v2_4_3.fits'
-DRP_FILENAME_bluehive = MANGDA_FOLDER_bluehive + 'redux/v2_4_3/drpall-v2_4_3.fits'
+#DRP_FILENAME_bluehive = MANGDA_FOLDER_bluehive + 'redux/v2_4_3/drpall-v2_4_3.fits'
 VEL_MAP_FOLDER_mac = MANGA_FOLDER_mac + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
-VEL_MAP_FOLDER_bluehive = MANGA_FOLDER_bluehive + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
+#VEL_MAP_FOLDER_bluehive = MANGA_FOLDER_bluehive + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
 #MORPH_file = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/2D_RC/manga_visual_morpho-1.0.1.fits'
 
 DTable =  Table.read(DRP_FILENAME_mac, format='fits')
@@ -85,22 +86,24 @@ r50_ang = DTable['nsa_elpetro_th50_r']
 galaxy_ID = []
 plate = ['7443','7495','7815']
 IFU = ['1901','1902','3701','3702','3703','3704','6101','6102','6103','6104','9101','9102','12701','12702','12703','12704','12705']
+#plate = ['7443']
+#IFU = ['12705']
 for i in range(len(plate)):
     for j in range(len(IFU)):
         galaxy_ID.append(plate[i]+'-'+IFU[j])
 
 # Isothermal
-c_iso = open('iso_b1.csv','w')
+c_iso = open('iso_exp.csv','w')
 writer_iso = csv.writer(c_iso)
 writer_iso.writerow(['galaxy_ID', 'A', 'Vin', 'SigD', 'Rd', 'rho0_h', 'Rh', 'incl', 'phi', 'x_cen', 'y_cen','Vsys','chi2'])
 
 # NFW
-c_nfw = open('nfw_b1.csv','w')
+c_nfw = open('nfw_exp.csv','w')
 writer_nfw = csv.writer(c_nfw)
 writer_nfw.writerow(['galaxy_ID', 'A', 'Vin', 'SigD', 'Rd', 'rho0_h', 'Rh', 'incl', 'phi', 'x_cen', 'y_cen','Vsys','chi2'])
 
 # Burket
-c_bur = open('bur_b1.csv','w')
+c_bur = open('bur_exp.csv','w')
 writer_bur = csv.writer(c_bur)
 writer_bur.writerow(['galaxy_ID', 'A', 'Vin', 'SigD', 'Rd', 'rho0_h', 'Rh', 'incl', 'phi', 'x_cen', 'y_cen','Vsys','chi2'])
 
@@ -133,7 +136,7 @@ for i in range(len(galaxy_ID)):
     if path.exists(data_file):
             # Get data
             # scale, incl, ph, rband, Ha_vel, Ha_vel_ivar, Ha_vel_mask, vmasked, gshape, x_center_guess, y_center_guess = Galaxy_Data(galaxy_ID)
-            r_band, Ha_vel, Ha_vel_ivar, Ha_vel_mask, Ha_flux, Ha_flux_ivar, Ha_flux_mask, vmasked, Ha_flux_masked, ivar_masked, gshape, x_center_guess, y_center_guess = Galaxy_Data(galaxy_ID[i])
+            data_maps, gshape, x_center_guess, y_center_guess = Galaxy_Data(galaxy_ID[i],MANGA_FOLDER_mac)
             # -------------------------------------------------------------------------------
 
             ################################################################################
@@ -146,13 +149,13 @@ for i in range(len(galaxy_ID)):
             # Smoothness cut
             max_map_smoothness = 1.85
 
-            map_smoothness = how_smooth(Ha_vel, Ha_vel_mask)
+            map_smoothness = how_smooth(data_maps['Ha_vel'], data_maps['Ha_vel_mask'])
 
-            SN_map = Ha_flux * np.sqrt(Ha_flux_ivar)
-            Ha_vel_mask = Ha_vel_mask + (SN_map < 5)
+            SN_map = data_maps['Ha_flux'] * np.sqrt(data_maps['Ha_flux_ivar'])
+            Ha_vel_mask = data_maps['Ha_vel_mask'] + (SN_map < 5)
 
-            vmasked = ma.array(Ha_vel, mask = Ha_vel_mask)
-            ivar_masked = ma.array(Ha_vel_ivar, mask = Ha_vel_mask)
+            vmasked = ma.array(data_maps['Ha_vel'], mask = Ha_vel_mask)
+            ivar_masked = ma.array(data_maps['Ha_vel_ivar'], mask = Ha_vel_mask)
 
             # NFW
 
@@ -251,7 +254,10 @@ for i in range(len(galaxy_ID)):
                 #plot_rot_curve(vmasked,ivar_masked,Isothermal_fit,scale,galaxy_ID[i],'Isothermal')
                 #plot_rot_curve(vmasked,ivar_masked,NFW_fit,scale,galaxy_ID[i],'NFW')
                 #plot_rot_curve(vmasked,ivar_masked,Burket_fit,scale,galaxy_ID[i],'Burket')
-                plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, Ha_vel_mask, vmasked, ivar_masked)
+                Isothermal_fit = np.ndarray.tolist(Isothermal_fit)
+                NFW_fit = np.ndarray.tolist(NFW_fit)
+                Burket_fit = np.ndarray.tolist(Burket_fit)
+                #plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, data_maps['Ha_vel_mask'], data_maps['vmasked'], data_maps['ivar_masked'])
                 # -------------------------------------------------------------------------------
 
                 # -------------------------------------------------------------------------------
@@ -273,7 +279,7 @@ for i in range(len(galaxy_ID)):
                 nd_iso = np.sum(~vmap_iso.mask)
 
                 # chi2_iso = np.nansum((vmasked - vmap_iso) ** 2 * Ha_vel_ivar)
-                chi2_iso = ma.sum(Ha_vel_ivar * (vmasked - vmap_iso) ** 2)
+                chi2_iso = ma.sum(data_maps['Ha_vel_ivar'] * (vmasked - vmap_iso) ** 2)
 
                 # chi2_iso_norm = chi2_iso/(nd_iso - 8)
                 chi2_iso_norm = chi2_iso / (nd_iso - len(Isothermal_fit))
@@ -281,7 +287,6 @@ for i in range(len(galaxy_ID)):
 
                 # -------------------------------------------------------------------------------
                 # NFW
-
                 full_vmap_NFW = rot_incl_NFW(gshape, scale, NFW_fit)
 
                 # Masked array
@@ -292,7 +297,7 @@ for i in range(len(galaxy_ID)):
                 nd_NFW = np.sum(~vmap_NFW.mask)
 
                 # chi2_NFW = np.nansum((vmasked - vmap_NFW) ** 2 * Ha_vel_ivar)
-                chi2_NFW = ma.sum(Ha_vel_ivar * (vmasked - vmap_NFW) ** 2)
+                chi2_NFW = ma.sum(data_maps['Ha_vel_ivar'] * (vmasked - vmap_NFW) ** 2)
 
                 # chi2_NFW_norm = chi2_NFW/(nd_NFW - 8)
                 chi2_NFW_norm = chi2_NFW / (nd_NFW - len(NFW_fit))
@@ -300,7 +305,6 @@ for i in range(len(galaxy_ID)):
 
                 # -------------------------------------------------------------------------------
                 # Burket
-
                 full_vmap_bur = rot_incl_bur(gshape, scale, Burket_fit)
 
                 # Masked array
@@ -311,7 +315,7 @@ for i in range(len(galaxy_ID)):
                 nd_bur = np.sum(~vmap_bur.mask)
 
                 # chi2_bur = np.nansum((vmasked - vmap_bur) ** 2 * Ha_vel_ivar)
-                chi2_bur = ma.sum(Ha_vel_ivar * (vmasked - vmap_bur) ** 2)
+                chi2_bur = ma.sum(data_maps['Ha_vel_ivar'] * (vmasked - vmap_bur) ** 2)
 
                 # chi2_bur_norm = chi2_bur/(nd_bur-8)
                 chi2_bur_norm = chi2_bur / (nd_bur - len(Burket_fit))

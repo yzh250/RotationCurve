@@ -15,16 +15,7 @@ from scipy.optimize import minimize, Bounds
 import numdifftools as ndt
 
 # Import functions from other .py files
-from Velocity_Map_Functions import rot_incl_iso,\
-                                   rot_incl_NFW, \
-                                   rot_incl_bur, \
-                                   nloglikelihood_iso,\
-                                   nloglikelihood_NFW, \
-                                   nloglikelihood_bur,\
-                                   nloglikelihood_iso_nb,\
-                                   nloglikelihood_NFW_nb, \
-                                   nloglikelihood_bur_nb,\
-                                   loglikelihood_iso_flat,\
+from Velocity_Map_Functions import loglikelihood_iso_flat,\
                                    loglikelihood_NFW_flat, \
                                    loglikelihood_bur_flat,\
                                    nloglikelihood_iso_flat,\
@@ -32,14 +23,19 @@ from Velocity_Map_Functions import rot_incl_iso,\
                                    nloglikelihood_bur_flat,\
                                    find_phi
 
-from galaxy_component_functions import vel_tot_iso,\
-                                       vel_tot_NFW,\
-                                       vel_tot_bur,\
-                                       bulge_vel,\
-                                       disk_vel,\
-                                       halo_vel_iso,\
-                                       halo_vel_NFW,\
-                                       halo_vel_bur
+from Velocity_Map_Functions_cython import rot_incl_iso,\
+                                          rot_incl_NFW, \
+                                          rot_incl_bur
+                                                                      
+
+from galaxy_component_functions_cython import vel_tot_iso,\
+                                               vel_tot_NFW,\
+                                               vel_tot_bur,\
+                                               bulge_vel,\
+                                               disk_vel,\
+                                               halo_vel_iso,\
+                                               halo_vel_NFW,\
+                                               halo_vel_bur
 ################################################################################
 
 
@@ -72,6 +68,9 @@ Mdata_bluehive = Mfile_bluehive[1].data
 RC_FILE_FOLDER_bluehive = '/home/yzh250/Documents/UR_Stuff/Research_UR/data/DRP-rot_curve_data_files/'
 '''
 
+MORPH_file_mac = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/2D_RC/manga_visual_morpho-1.0.1.fits'
+Mfile_mac = fits.open(MORPH_file_mac)
+Mdata_mac = Mfile_mac[1].data
 
 '''
 ################################################################################
@@ -195,7 +194,7 @@ def Galaxy_Data(galaxy_ID, MANGA_FOLDER):
 
 
 def getTidal(gal_ID):
-    for galaxy in Mdata:
+    for galaxy in Mdata_mac:
         if galaxy['NAME'] == 'manga-'+gal_ID:
             return galaxy['TIDAL']
 
@@ -218,9 +217,9 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, mask):
     incl, ph, x_guess, y_guess = params
 
     # Isothermal Fitting
-    bounds_iso = [[0, 100],
+    bounds_iso = [[-7,2],
                   [0,5],
-                  [0.1, 10000],  # Surface Density [Msol/pc^2]
+                  [0.1, 3000],  # Surface Density [Msol/pc^2]
                   [0.1, 30],  # Disk radius [kpc]
                   [0.000001, 0.1],  # Halo density [Msun/pc^2]
                   [0.1, 1000],  # Halo radius [kpc]
@@ -232,7 +231,7 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, mask):
 
     vsys = 0
 
-    ig_iso = [20, 1,1000, 4, 0.006, 25, incl, ph, x_guess, y_guess, vsys]
+    ig_iso = [-1, 1, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess, vsys]
 
     bestfit_iso = minimize(nloglikelihood_iso_flat,
                            ig_iso,
@@ -303,7 +302,7 @@ def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar, mask):
     # NFW Fitting
     bounds_NFW = [[0, 100],
                   [0,5],
-                  [0.1, 10000],  # Surface Density [Msol/pc^2]
+                  [0.1, 3000],  # Surface Density [Msol/pc^2]
                   [0.1, 30],  # Disk radius [kpc]
                   [0.000001, 0.1],  # Halo density [Msun/pc^2]
                   [0.1, 1000],  # Halo radius [kpc]
@@ -315,7 +314,7 @@ def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar, mask):
 
     vsys = 0
 
-    ig_NFW = [20, 1, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess, vsys]
+    ig_NFW = [0.1, 1, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess, vsys]
 
     bestfit_NFW = minimize(nloglikelihood_NFW_flat,
                            ig_NFW, 
@@ -383,7 +382,7 @@ def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar, mask):
     # Burket Fitting
     bounds_bur = [[0, 100],
                   [0,5],
-                  [0.1, 10000],  # Surface Density [Msol/pc^2]
+                  [0.1, 3000],  # Surface Density [Msol/pc^2]
                   [0.1, 30],  # Disk radius [kpc]
                   [0.000001, 0.1],  # Halo density [Msun/pc^2]
                   [0.1, 1000],  # Halo radius [kpc]
@@ -397,7 +396,7 @@ def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar, mask):
 
     vsys = 0
 
-    ig_bur = [20, 1, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess, vsys]
+    ig_bur = [0.1, 1, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess, vsys]
 
     bestfit_bur = minimize(nloglikelihood_bur_flat,
                            ig_bur, 
@@ -721,13 +720,13 @@ def plot_rot_curve(mHa_vel,
             v_d[i] = disk_vel(r[i]*1000,best_fit_values[2],best_fit_values[3]*1000)
             if halo_model == 'Isothermal':
                 v_h[i] = halo_vel_iso(r[i]*1000,best_fit_values[4],best_fit_values[5]*1000)
-                v[i] = vel_tot_iso(r[i],best_fit_values[:-5])
+                v[i] = vel_tot_iso(r[i],best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
             elif halo_model == 'NFW':
                 v_h[i] = halo_vel_NFW(r[i]*1000,best_fit_values[4],best_fit_values[5]*1000)
-                v[i] = vel_tot_NFW(r[i],best_fit_values[:-5])
+                v[i] = vel_tot_NFW(r[i],bbest_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
             elif halo_model == 'Burket':
                 v_h[i] = halo_vel_bur(r[i]*1000,best_fit_values[4],best_fit_values[5]*1000)
-                v[i] = vel_tot_bur(r[i],best_fit_values[:-5])
+                v[i] = vel_tot_bur(r[i],best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
             else:
                 print('Fit function not known.  Please update plot_rot_curve function.')
         else:
@@ -735,13 +734,13 @@ def plot_rot_curve(mHa_vel,
             v_d[i] = -disk_vel(np.abs(r[i]*1000),best_fit_values[2],best_fit_values[3]*1000)
             if halo_model == 'Isothermal':
                 v_h[i] = -halo_vel_iso(np.abs(r[i]*1000),best_fit_values[4],best_fit_values[5]*1000)
-                v[i] = -vel_tot_iso(np.abs(r[i]),best_fit_values[:-5])
+                v[i] = -vel_tot_iso(np.abs(r[i]),best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
             elif halo_model == 'NFW':
                 v_h[i] = -halo_vel_NFW(np.abs(r[i]*1000),best_fit_values[4],best_fit_values[5]*1000)
-                v[i] = -vel_tot_NFW(np.abs(r[i]),best_fit_values[:-5])
+                v[i] = -vel_tot_NFW(np.abs(r[i]),best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
             elif halo_model == 'Burket':
                 v_h[i] = -halo_vel_bur(np.abs(r[i]*1000),best_fit_values[4],best_fit_values[5]*1000)
-                v[i] = -vel_tot_bur(np.abs(r[i]),best_fit_values[:-5])
+                v[i] = -vel_tot_bur(np.abs(r[i]),best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
             else:
                 print('Fit function not known.  Please update plot_rot_curve function.')
     ############################################################################

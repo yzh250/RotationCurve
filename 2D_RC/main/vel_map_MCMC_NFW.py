@@ -16,7 +16,7 @@ from RC_2D_Fit_Functions import Galaxy_Data
 
 G = 6.674E-11  # m^3 kg^-1 s^-2
 Msun = 1.989E30  # kg
-scale = 0.46886408261217366                                                                    
+scale = 0.22471093                                                                       
 ####################################################################
 
 #manga = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
@@ -37,7 +37,7 @@ def log_prior(params):
      and 10 < center_x < 50 and 10 < center_y < 50 and -100 < vsys < 100:
         logP = 0
     # setting constraints on the radii
-    elif Rh < Rb or Rh < Rd or Rd < Rd:
+    elif Rh < Rb or Rh < Rd or Rd < Rb:
         logP = -np.inf
     else:
         logP = -np.inf
@@ -57,19 +57,15 @@ mini_soln = [np.log10(5.315237789),0.1472824,417.348003,11.71427151,0.003456733,
 ####################################################################
 # NFW
 
-pos = np.array(mini_soln) + np.random.uniform(low=-1e-4*np.ones(len(mini_soln)), high=1e-4*np.ones(len(mini_soln)), size=(64,11))
+pos = np.array(mini_soln) + np.random.uniform(low=-1e-3*np.ones(len(mini_soln)), high=1e-3*np.ones(len(mini_soln)), size=(64,11))
 #pos = np.random.uniform(low=[-6,0.00001,200,0.1,2e-5,0.1,0,0,15,15,-50], high=[2,5,2500,25,0.1,500,0.436*np.pi,2*np.pi,45,45,50], size=(64,11))
 
 nwalkers, ndim = pos.shape
 bad_sampler_NFW = emcee.EnsembleSampler(nwalkers, ndim, log_prob_NFW, args=(scale, gshape, data_maps['vmasked'], data_maps['ivar_masked'], data_maps['Ha_vel_mask']))
-bad_sampler_NFW.run_mcmc(pos, 5000, progress=True)
-
-#good_walkers_NFW = bad_sampler_NFW.acceptance_fraction > 0
-#np.save('good_walkers_NFW.npy',good_walkers_NFW)
-
-#fig_NFW, axes_NFW = plt.subplots(11,1, figsize=(20, 14), sharex=True,
-                         #gridspec_kw={'hspace':0.1})
-bad_samples_NFW = bad_sampler_NFW.get_chain()[:,good_walkers_NFW,:]
+bad_sampler_NFW.run_mcmc(pos, 10000, progress=True)
+bad_samples_NFW = bad_sampler_NFW.get_chain()
+good_walkers_NFW = bad_sampler_NFW.acceptance_fraction > 0
+np.save('good_walkers_NFW.npy',good_walkers_NFW)
 np.save('bad_samples_NFW.npy',bad_samples_NFW)
 
 '''
