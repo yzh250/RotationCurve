@@ -86,7 +86,7 @@ cpdef np.ndarray rot_incl_iso(shape,
             theta = atan2(-x, y)
 
             vTot = vel_tot_iso(r, log_rhob0, Rb, SigD, Rd, rho0_h, Rh)
-            
+
             v = vTot*sin(inclination)*cos(theta)
 
             rotated_inclined_map_memview[i,j] = v + vsys

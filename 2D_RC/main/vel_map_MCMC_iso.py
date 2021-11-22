@@ -57,7 +57,7 @@ mini_soln = [np.log10(11.66291723),2.69E-05,1031.023329,1.838768634,0.083546044,
 ####################################################################
 # Isothermal
 
-pos = np.array(mini_soln) + np.random.uniform(low=-1e-4*np.ones(len(mini_soln)), high=1e-4*np.ones(len(mini_soln)), size=(64,11))
+pos = np.array(mini_soln) + np.random.uniform(low=-1e-3*np.ones(len(mini_soln)), high=1e-3*np.ones(len(mini_soln)), size=(64,11))
 #pos = np.random.uniform(low=[-6,0.00001,200,0.1,2e-5,0.1,0,0,15,15,-50], high=[2,5,2500,25,0.1,500,0.436*np.pi,2*np.pi,45,45,50], size=(64,11))
 
 nwalkers, ndim = pos.shape

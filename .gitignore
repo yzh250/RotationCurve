@@ -2,6 +2,7 @@
 *.pyc
 *.png
 *.txt
+*.npy
 *.csv
 *.fits
 *.pdf

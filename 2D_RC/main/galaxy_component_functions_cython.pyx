@@ -62,7 +62,7 @@ cpdef DTYPE_F32_t bulge_vel(DTYPE_F32_t r,
 
     rho_0 = 10.0**log_rhob0
 
-    mass_b = (4.0/3.0) * pi * rho_0 * Rb**3 * ( 1 - exp(-(r/Rb)**3) )
+    mass_b = (4.0/3.0) * pi * rho_0 * Rb**3 * (1.0 - exp(-(r/Rb)**3) )
     
     vel = sqrt((G * mass_b * Msun) / (r * 3.086e16))
 
@@ -153,11 +153,9 @@ cpdef DTYPE_F32_t halo_vel_iso(DTYPE_F32_t r,
     cdef DTYPE_F32_t Vinf
     cdef DTYPE_F32_t sterm
     cdef DTYPE_F32_t Vh
-    
-    Vinf = sqrt((4 * pi * G * rho0_h * Msun * Rh**2) / 3.086e16)/1000
 
-    sterm = sqrt(1 - (Rh/r) * atan2(r,Rh))
-
+    Vinf = sqrt((4.0 * pi * G * rho0_h * Msun * Rh**2) / 3.086e16)/1000.0
+    sterm = sqrt(1.0 - (Rh/r) * atan2(r,Rh))
     Vh = Vinf * sterm
 
     return Vh
@@ -200,7 +198,7 @@ cpdef DTYPE_F32_t halo_vel_NFW(DTYPE_F32_t r,
     cdef DTYPE_F32_t vel2
     cdef DTYPE_F32_t Vh
     
-    halo_mass = 4.0 * pi * rho0_h * Rh**3 * ((Rh/(Rh + r)) + log(Rh + r) - 1 - log(Rh))
+    halo_mass = 4.0 * pi * rho0_h * Rh**3.0 * ((Rh/(Rh + r)) + log(Rh + r) - 1.0 - log(Rh))
 
     vel2 = G * (halo_mass * Msun) / (r * 3.086e16)
 
