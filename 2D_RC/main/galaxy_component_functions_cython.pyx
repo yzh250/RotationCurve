@@ -11,7 +11,7 @@ import numpy as np
 
 from libc.math cimport sqrt, exp, log, atan2
 
-from typedefs cimport DTYPE_F32_t
+from typedefs cimport DTYPE_F64_t
 
 from scipy.special.cython_special cimport i0, i1, k0, k1
 
@@ -21,11 +21,11 @@ from scipy.special.cython_special cimport i0, i1, k0, k1
 ################################################################################
 # Constants
 #-------------------------------------------------------------------------------
-cdef DTYPE_F32_t G = 6.674e-11  # m^3 kg^-1 s^-2
+cdef DTYPE_F64_t G = 6.674e-11  # m^3 kg^-1 s^-2
 
-cdef DTYPE_F32_t Msun = 1.989e30  # kg
+cdef DTYPE_F64_t Msun = 1.989e30  # kg
 
-cdef DTYPE_F32_t pi = np.pi
+cdef DTYPE_F64_t pi = np.pi
 ################################################################################
 
 
@@ -33,9 +33,9 @@ cdef DTYPE_F32_t pi = np.pi
 ################################################################################
 # Exponential bulge model (Feng2014)
 #-------------------------------------------------------------------------------
-cpdef DTYPE_F32_t bulge_vel(DTYPE_F32_t r,
-                            DTYPE_F32_t log_rhob0, 
-                            DTYPE_F32_t Rb):
+cpdef DTYPE_F64_t bulge_vel(DTYPE_F64_t r,
+                            DTYPE_F64_t log_rhob0, 
+                            DTYPE_F64_t Rb):
     '''
     Function to calculate the bulge velocity at a given galactocentric radius.
 
@@ -55,18 +55,20 @@ cpdef DTYPE_F32_t bulge_vel(DTYPE_F32_t r,
 
     Vb : The rotational velocity of the bulge [km/s]
     '''
-    cdef DTYPE_F32_t rho_0
-    cdef DTYPE_F32_t mass_b
-    cdef DTYPE_F32_t vel
-    cdef DTYPE_F32_t Vb
+    cdef DTYPE_F64_t rho_0
+    cdef DTYPE_F64_t mass_b
+    cdef DTYPE_F64_t vel
+    cdef DTYPE_F64_t Vb = 0.0
 
-    rho_0 = 10.0**log_rhob0
+    if r != 0.0:
 
-    mass_b = (4.0/3.0) * pi * rho_0 * Rb**3 * (1.0 - exp(-(r/Rb)**3) )
-    
-    vel = sqrt((G * mass_b * Msun) / (r * 3.086e16))
+        rho_0 = 10.0**log_rhob0
 
-    Vb = vel / 1000.0
+        mass_b = (4.0/3.0) * pi * rho_0 * Rb**3 * (1.0 - exp(-(r/Rb)**3) )
+        
+        vel = sqrt((G * mass_b * Msun) / (r * 3.086e16))
+
+        Vb = vel / 1000.0
 
     return Vb
 ################################################################################
@@ -78,9 +80,9 @@ cpdef DTYPE_F32_t bulge_vel(DTYPE_F32_t r,
 #
 # Fitting for central surface density
 #-------------------------------------------------------------------------------
-cpdef DTYPE_F32_t disk_vel(DTYPE_F32_t r, 
-                          DTYPE_F32_t SigD, 
-                          DTYPE_F32_t Rd):
+cpdef DTYPE_F64_t disk_vel(DTYPE_F64_t r, 
+                           DTYPE_F64_t SigD, 
+                           DTYPE_F64_t Rd):
     '''
     Function to calculate the disk velocity at a given galactocentric radius.
 
@@ -101,10 +103,10 @@ cpdef DTYPE_F32_t disk_vel(DTYPE_F32_t r,
     Vd : The rotational velocity of the disk [km/s]
     '''
 
-    cdef DTYPE_F32_t y
-    cdef DTYPE_F32_t bessel_component
-    cdef DTYPE_F32_t vel2
-    cdef DTYPE_F32_t Vd
+    cdef DTYPE_F64_t y
+    cdef DTYPE_F64_t bessel_component
+    cdef DTYPE_F64_t vel2
+    cdef DTYPE_F64_t Vd
 
     y = r / (2.0 * Rd)
 
@@ -117,17 +119,20 @@ cpdef DTYPE_F32_t disk_vel(DTYPE_F32_t r,
     return Vd
 ################################################################################
 
+
+
+
 ################################################################################
 # Isothermal_halo
 # velocity calculated from mass with already evaluated integral
 # from density profile (eqn 55, Sofue 2013)
 # integral form can be seen from "rotation_curve_functions.py"
 #-------------------------------------------------------------------------------
-cpdef DTYPE_F32_t halo_vel_iso(DTYPE_F32_t r, 
-                               DTYPE_F32_t rho0_h, 
-                               DTYPE_F32_t Rh):
+cpdef DTYPE_F64_t halo_vel_iso(DTYPE_F64_t r, 
+                               DTYPE_F64_t rho0_h, 
+                               DTYPE_F64_t Rh):
     '''
-    Function to calculate the NFW halo velocity at a given galactocentric 
+    Function to calculate the isothermal halo velocity at a given galactocentric 
     radius.
 
 
@@ -147,17 +152,21 @@ cpdef DTYPE_F32_t halo_vel_iso(DTYPE_F32_t r,
     Vh : The rotational velocity of the halo [km/s]
     '''
 
-    cdef DTYPE_F32_t Vinf
-    cdef DTYPE_F32_t sterm
-    cdef DTYPE_F32_t Vh
+    cdef DTYPE_F64_t Vinf
+    cdef DTYPE_F64_t sterm = 0.0
+    cdef DTYPE_F64_t Vh
 
-    Vh = 0
+    if r != 0.0:
+        sterm = sqrt(1.0 - (Rh/r) * atan2(r,Rh))
+
     Vinf = sqrt((4.0 * pi * G * rho0_h * Msun * Rh**2) / 3.086e16)/1000.0
-    sterm = sqrt(1.0 - (Rh/r) * atan2(r,Rh))
+    
     Vh = Vinf * sterm
 
     return Vh
 ################################################################################
+
+
 
 
 ################################################################################
@@ -166,9 +175,9 @@ cpdef DTYPE_F32_t halo_vel_iso(DTYPE_F32_t r,
 # from density profile (eqn 55, Sofue 2013)
 # integral form can be seen from "rotation_curve_functions.py"
 #-------------------------------------------------------------------------------
-cpdef DTYPE_F32_t halo_vel_NFW(DTYPE_F32_t r, 
-                               DTYPE_F32_t rho0_h, 
-                               DTYPE_F32_t Rh):
+cpdef DTYPE_F64_t halo_vel_NFW(DTYPE_F64_t r, 
+                               DTYPE_F64_t rho0_h, 
+                               DTYPE_F64_t Rh):
     '''
     Function to calculate the NFW halo velocity at a given galactocentric 
     radius.
@@ -190,18 +199,22 @@ cpdef DTYPE_F32_t halo_vel_NFW(DTYPE_F32_t r,
     Vh : The rotational velocity of the halo [km/s]
     '''
 
-    cdef DTYPE_F32_t halo_mass
-    cdef DTYPE_F32_t vel2
-    cdef DTYPE_F32_t Vh
+    cdef DTYPE_F64_t halo_mass
+    cdef DTYPE_F64_t vel2 = 0.0
+    cdef DTYPE_F64_t Vh
     
     halo_mass = 4.0 * pi * rho0_h * Rh**3.0 * ((Rh/(Rh + r)) + log(Rh + r) - 1.0 - log(Rh))
 
-    vel2 = G * (halo_mass * Msun) / (r * 3.086e16)
+    if r != 0.0:
+        vel2 = G * (halo_mass * Msun) / (r * 3.086e16)
 
     Vh = sqrt(vel2) / 1000.0
 
     return Vh
 ################################################################################
+
+
+
 
 ################################################################################
 # Burket_halo
@@ -209,11 +222,11 @@ cpdef DTYPE_F32_t halo_vel_NFW(DTYPE_F32_t r,
 # from density profile (eqn 55, Sofue 2013)
 # integral form can be seen from "rotation_curve_functions.py"
 #-------------------------------------------------------------------------------
-cpdef DTYPE_F32_t halo_vel_bur(DTYPE_F32_t r, 
-                               DTYPE_F32_t rho0_h, 
-                               DTYPE_F32_t Rh):
+cpdef DTYPE_F64_t halo_vel_bur(DTYPE_F64_t r, 
+                               DTYPE_F64_t rho0_h, 
+                               DTYPE_F64_t Rh):
     '''
-    Function to calculate the NFW halo velocity at a given galactocentric 
+    Function to calculate the Burket halo velocity at a given galactocentric 
     radius.
 
 
@@ -233,36 +246,40 @@ cpdef DTYPE_F32_t halo_vel_bur(DTYPE_F32_t r,
     Vh : The rotational velocity of the halo [km/s]
     '''
 
-    cdef DTYPE_F32_t halo_mass
-    cdef DTYPE_F32_t vel2
-    cdef DTYPE_F32_t Vh
+    cdef DTYPE_F64_t halo_mass
+    cdef DTYPE_F64_t vel2 = 0.0
+    cdef DTYPE_F64_t Vh
     
     halo_mass = np.pi * (-rho0_h) * (Rh**3) * (-log(Rh**2 + r**2) \
                                                - 2.0*log(Rh + r)\
                                                + 2.0*atan2(r, Rh)\
                                                + log(Rh**2)\
                                                + 2.0*log(Rh)\
-                                               - 2.0*atan2(0, Rh))
+                                               - 2.0*atan2(0.0, Rh))
 
-    vel2 = G * (halo_mass * Msun) / (r * 3.086e16)
+    if r != 0.0:
+        vel2 = G * (halo_mass * Msun) / (r * 3.086e16)
 
     Vh = sqrt(vel2) / 1000.0
 
     return Vh
 ################################################################################
 
+
+
+
 ################################################################################
 # total Isothermal velocity
 #-------------------------------------------------------------------------------
-cpdef DTYPE_F32_t vel_tot_iso(DTYPE_F32_t r, 
-                              DTYPE_F32_t log_rhob0, 
-                              DTYPE_F32_t Rb, 
-                              DTYPE_F32_t SigD, 
-                              DTYPE_F32_t Rd, 
-                              DTYPE_F32_t rho0_h, 
-                              DTYPE_F32_t Rh):
+cpdef DTYPE_F64_t vel_tot_iso(DTYPE_F64_t r, 
+                              DTYPE_F64_t log_rhob0, 
+                              DTYPE_F64_t Rb, 
+                              DTYPE_F64_t SigD, 
+                              DTYPE_F64_t Rd, 
+                              DTYPE_F64_t rho0_h, 
+                              DTYPE_F64_t Rh):
     '''
-    Function to calculate the total velocity with an NFW bulge at a given 
+    Function to calculate the total velocity with an isothermal halo at a given 
     galactocentric radius.
 
 
@@ -280,22 +297,23 @@ cpdef DTYPE_F32_t vel_tot_iso(DTYPE_F32_t r,
 
     Rd : The scale radius of the disk [kpc]
 
-    rho0_h : The central surface mass density of the NFW halo [M_sol/pc^2]
+    rho0_h : The central surface mass density of the isothermal halo 
+        [M_sol/pc^2]
 
-    Rh : The scale radius of the NFW halo [kpc]
+    Rh : The scale radius of the isothermal halo [kpc]
 
 
     RETURNS
     =======
 
-    Vtot : The total velocity from the bulge, disk, and NFW halo [km/s]
+    Vtot : The total velocity from the bulge, disk, and isothermal halo [km/s]
     '''
     
-    cdef DTYPE_F32_t Vbulge
-    cdef DTYPE_F32_t Vdisk
-    cdef DTYPE_F32_t Vhalo
-    cdef DTYPE_F32_t v2
-    cdef DTYPE_F32_t Vtot
+    cdef DTYPE_F64_t Vbulge
+    cdef DTYPE_F64_t Vdisk
+    cdef DTYPE_F64_t Vhalo
+    cdef DTYPE_F64_t v2
+    cdef DTYPE_F64_t Vtot
 
     Vbulge = bulge_vel(r * 1000.0, log_rhob0, Rb * 1000.0)
     Vdisk = disk_vel(r * 1000.0, SigD, Rd * 1000.0)
@@ -308,18 +326,21 @@ cpdef DTYPE_F32_t vel_tot_iso(DTYPE_F32_t r,
     return Vtot
 ################################################################################
 
+
+
+
 ################################################################################
 # total NFW velocity
 #-------------------------------------------------------------------------------
-cpdef DTYPE_F32_t vel_tot_NFW(DTYPE_F32_t r, 
-                              DTYPE_F32_t log_rhob0, 
-                              DTYPE_F32_t Rb, 
-                              DTYPE_F32_t SigD, 
-                              DTYPE_F32_t Rd, 
-                              DTYPE_F32_t rho0_h, 
-                              DTYPE_F32_t Rh):
+cpdef DTYPE_F64_t vel_tot_NFW(DTYPE_F64_t r, 
+                              DTYPE_F64_t log_rhob0, 
+                              DTYPE_F64_t Rb, 
+                              DTYPE_F64_t SigD, 
+                              DTYPE_F64_t Rd, 
+                              DTYPE_F64_t rho0_h, 
+                              DTYPE_F64_t Rh):
     '''
-    Function to calculate the total velocity with an NFW bulge at a given 
+    Function to calculate the total velocity with an NFW halo at a given 
     galactocentric radius.
 
 
@@ -348,11 +369,11 @@ cpdef DTYPE_F32_t vel_tot_NFW(DTYPE_F32_t r,
     Vtot : The total velocity from the bulge, disk, and NFW halo [km/s]
     '''
     
-    cdef DTYPE_F32_t Vbulge
-    cdef DTYPE_F32_t Vdisk
-    cdef DTYPE_F32_t Vhalo
-    cdef DTYPE_F32_t v2
-    cdef DTYPE_F32_t Vtot
+    cdef DTYPE_F64_t Vbulge
+    cdef DTYPE_F64_t Vdisk
+    cdef DTYPE_F64_t Vhalo
+    cdef DTYPE_F64_t v2
+    cdef DTYPE_F64_t Vtot
 
     Vbulge = bulge_vel(r * 1000.0, log_rhob0, Rb * 1000.0)
     Vdisk = disk_vel(r * 1000.0, SigD, Rd * 1000.0)
@@ -365,18 +386,21 @@ cpdef DTYPE_F32_t vel_tot_NFW(DTYPE_F32_t r,
     return Vtot
 ################################################################################
 
+
+
+
 ################################################################################
 # total Burket velocity
 #-------------------------------------------------------------------------------
-cpdef DTYPE_F32_t vel_tot_bur(DTYPE_F32_t r, 
-                              DTYPE_F32_t log_rhob0, 
-                              DTYPE_F32_t Rb, 
-                              DTYPE_F32_t SigD, 
-                              DTYPE_F32_t Rd, 
-                              DTYPE_F32_t rho0_h, 
-                              DTYPE_F32_t Rh):
+cpdef DTYPE_F64_t vel_tot_bur(DTYPE_F64_t r, 
+                              DTYPE_F64_t log_rhob0, 
+                              DTYPE_F64_t Rb, 
+                              DTYPE_F64_t SigD, 
+                              DTYPE_F64_t Rd, 
+                              DTYPE_F64_t rho0_h, 
+                              DTYPE_F64_t Rh):
     '''
-    Function to calculate the total velocity with an NFW bulge at a given 
+    Function to calculate the total velocity with a Burket halo at a given 
     galactocentric radius.
 
 
@@ -394,22 +418,22 @@ cpdef DTYPE_F32_t vel_tot_bur(DTYPE_F32_t r,
 
     Rd : The scale radius of the disk [kpc]
 
-    rho0_h : The central surface mass density of the NFW halo [M_sol/pc^2]
+    rho0_h : The central surface mass density of the Burket halo [M_sol/pc^2]
 
-    Rh : The scale radius of the NFW halo [kpc]
+    Rh : The scale radius of the Burket halo [kpc]
 
 
     RETURNS
     =======
 
-    Vtot : The total velocity from the bulge, disk, and NFW halo [km/s]
+    Vtot : The total velocity from the bulge, disk, and Burket halo [km/s]
     '''
     
-    cdef DTYPE_F32_t Vbulge
-    cdef DTYPE_F32_t Vdisk
-    cdef DTYPE_F32_t Vhalo
-    cdef DTYPE_F32_t v2
-    cdef DTYPE_F32_t Vtot
+    cdef DTYPE_F64_t Vbulge
+    cdef DTYPE_F64_t Vdisk
+    cdef DTYPE_F64_t Vhalo
+    cdef DTYPE_F64_t v2
+    cdef DTYPE_F64_t Vtot
 
     Vbulge = bulge_vel(r * 1000.0, log_rhob0, Rb * 1000.0)
     Vdisk = disk_vel(r * 1000.0, SigD, Rd * 1000.0)
