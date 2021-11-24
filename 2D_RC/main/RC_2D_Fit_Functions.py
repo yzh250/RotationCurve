@@ -20,22 +20,20 @@ from Velocity_Map_Functions import loglikelihood_iso_flat,\
                                    loglikelihood_bur_flat,\
                                    nloglikelihood_iso_flat,\
                                    nloglikelihood_NFW_flat,\
-                                   nloglikelihood_bur_flat,\
-                                   find_phi
+                                   nloglikelihood_bur_flat
 
 from Velocity_Map_Functions_cython import rot_incl_iso,\
                                           rot_incl_NFW, \
-                                          rot_incl_bur
-                                                                      
+                                          rot_incl_bur           
 
 from galaxy_component_functions_cython import vel_tot_iso,\
-                                               vel_tot_NFW,\
-                                               vel_tot_bur,\
-                                               bulge_vel,\
-                                               disk_vel,\
-                                               halo_vel_iso,\
-                                               halo_vel_NFW,\
-                                               halo_vel_bur
+                                              vel_tot_NFW,\
+                                              vel_tot_bur,\
+                                              bulge_vel,\
+                                              disk_vel,\
+                                              halo_vel_iso,\
+                                              halo_vel_NFW,\
+                                              halo_vel_bur
 ################################################################################
 
 
@@ -67,10 +65,6 @@ Mfile_bluehive = fits.open(MORPH_file_bluehive)
 Mdata_bluehive = Mfile_bluehive[1].data
 RC_FILE_FOLDER_bluehive = '/home/yzh250/Documents/UR_Stuff/Research_UR/data/DRP-rot_curve_data_files/'
 '''
-
-MORPH_file_mac = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/2D_RC/manga_visual_morpho-1.0.1.fits'
-Mfile_mac = fits.open(MORPH_file_mac)
-Mdata_mac = Mfile_mac[1].data
 
 '''
 ################################################################################
@@ -193,10 +187,24 @@ def Galaxy_Data(galaxy_ID, MANGA_FOLDER):
     return maps, gshape, x_center_guess, y_center_guess
 
 
-def getTidal(gal_ID):
-    for galaxy in Mdata_mac:
-        if galaxy['NAME'] == 'manga-'+gal_ID:
-            return galaxy['TIDAL']
+
+
+
+def getTidal(gal_ID, MORPH_file_path):
+
+    #MORPH_file_path = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/2D_RC/'
+    MORPH_file = MORPH_file_path + 'manga_visual_morpho-1.0.1.fits'
+
+    Mfile = fits.open(MORPH_file)
+    Mdata = Mfile[1].data
+    Mfile.close()
+
+    Mdata_index = Mdata['NAME'] == 'manga-' + gal_ID
+
+    return Mdata['TIDAL'][Mdata_index]
+
+
+
 
 def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, mask):
     '''
@@ -217,11 +225,11 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, mask):
     incl, ph, x_guess, y_guess = params
 
     # Isothermal Fitting
-    bounds_iso = [[-7,2],
-                  [0,5],
+    bounds_iso = [[-7,2], # Bulge density log([Msun/pc^2])
+                  [0,5],  # Bulge radius [kpc/h]
                   [0.1, 3000],  # Surface Density [Msol/pc^2]
-                  [0.1, 30],  # Disk radius [kpc]
-                  [0.000001, 0.1],  # Halo density [Msun/pc^2]
+                  [0.1, 30],  # Disk radius [kpc/h]
+                  [-7, 2],  # Halo density log([Msun/pc^2])
                   [0.1, 1000],  # Halo radius [kpc]
                   [0.1, 0.436*np.pi],  # Inclination angle
                   [0, 2.2 * np.pi],  # Phase angle
@@ -231,7 +239,7 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, mask):
 
     vsys = 0
 
-    ig_iso = [-1, 1, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess, vsys]
+    ig_iso = [-1, 1, 1000, 4, -3, 25, incl, ph, x_guess, y_guess, vsys]
 
     bestfit_iso = minimize(nloglikelihood_iso_flat,
                            ig_iso,
@@ -300,21 +308,21 @@ def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar, mask):
     incl, ph, x_guess, y_guess = params
 
     # NFW Fitting
-    bounds_NFW = [[0, 100],
-                  [0,5],
-                  [0.1, 3000],  # Surface Density [Msol/pc^2]
-                  [0.1, 30],  # Disk radius [kpc]
-                  [0.000001, 0.1],  # Halo density [Msun/pc^2]
-                  [0.1, 1000],  # Halo radius [kpc]
-                  [0.1, 0.436*np.pi],  # Inclination angle
-                  [0, 2.2 * np.pi],  # Phase angle
-                  [x_guess-10, x_guess+10],  # center_x
+    bounds_NFW = [[-7, 2], # Bulge density [log(Msun/pc^2)]
+                  [0, 5],  # Bulge radius [kpc/h]
+                  [0.1, 3000], # Surface Density [Msol/pc^2]
+                  [0.1, 30],   # Disk radius [kpc/h]
+                  [-7, 2],     # Halo density [log(Msun/pc^2)]
+                  [0.1, 1000], # Halo radius [kpc]
+                  [0.1, 0.436*np.pi], # Inclination angle
+                  [0, 2.2 * np.pi], # Phase angle
+                  [x_guess-10, x_guess+10], # center_x
                   [y_guess-10, y_guess+10], # center_y
                   [-100,100]] # systemic velocity
 
     vsys = 0
 
-    ig_NFW = [0.1, 1, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess, vsys]
+    ig_NFW = [-1, 1, 1000, 4, -3, 25, incl, ph, x_guess, y_guess, vsys]
 
     bestfit_NFW = minimize(nloglikelihood_NFW_flat,
                            ig_NFW, 
@@ -380,15 +388,15 @@ def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar, mask):
     incl, ph, x_guess, y_guess = params
 
     # Burket Fitting
-    bounds_bur = [[0, 100],
-                  [0,5],
-                  [0.1, 3000],  # Surface Density [Msol/pc^2]
-                  [0.1, 30],  # Disk radius [kpc]
-                  [0.000001, 0.1],  # Halo density [Msun/pc^2]
-                  [0.1, 1000],  # Halo radius [kpc]
+    bounds_bur = [[-7, 2], # Bulge density [log(Msun/pc^2)]
+                  [0, 5],  # Bulge radius [kpc/h]
+                  [0.1, 3000], # Surface Density [Msol/pc^2]
+                  [0.1, 30],   # Disk radius [kpc/h]
+                  [-7, 2],    # Halo density [log(Msun/pc^2)]
+                  [0.1, 1000], # Halo radius [kpc]
                   [0.1, 0.436*np.pi],  # Inclination angle
                   [0, 2.2 * np.pi],  # Phase angle
-                  [x_guess-10, x_guess+10],  # center_x
+                  [x_guess-10, x_guess+10], # center_x
                   [y_guess-10, y_guess+10], # center_y
                   [-100,100]] # systemic velocity
 
@@ -396,7 +404,7 @@ def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar, mask):
 
     vsys = 0
 
-    ig_bur = [0.1, 1, 1000, 4, 0.006, 25, incl, ph, x_guess, y_guess, vsys]
+    ig_bur = [-1, 1, 1000, 4, -3, 25, incl, ph, x_guess, y_guess, vsys]
 
     bestfit_bur = minimize(nloglikelihood_bur_flat,
                            ig_bur, 
