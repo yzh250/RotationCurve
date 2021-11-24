@@ -1,72 +1,161 @@
-####################################################################
+################################################################################
+# Import modules
+#-------------------------------------------------------------------------------
 #import matplotlib.pyplot as plt
 
 import numpy as np
 
-import numdifftools as ndt
-
 import emcee
-import corner
+#import corner
 
-import pickle
+#import pickle
 
-from Velocity_Map_Functions import loglikelihood_bur_flat
+from Velocity_Map_Functions import loglikelihood_bur_flat_constraints
 
-from RC_2D_Fit_Functions import Galaxy_Data    
+from RC_2D_Fit_Functions import Galaxy_Data
+################################################################################
 
+
+
+
+################################################################################
+# Constants
+#-------------------------------------------------------------------------------
 G = 6.674E-11  # m^3 kg^-1 s^-2
 Msun = 1.989E30  # kg
-scale = 0.46886408261217366                                                                     
-####################################################################
 
-####################################################################
-# 7443-12705
-r_band, Ha_vel, Ha_vel_ivar, Ha_vel_mask, Ha_flux, Ha_flux_ivar, Ha_flux_mask, vmasked, Ha_flux_masked, ivar_masked, gshape, x_center_guess, y_center_guess = Galaxy_Data('7443-12705')
-####################################################################
+# Specific for galaxy 7443-6101
+scale = 0.22471093                                           
+################################################################################
 
-####################################################################
-# loglikelihood
+
+
+
+################################################################################
+# Data location
+#-------------------------------------------------------------------------------
+#manga = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+#manga =  '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+manga = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/spectro/'
+################################################################################
+
+
+
+
+################################################################################
+# Import galaxy data
+#-------------------------------------------------------------------------------
+data_maps, gshape, x_center_guess, y_center_guess = Galaxy_Data('7443-6101', 
+                                                                manga)
+################################################################################
+
+
+
+
+################################################################################
+# Define MCMC functions
+#-------------------------------------------------------------------------------
 def log_prior(params):
-    rho_b,Rb,SigD,Rd,rho_h,Rh,inclination,phi,center_x,center_y,vsys= params
+
+    log_rhob0,Rb,SigD,Rd,log_rhoh0,Rh,inclination,phi,center_x,center_y,vsys = params
+
     logP = 0
-    if 0 < rho_b < 100 and 0 < Rb < 5 and 100 < SigD < 3000 and 1 < Rd < 30\
-     and 1e-5 < rho_h < 0.1 and 0.01 < Rh< 500 and 0 < inclination < 0.436*np.pi and 0 < phi < 2*np.pi\
-     and 20 < center_x < 40 and 20 < center_y < 40 and -100 < vsys < 100:
+
+    if -7 < log_rhob0 < 2 and 0 < Rb < 5 and 100 < SigD < 3000 and 1 < Rd < 30\
+     and -7 < log_rhoh0 < 2 and 0.01 < Rh< 500 and 0 < inclination < np.pi*0.436 and 0 < phi < 2*np.pi\
+     and 10 < center_x < 50 and 10 < center_y < 50 and -100 < vsys < 100:
         logP = 0
+
     # setting constraints on the radii
-    elif Rh < Rb or Rh < Rd or Rd < Rd:
+    elif Rh < Rb or Rh < Rd or Rd < Rb:
         logP = -np.inf
     else:
-        logP = -np.inf
+    	logP = -np.inf
+
     return logP
 
+
+
 def log_prob_bur(params, scale, shape, vdata, ivar, mask):
+
     lp = log_prior(params)
-    logL = loglikelihood_bur_flat(params, scale, shape, vdata.compressed(), ivar.compressed(), mask)
+
+    logL = loglikelihood_bur_flat_constraints(params, 
+                                              scale, 
+                                              shape, 
+                                              vdata.compressed(), 
+                                              ivar.compressed(), 
+                                              mask)
+
     if not np.isfinite(lp) or not np.isfinite(logL):
         return -np.inf 
     else:
         return lp + logL
-####################################################################
+################################################################################
 
-mini_soln = [np.log10(5.36E-05),2.811046162,978.7934831,6.493085395,4.10E-05,999.8669552,0.858228903,0.752910577,38.25051586,37.23417255,-0.685352448]
 
-####################################################################
+
+
+################################################################################
+# Best-fit parameter values from scipy.optimize.minimize
+#-------------------------------------------------------------------------------
+'''
+# 7443-12705
+mini_soln = [np.log10(5.36E-05),
+             2.811046162,
+             978.7934831,
+             6.493085395,
+             4.10E-05,
+             999.8669552,
+             0.858228903,
+             0.752910577,
+             38.25051586,
+             37.23417255,
+             -0.685352448]
+'''
+mini_soln = [-1.40486167e+00,  
+             1.89353769e+00,  
+             1.16228518e+03,  
+             1.53230277e+00,
+             -9.31163096e-01,  
+             2.42473452e+00,  
+             4.54118840e-01,  
+             1.95365937e+00,
+             2.65093727e+01,  
+             2.74410572e+01, 
+             -3.58896610e-02]
+################################################################################
+
+
+
+
+################################################################################
 # Burket
+#-------------------------------------------------------------------------------
+pos = np.array(mini_soln) + np.random.uniform(low=-1e-3*np.ones(len(mini_soln)), 
+                                              high=1e-3*np.ones(len(mini_soln)), 
+                                              size=(64,11))
+#pos = np.random.uniform(low=[-6,0.00001,200,0.1,2e-5,0.1,0,0,15,15,-50], 
+#                        high=[2,5,2500,25,0.1,500,0.436*np.pi,2*np.pi,45,45,50], 
+#                        size=(64,11))
 
-pos = np.array(mini_soln) + np.random.uniform(low=-1e-6*np.ones(len(mini_soln)), high=1e-6*np.ones(len(mini_soln)), size=(64,11))
 nwalkers, ndim = pos.shape
 
-bad_sampler_bur = emcee.EnsembleSampler(nwalkers, ndim, log_prob_bur, args=(scale, gshape, data_maps['vmasked'], data_maps['ivar_masked'], data_maps['Ha_vel_mask']))
+bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
+                                        ndim, 
+                                        log_prob_bur, 
+                                        args=(scale, 
+                                              gshape, 
+                                              data_maps['vmasked'], 
+                                              data_maps['ivar_masked'], 
+                                              data_maps['Ha_vel_mask']))
 bad_sampler_bur.run_mcmc(pos, 5000, progress=True)
+bad_samples_bur = bad_sampler_bur.get_chain()
+
+np.save('bad_samples_bur.npy', bad_samples_bur)
 
 good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
-np.save('good_walkers_bur.npy',good_walkers_bur)
-
-fig_bur, axes_bur = plt.subplots(11,1, figsize=(20, 14), sharex=True,
-                         gridspec_kw={'hspace':0.1})
-bad_samples_bur = bad_sampler_bur.get_chain()[:,good_walkers_bur,:]
-np.save('bad_samples_bur.npy',bad_samples_bur)
+np.save('good_walkers_bur.npy', good_walkers_bur)
 
 '''
 labels = ['rho_b','R_b', 'Sigma_d','R_d','rho_h','R_h','i','phi','x','y','vsys']

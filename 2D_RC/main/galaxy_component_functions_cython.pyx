@@ -129,7 +129,7 @@ cpdef DTYPE_F64_t disk_vel(DTYPE_F64_t r,
 # integral form can be seen from "rotation_curve_functions.py"
 #-------------------------------------------------------------------------------
 cpdef DTYPE_F64_t halo_vel_iso(DTYPE_F64_t r, 
-                               DTYPE_F64_t rho0_h, 
+                               DTYPE_F64_t log_rhoh0, 
                                DTYPE_F64_t Rh):
     '''
     Function to calculate the isothermal halo velocity at a given galactocentric 
@@ -141,7 +141,8 @@ cpdef DTYPE_F64_t halo_vel_iso(DTYPE_F64_t r,
 
     r : The distance from the center [pc]
 
-    rho0_h : The central surface mass density for the halo [M_sol/pc^2]
+    log_rhoh0 : The logarithm of the central surface mass density for the halo 
+        [log(M_sol/pc^2)]
 
     Rh : The scale radius of the halo [pc]
 
@@ -152,9 +153,12 @@ cpdef DTYPE_F64_t halo_vel_iso(DTYPE_F64_t r,
     Vh : The rotational velocity of the halo [km/s]
     '''
 
+    cdef DTYPE_F64_t rho0_h
     cdef DTYPE_F64_t Vinf
     cdef DTYPE_F64_t sterm = 0.0
     cdef DTYPE_F64_t Vh
+
+    rho0_h = 10**log_rhoh0
 
     if r != 0.0:
         sterm = sqrt(1.0 - (Rh/r) * atan2(r,Rh))
@@ -176,7 +180,7 @@ cpdef DTYPE_F64_t halo_vel_iso(DTYPE_F64_t r,
 # integral form can be seen from "rotation_curve_functions.py"
 #-------------------------------------------------------------------------------
 cpdef DTYPE_F64_t halo_vel_NFW(DTYPE_F64_t r, 
-                               DTYPE_F64_t rho0_h, 
+                               DTYPE_F64_t log_rhoh0, 
                                DTYPE_F64_t Rh):
     '''
     Function to calculate the NFW halo velocity at a given galactocentric 
@@ -188,7 +192,8 @@ cpdef DTYPE_F64_t halo_vel_NFW(DTYPE_F64_t r,
 
     r : The distance from the center [pc]
 
-    rho0_h : The central surface mass density for the halo [M_sol/pc^2]
+    log_rhoh0 : The logarithm of the central surface mass density for the halo 
+        [log(M_sol/pc^2)]
 
     Rh : The scale radius of the halo [pc]
 
@@ -199,9 +204,12 @@ cpdef DTYPE_F64_t halo_vel_NFW(DTYPE_F64_t r,
     Vh : The rotational velocity of the halo [km/s]
     '''
 
+    cdef DTYPE_F64_t rho0_h
     cdef DTYPE_F64_t halo_mass
     cdef DTYPE_F64_t vel2 = 0.0
     cdef DTYPE_F64_t Vh
+
+    rho0_h = 10**log_rhoh0
     
     halo_mass = 4.0 * pi * rho0_h * Rh**3.0 * ((Rh/(Rh + r)) + log(Rh + r) - 1.0 - log(Rh))
 
@@ -223,7 +231,7 @@ cpdef DTYPE_F64_t halo_vel_NFW(DTYPE_F64_t r,
 # integral form can be seen from "rotation_curve_functions.py"
 #-------------------------------------------------------------------------------
 cpdef DTYPE_F64_t halo_vel_bur(DTYPE_F64_t r, 
-                               DTYPE_F64_t rho0_h, 
+                               DTYPE_F64_t log_rhoh0, 
                                DTYPE_F64_t Rh):
     '''
     Function to calculate the Burket halo velocity at a given galactocentric 
@@ -235,7 +243,8 @@ cpdef DTYPE_F64_t halo_vel_bur(DTYPE_F64_t r,
 
     r : The distance from the center [pc]
 
-    rho0_h : The central surface mass density for the halo [M_sol/pc^2]
+    log_rhoh0 : The logarithm of the central surface mass density for the halo 
+        [log(M_sol/pc^2)]
 
     Rh : The scale radius of the halo [pc]
 
@@ -246,9 +255,12 @@ cpdef DTYPE_F64_t halo_vel_bur(DTYPE_F64_t r,
     Vh : The rotational velocity of the halo [km/s]
     '''
 
+    cdef DTYPE_F64_t rho0_h
     cdef DTYPE_F64_t halo_mass
     cdef DTYPE_F64_t vel2 = 0.0
     cdef DTYPE_F64_t Vh
+
+    rho0_h = 10**log_rhoh0
     
     halo_mass = np.pi * (-rho0_h) * (Rh**3) * (-log(Rh**2 + r**2) \
                                                - 2.0*log(Rh + r)\
@@ -276,7 +288,7 @@ cpdef DTYPE_F64_t vel_tot_iso(DTYPE_F64_t r,
                               DTYPE_F64_t Rb, 
                               DTYPE_F64_t SigD, 
                               DTYPE_F64_t Rd, 
-                              DTYPE_F64_t rho0_h, 
+                              DTYPE_F64_t log_rhoh0, 
                               DTYPE_F64_t Rh):
     '''
     Function to calculate the total velocity with an isothermal halo at a given 
@@ -297,8 +309,8 @@ cpdef DTYPE_F64_t vel_tot_iso(DTYPE_F64_t r,
 
     Rd : The scale radius of the disk [kpc]
 
-    rho0_h : The central surface mass density of the isothermal halo 
-        [M_sol/pc^2]
+    log_rhoh0 : The logarithm of the central surface mass density of the 
+        isothermal halo [log(M_sol/pc^2)]
 
     Rh : The scale radius of the isothermal halo [kpc]
 
@@ -317,7 +329,7 @@ cpdef DTYPE_F64_t vel_tot_iso(DTYPE_F64_t r,
 
     Vbulge = bulge_vel(r * 1000.0, log_rhob0, Rb * 1000.0)
     Vdisk = disk_vel(r * 1000.0, SigD, Rd * 1000.0)
-    Vhalo = halo_vel_iso(r * 1000.0, rho0_h, Rh * 1000.0)
+    Vhalo = halo_vel_iso(r * 1000.0, log_rhoh0, Rh * 1000.0)
 
     v2 = Vbulge**2 + Vdisk**2 + Vhalo**2
 
@@ -337,7 +349,7 @@ cpdef DTYPE_F64_t vel_tot_NFW(DTYPE_F64_t r,
                               DTYPE_F64_t Rb, 
                               DTYPE_F64_t SigD, 
                               DTYPE_F64_t Rd, 
-                              DTYPE_F64_t rho0_h, 
+                              DTYPE_F64_t log_rhoh0, 
                               DTYPE_F64_t Rh):
     '''
     Function to calculate the total velocity with an NFW halo at a given 
@@ -358,7 +370,8 @@ cpdef DTYPE_F64_t vel_tot_NFW(DTYPE_F64_t r,
 
     Rd : The scale radius of the disk [kpc]
 
-    rho0_h : The central surface mass density of the NFW halo [M_sol/pc^2]
+    log_rhoh0 : The logarithm of the central surface mass density of the NFW 
+        halo [log(M_sol/pc^2)]
 
     Rh : The scale radius of the NFW halo [kpc]
 
@@ -377,7 +390,7 @@ cpdef DTYPE_F64_t vel_tot_NFW(DTYPE_F64_t r,
 
     Vbulge = bulge_vel(r * 1000.0, log_rhob0, Rb * 1000.0)
     Vdisk = disk_vel(r * 1000.0, SigD, Rd * 1000.0)
-    Vhalo = halo_vel_NFW(r * 1000.0, rho0_h, Rh * 1000.0)
+    Vhalo = halo_vel_NFW(r * 1000.0, log_rhoh0, Rh * 1000.0)
 
     v2 = Vbulge**2 + Vdisk**2 + Vhalo**2
 
@@ -397,7 +410,7 @@ cpdef DTYPE_F64_t vel_tot_bur(DTYPE_F64_t r,
                               DTYPE_F64_t Rb, 
                               DTYPE_F64_t SigD, 
                               DTYPE_F64_t Rd, 
-                              DTYPE_F64_t rho0_h, 
+                              DTYPE_F64_t log_rhoh0, 
                               DTYPE_F64_t Rh):
     '''
     Function to calculate the total velocity with a Burket halo at a given 
@@ -418,7 +431,8 @@ cpdef DTYPE_F64_t vel_tot_bur(DTYPE_F64_t r,
 
     Rd : The scale radius of the disk [kpc]
 
-    rho0_h : The central surface mass density of the Burket halo [M_sol/pc^2]
+    log_rhoh0 : The logarithm of the central surface mass density of the Burket 
+        halo [log(M_sol/pc^2)]
 
     Rh : The scale radius of the Burket halo [kpc]
 
@@ -437,7 +451,7 @@ cpdef DTYPE_F64_t vel_tot_bur(DTYPE_F64_t r,
 
     Vbulge = bulge_vel(r * 1000.0, log_rhob0, Rb * 1000.0)
     Vdisk = disk_vel(r * 1000.0, SigD, Rd * 1000.0)
-    Vhalo = halo_vel_bur(r * 1000.0, rho0_h, Rh * 1000.0)
+    Vhalo = halo_vel_bur(r * 1000.0, log_rhoh0, Rh * 1000.0)
 
     v2 = Vbulge**2 + Vdisk**2 + Vhalo**2
 
