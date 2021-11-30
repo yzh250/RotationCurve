@@ -731,7 +731,7 @@ def plot_rot_curve(mHa_vel,
                 v[i] = vel_tot_iso(r[i],best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
             elif halo_model == 'NFW':
                 v_h[i] = halo_vel_NFW(r[i]*1000,best_fit_values[4],best_fit_values[5]*1000)
-                v[i] = vel_tot_NFW(r[i],bbest_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
+                v[i] = vel_tot_NFW(r[i],best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
             elif halo_model == 'Burket':
                 v_h[i] = halo_vel_bur(r[i]*1000,best_fit_values[4],best_fit_values[5]*1000)
                 v[i] = vel_tot_bur(r[i],best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])

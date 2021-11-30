@@ -35,8 +35,8 @@ scale = 0.22471093
 # Data location
 #-------------------------------------------------------------------------------
 #manga = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
-#manga =  '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
-manga = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/spectro/'
+manga =  '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+#manga = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/spectro/'
 ################################################################################
 
 
@@ -149,7 +149,7 @@ bad_sampler_iso = emcee.EnsembleSampler(nwalkers,
                                               data_maps['vmasked'], 
                                               data_maps['ivar_masked'], 
                                               data_maps['Ha_vel_mask']))
-bad_sampler_iso.run_mcmc(pos, 5000, progress=True)
+bad_sampler_iso.run_mcmc(pos, 10000, progress=True)
 bad_samples_iso = bad_sampler_iso.get_chain()
 
 np.save('bad_samples_iso.npy', bad_samples_iso)
