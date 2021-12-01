@@ -150,7 +150,7 @@ bad_sampler_bur = emcee.EnsembleSampler(nwalkers,
                                               data_maps['ivar_masked'], 
                                               data_maps['Ha_vel_mask']))
 bad_sampler_bur.run_mcmc(pos, 10000, progress=True)
-bad_samples_bur = bad_sampler_bur.get_chain()
+bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
 
 np.save('bad_samples_bur.npy', bad_samples_bur)
 

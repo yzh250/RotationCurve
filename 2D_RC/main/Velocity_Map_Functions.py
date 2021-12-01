@@ -304,11 +304,11 @@ def loglikelihood_iso_flat_constraints(params,
                          - np.log(ivar_flat))
     
     if params[3] >= params[5]:
-        logL -= 1e8
+        logL -= 1e10
     elif params[1] >= params[5]:
-        logL -= 1e8
+        logL -= 1e10
     elif params[1] >= params[3]:
-        logL -= 1e8
+        logL -= 1e10
     
     return logL
 
@@ -438,11 +438,11 @@ def loglikelihood_NFW_flat_constraints(params,
                          - np.log(ivar_flat))
     
     if params[3] >= params[5]:
-        logL -= 1e8
+        logL -= 1e10
     elif params[1] >= params[5]:
-        logL -= 1e8
+        logL -= 1e10
     elif params[1] >= params[3]:
-        logL -= 1e8
+        logL -= 1e10
 
     return logL
 
@@ -546,11 +546,11 @@ def loglikelihood_bur_flat_constraints(params, scale, shape, vdata_flat, ivar_fl
                          - np.log(ivar_flat))
     
     if params[3] >= params[5]:
-        logL -= 1e8
+        logL -= 1e10
     elif params[1] >= params[5]:
-        logL -= 1e8
+        logL -= 1e10
     elif params[1] >= params[3]:
-        logL -= 1e8
+        logL -= 1e10
 
     return logL
 
