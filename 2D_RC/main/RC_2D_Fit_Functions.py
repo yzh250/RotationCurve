@@ -225,11 +225,11 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, mask):
     incl, ph, x_guess, y_guess = params
 
     # Isothermal Fitting
-    bounds_iso = [[-7,2], # Bulge density log([Msun/pc^2])
+    bounds_iso = [[-7,1], # Bulge density log([Msun/pc^3])
                   [0,5],  # Bulge radius [kpc/h]
                   [0.1, 3000],  # Surface Density [Msol/pc^2]
                   [0.1, 30],  # Disk radius [kpc/h]
-                  [-7, 2],  # Halo density log([Msun/pc^2])
+                  [-7, 2],  # Halo density log([Msun/pc^3])
                   [0.1, 1000],  # Halo radius [kpc]
                   [0.1, 0.436*np.pi],  # Inclination angle
                   [0, 2.2 * np.pi],  # Phase angle
@@ -308,7 +308,7 @@ def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar, mask):
     incl, ph, x_guess, y_guess = params
 
     # NFW Fitting
-    bounds_NFW = [[-7, 2], # Bulge density [log(Msun/pc^2)]
+    bounds_NFW = [[-7, 1], # Bulge density [log(Msun/pc^2)]
                   [0, 5],  # Bulge radius [kpc/h]
                   [0.1, 3000], # Surface Density [Msol/pc^2]
                   [0.1, 30],   # Disk radius [kpc/h]
@@ -388,7 +388,7 @@ def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar, mask):
     incl, ph, x_guess, y_guess = params
 
     # Burket Fitting
-    bounds_bur = [[-7, 2], # Bulge density [log(Msun/pc^2)]
+    bounds_bur = [[-7, 1], # Bulge density [log(Msun/pc^2)]
                   [0, 5],  # Bulge radius [kpc/h]
                   [0.1, 3000], # Surface Density [Msol/pc^2]
                   [0.1, 30],   # Disk radius [kpc/h]
