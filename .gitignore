@@ -14,3 +14,4 @@
 *.lprof
 *.sh~
 /2D_RC/main/build/*
+/2D_RC/main/*.npy
