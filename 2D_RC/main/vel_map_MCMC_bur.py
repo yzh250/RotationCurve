@@ -61,9 +61,26 @@ def log_prior(params):
 
     logP = 0
 
-    if -7 < log_rhob0 < 2 and 0 < Rb < 5 and 100 < SigD < 3000 and 1 < Rd < 30\
-     and -7 < log_rhoh0 < 2 and 0.01 < Rh< 500 and 0 < inclination < np.pi*0.436 and 0 < phi < 2*np.pi\
-     and 10 < center_x < 50 and 10 < center_y < 50 and -100 < vsys < 100:
+    rhob_check = -7 < log_rhob0 < 1
+    #rhob_check = 0 < log_rhob0 < 10
+    Rb_check = 0 < Rb < 5
+
+    SigD_check = 0.1 < SigD < 3000
+    Rd_check = 0.1 < Rd < 30
+
+    rhoh_check = -7 < log_rhoh0 < 2
+    #rhoh_check = 0 < log_rhoh0 < 100
+    Rh_check = 0.01 < Rh < 500
+
+    i_check = 0 < inclination < np.pi*0.436
+    phi_check = 0 < phi < 2*np.pi
+
+    x_check = 10 < center_x < 50
+    y_check = 10 < center_y < 50
+
+    v_check = -100 < vsys < 100
+
+    if rhob_check and Rb_check and SigD_check and Rd_check and rhoh_check and Rh_check and i_check and phi_check and x_check and y_check and v_check:
         logP = 0
 
     # setting constraints on the radii
@@ -113,17 +130,17 @@ mini_soln = [np.log10(5.36E-05),
              37.23417255,
              -0.685352448]
 '''
-mini_soln = [-1.40486167e+00,  
-             1.89353769e+00,  
-             1.16228518e+03,  
-             1.53230277e+00,
-             -9.31163096e-01,  
-             2.42473452e+00,  
-             4.54118840e-01,  
-             1.95365937e+00,
-             2.65093727e+01,  
-             2.74410572e+01, 
-             -3.58896610e-02]
+mini_soln = [-6.59777831e-01,  
+             8.79672148e-01,  
+             1.26255880e+03,  
+             1.70030546e+00,
+             -1.12663702e+00,  
+             1.96961240e+00,  
+             4.32737152e-01,  
+             1.95459032e+00,
+             2.64977218e+01,  
+             2.74595137e+01,  
+             8.45094049e-02]
 ################################################################################
 
 
@@ -150,7 +167,8 @@ bad_sampler_bur = emcee.EnsembleSampler(nwalkers,
                                               data_maps['ivar_masked'], 
                                               data_maps['Ha_vel_mask']))
 bad_sampler_bur.run_mcmc(pos, 10000, progress=True)
-bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
+bad_samples_bur = bad_sampler_bur.get_chain()
+#bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
 
 np.save('bad_samples_bur.npy', bad_samples_bur)
 

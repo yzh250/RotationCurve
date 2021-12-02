@@ -221,7 +221,7 @@ cpdef DTYPE_F64_t bulge_vel(DTYPE_F64_t r,
     cdef DTYPE_F64_t Vb 
 
     if r != 0.0:
-        
+
         rho_0 = 10.0**log_rhob0
 
         x = r/Rb
@@ -346,8 +346,8 @@ cpdef DTYPE_F64_t halo_vel_iso(DTYPE_F64_t r,
 # integral form can be seen from "rotation_curve_functions.py"
 #-------------------------------------------------------------------------------
 cpdef DTYPE_F64_t halo_vel_NFW(DTYPE_F64_t r, 
-                               #DTYPE_F64_t log_rhoh0, 
-                               DTYPE_F64_t rho0_h, 
+                               DTYPE_F64_t log_rhoh0, 
+                               #DTYPE_F64_t rho0_h, 
                                DTYPE_F64_t Rh):
     '''
     Function to calculate the NFW halo velocity at a given galactocentric 
@@ -371,12 +371,12 @@ cpdef DTYPE_F64_t halo_vel_NFW(DTYPE_F64_t r,
     Vh : The rotational velocity of the halo [km/s]
     '''
 
-    #cdef DTYPE_F64_t rho0_h
+    cdef DTYPE_F64_t rho0_h
     cdef DTYPE_F64_t halo_mass
     cdef DTYPE_F64_t vel2 = 0.0
     cdef DTYPE_F64_t Vh
 
-    #rho0_h = 10**log_rhoh0
+    rho0_h = 10**log_rhoh0
     
     halo_mass = 4.0 * pi * rho0_h * Rh**3.0 * ((Rh/(Rh + r)) + log(Rh + r) - 1.0 - log(Rh))
 
@@ -398,8 +398,8 @@ cpdef DTYPE_F64_t halo_vel_NFW(DTYPE_F64_t r,
 # integral form can be seen from "rotation_curve_functions.py"
 #-------------------------------------------------------------------------------
 cpdef DTYPE_F64_t halo_vel_bur(DTYPE_F64_t r, 
-                               #DTYPE_F64_t log_rhoh0, 
-                               DTYPE_F64_t rho0_h, 
+                               DTYPE_F64_t log_rhoh0, 
+                               #DTYPE_F64_t rho0_h, 
                                DTYPE_F64_t Rh):
     '''
     Function to calculate the Burket halo velocity at a given galactocentric 
@@ -423,12 +423,12 @@ cpdef DTYPE_F64_t halo_vel_bur(DTYPE_F64_t r,
     Vh : The rotational velocity of the halo [km/s]
     '''
 
-    #cdef DTYPE_F64_t rho0_h
+    cdef DTYPE_F64_t rho0_h
     cdef DTYPE_F64_t halo_mass
     cdef DTYPE_F64_t vel2 = 0.0
     cdef DTYPE_F64_t Vh
 
-    #rho0_h = 10**log_rhoh0
+    rho0_h = 10**log_rhoh0
     
     halo_mass = np.pi * (-rho0_h) * (Rh**3) * (-log(Rh**2 + r**2) \
                                                - 2.0*log(Rh + r)\

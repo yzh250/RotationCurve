@@ -61,9 +61,26 @@ def log_prior(params):
 
     logP = 0
 
-    if -7 < log_rhob0 < 2 and 0 < Rb < 5 and 100 < SigD < 3000 and 1 < Rd < 30\
-     and -7 < log_rhoh0 < 2 and 0.01 < Rh< 500 and 0 < inclination < np.pi*0.436 and 0 < phi < 2*np.pi\
-     and 10 < center_x < 50 and 10 < center_y < 50 and -100 < vsys < 100:
+    rhob_check = -7 < log_rhob0 < 1
+    #rhob_check = 0 < log_rhob0 < 10
+    Rb_check = 0 < Rb < 5
+
+    SigD_check = 0.1 < SigD < 3000
+    Rd_check = 0.1 < Rd < 30
+
+    rhoh_check = -7 < log_rhoh0 < 2
+    #rhoh_check = 0 < log_rhoh0 < 100
+    Rh_check = 0.01 < Rh < 500
+
+    i_check = 0 < inclination < np.pi*0.436
+    phi_check = 0 < phi < 2*np.pi
+
+    x_check = 10 < center_x < 50
+    y_check = 10 < center_y < 50
+
+    v_check = -100 < vsys < 100
+
+    if rhob_check and Rb_check and SigD_check and Rd_check and rhoh_check and Rh_check and i_check and phi_check and x_check and y_check and v_check:
         logP = 0
 
     # setting constraints on the radii
@@ -112,17 +129,17 @@ mini_soln = [np.log10(5.315237789),
              27.65695241,
              4.516715936]
 '''
-mini_soln = [-1.55039138e+00,  
-             2.60121905e+00,  
-             5.41233872e+02,  
-             1.45222297e+00,
-             -3.65723641e+00,  
-             3.81443437e+02,  
-             5.92785613e-01,  
-             1.95488595e+00,
-             2.64660673e+01,  
-             2.75112718e+01,  
-             2.51683515e-01]
+mini_soln = [-0.98919516,   
+             1.29825327, 
+             512.29796252,   
+             1.66840085,
+             -3.88968456, 
+             288.94905845,   
+             0.64977465,   
+             1.95050722,
+             26.34076295,  
+             27.40741842,   
+             1.23116196]
 ################################################################################
 
 
@@ -149,7 +166,8 @@ bad_sampler_NFW = emcee.EnsembleSampler(nwalkers,
                                               data_maps['ivar_masked'], 
                                               data_maps['Ha_vel_mask']))
 bad_sampler_NFW.run_mcmc(pos, 10000, progress=True)
-bad_samples_NFW = bad_sampler_NFW.get_chain(discard=500)
+bad_samples_NFW = bad_sampler_NFW.get_chain()
+#bad_samples_NFW = bad_sampler_NFW.get_chain(discard=500)
 
 np.save('bad_samples_NFW.npy', bad_samples_NFW)
 

@@ -35,8 +35,8 @@ scale = 0.22471093
 # Data location
 #-------------------------------------------------------------------------------
 #manga = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
-manga =  '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
-#manga = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/spectro/'
+#manga = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+manga = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/spectro/'
 ################################################################################
 
 
@@ -61,14 +61,32 @@ def log_prior(params):
 
     logP = 0
 
-    if -7 < log_rhob0 < 2 and 0 < Rb < 5 and 100 < SigD < 3000 and 1 < Rd < 30\
-     and -7 < log_rhoh0 < 2 and 0.01 < Rh < 500 and 0 < inclination < np.pi*0.436 and 0 < phi < 2*np.pi\
-     and 10 < center_x < 50 and 10 < center_y < 50 and -100 < vsys < 100:
+    rhob_check = -7 < log_rhob0 < 1
+    #rhob_check = 0 < log_rhob0 < 10
+    Rb_check = 0 < Rb < 5
+
+    SigD_check = 0.1 < SigD < 3000
+    Rd_check = 0.1 < Rd < 30
+
+    rhoh_check = -7 < log_rhoh0 < 2
+    #rhoh_check = 0 < log_rhoh0 < 100
+    Rh_check = 0.01 < Rh < 500
+
+    i_check = 0 < inclination < np.pi*0.436
+    phi_check = 0 < phi < 2*np.pi
+
+    x_check = 10 < center_x < 50
+    y_check = 10 < center_y < 50
+
+    v_check = -100 < vsys < 100
+
+    if rhob_check and Rb_check and SigD_check and Rd_check and rhoh_check and Rh_check and i_check and phi_check and x_check and y_check and v_check:
         logP = 0
 
     # setting constraints on the radii
-    elif Rh < Rb or Rh < Rd or Rd < Rb:
+    elif (Rh < Rb) or (Rh < Rd) or (Rd < Rb):
         logP = -np.inf
+
     else:
     	logP = -np.inf
 
@@ -99,31 +117,17 @@ def log_prob_iso(params, scale, shape, vdata, ivar, mask):
 ################################################################################
 # Best-fit parameter values from scipy.optimize.minimize
 #-------------------------------------------------------------------------------
-'''
-mini_soln = [np.log10(11.66291723), \
-             2.69E-05, \
-             1031.023329, \
-             1.838768634, \
-             0.083546044, \
-             0.102759719, \
-             0.553854733, \
-             1.951500683, \
-             26.37172472, \
-             27.44266793, \
-             0.907424538]
-'''
-mini_soln = [-1.75945524e+00,
-             9.92569881e-01,  
-             1.53473087e+03,  
-             1.53193786e+00,
-             -9.71730256e-01,  
-             2.21049991e+00,  
-             4.00380847e-01,  
-             1.96012236e+00,
-             2.65844368e+01,  
-             2.76934251e+01, 
-             -9.79924775e-01]
-
+mini_soln = [5.22556630e-01,  
+             8.75867868e-02,  
+             1.22274318e+03,  
+             1.84783695e+00,
+             -2.58560881e+00,  
+             2.49168726e+00,  
+             4.87943120e-01,  
+             1.95828750e+00,
+             2.68901538e+01,  
+             2.78359427e+01, 
+             -3.14480464e+00]
 ################################################################################
 
 
@@ -132,13 +136,15 @@ mini_soln = [-1.75945524e+00,
 ################################################################################
 # Isothermal
 #-------------------------------------------------------------------------------
+
 pos = np.array(mini_soln) + np.random.uniform(low=-1e-3*np.ones(len(mini_soln)), 
                                               high=1e-3*np.ones(len(mini_soln)), 
                                               size=(64,11))
-#pos = np.random.uniform(low=[-6,0.00001,200,0.1,2e-5,0.1,0,0,15,15,-50], 
-#                        high=[2,5,2500,25,0.1,500,0.436*np.pi,2*np.pi,45,45,50], 
-#                        size=(64,11))
-
+'''
+pos = np.random.uniform(low=[0, 0, 0.1, 0.1, 0, 0.1, 0.1, 0, 15, 15, -100], 
+                        high=[10, 5, 3000, 25, 100, 500, 0.436*np.pi, 2*np.pi, 45, 45, 100], 
+                        size=(64,11))
+'''
 nwalkers, ndim = pos.shape
 
 bad_sampler_iso = emcee.EnsembleSampler(nwalkers, 
@@ -150,7 +156,8 @@ bad_sampler_iso = emcee.EnsembleSampler(nwalkers,
                                               data_maps['ivar_masked'], 
                                               data_maps['Ha_vel_mask']))
 bad_sampler_iso.run_mcmc(pos, 10000, progress=True)
-bad_samples_iso = bad_sampler_iso.get_chain(discard=500)
+bad_samples_iso = bad_sampler_iso.get_chain()
+#bad_samples_iso = bad_sampler_iso.get_chain(discard=500)
 
 np.save('bad_samples_iso.npy', bad_samples_iso)
 

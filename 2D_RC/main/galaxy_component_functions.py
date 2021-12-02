@@ -13,6 +13,8 @@ from numpy import log as ln
 
 from astropy.table import QTable
 import astropy.units as u
+
+from galaxy_component_functions_cython import Sigb_integrand as deV_integrand
 ################################################################################
 
 
@@ -70,10 +72,11 @@ def bulge_vel(r, log_rhob0, Rb):
     return vel/1000
 ################################################################################
 
-'''
+
 ################################################################################
 # de Vaucouleur's bulge model (Integrating volume mass density)
 #-------------------------------------------------------------------------------
+'''
 gamma = 3.3308 # unitless
 kappa = gamma*ln(10) # unitless
 
@@ -113,9 +116,9 @@ def density_integrand(x,r,SigBC,Rb):
     return: integrand for volume density of the bulge (g/pc^3)
     """
     return -(1/np.pi)*dsdx(x,SigBC,Rb)/np.sqrt(x**2-r**2)
-
+'''
 # mass integrand
-def mass_integrand(r,SigBC,Rb):
+def mass_integrand(r, SigBC, Rb):
     """
     parameters:
     x (projected radius): The projected rdius  (pc)   
@@ -126,11 +129,11 @@ def mass_integrand(r,SigBC,Rb):
     return: volume density of the bulge
     """
     # integrating for volume density
-    vol_den, vol_den_err = inte.quad(density_integrand, r, np.inf, args=(r,SigBC,Rb))
-    return 4*np.pi*vol_den*r**2
+    vol_den, vol_den_err = inte.quad(deV_integrand, r, np.inf, args=(r,SigBC,Rb))
+    return 4 * np.pi * vol_den * r**2
 
 # getting a velocity
-def bulge_vel_full(r,SigBC,Rb):
+def bulge_vel_deV(r,SigBC,Rb):
     """
     parameters:
     r (radius): The a distance from the centre (pc)
@@ -155,7 +158,7 @@ def bulge_vel_full(r,SigBC,Rb):
 
     return vel
 ################################################################################
-'''
+
 
 ####################################################################################
 # Disk velocity from Sofue 2013

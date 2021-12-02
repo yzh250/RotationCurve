@@ -225,11 +225,13 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, mask):
     incl, ph, x_guess, y_guess = params
 
     # Isothermal Fitting
-    bounds_iso = [[-7,1], # Bulge density log([Msun/pc^3])
-                  [0,5],  # Bulge radius [kpc/h]
+    bounds_iso = [[-7, 1], # Bulge density [log(Msun/pc^3)]
+                  #[0, 10], # Bulge density [Msun/pc^3]
+                  [0, 10],  # Bulge radius [kpc/h]
                   [0.1, 3000],  # Surface Density [Msol/pc^2]
                   [0.1, 30],  # Disk radius [kpc/h]
-                  [-7, 2],  # Halo density log([Msun/pc^3])
+                  [-7, 2],  # Halo density [log(Msun/pc^3)]
+                  #[0, 100],  # Halo density [Msun/pc^3]
                   [0.1, 1000],  # Halo radius [kpc]
                   [0.1, 0.436*np.pi],  # Inclination angle
                   [0, 2.2 * np.pi],  # Phase angle
@@ -240,6 +242,8 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, mask):
     vsys = 0
 
     ig_iso = [-1, 1, 1000, 4, -3, 25, incl, ph, x_guess, y_guess, vsys]
+    #ig_iso = [-1, 1, 1000, 4, 0.001, 25, incl, ph, x_guess, y_guess, vsys]
+    #ig_iso = [0.0001, 4, 2000, 25, 5, 250, incl, ph, x_guess, y_guess, vsys]
 
     bestfit_iso = minimize(nloglikelihood_iso_flat,
                            ig_iso,
@@ -308,11 +312,13 @@ def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar, mask):
     incl, ph, x_guess, y_guess = params
 
     # NFW Fitting
-    bounds_NFW = [[-7, 1], # Bulge density [log(Msun/pc^2)]
+    bounds_NFW = [[-7, 1], # Bulge density [log(Msun/pc^3)]
+                  #[0, 10], # Bulge density [Msun/pc^3]
                   [0, 5],  # Bulge radius [kpc/h]
                   [0.1, 3000], # Surface Density [Msol/pc^2]
                   [0.1, 30],   # Disk radius [kpc/h]
-                  [-7, 2],     # Halo density [log(Msun/pc^2)]
+                  [-7, 2],     # Halo density [log(Msun/pc^3)]
+                  #[0, 100],    # Halo density [Msun/pc^3]
                   [0.1, 1000], # Halo radius [kpc]
                   [0.1, 0.436*np.pi], # Inclination angle
                   [0, 2.2 * np.pi], # Phase angle
@@ -323,6 +329,7 @@ def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar, mask):
     vsys = 0
 
     ig_NFW = [-1, 1, 1000, 4, -3, 25, incl, ph, x_guess, y_guess, vsys]
+    #ig_NFW = [0.1, 1, 1000, 4, 0.001, 25, incl, ph, x_guess, y_guess, vsys]
 
     bestfit_NFW = minimize(nloglikelihood_NFW_flat,
                            ig_NFW, 
@@ -388,11 +395,13 @@ def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar, mask):
     incl, ph, x_guess, y_guess = params
 
     # Burket Fitting
-    bounds_bur = [[-7, 1], # Bulge density [log(Msun/pc^2)]
+    bounds_bur = [[-7, 1], # Bulge density [log(Msun/pc^3)]
+                  #[0, 10], # Bulge density [Msun/pc^3]
                   [0, 5],  # Bulge radius [kpc/h]
                   [0.1, 3000], # Surface Density [Msol/pc^2]
                   [0.1, 30],   # Disk radius [kpc/h]
-                  [-7, 2],    # Halo density [log(Msun/pc^2)]
+                  [-7, 2],    # Halo density [log(Msun/pc^3)]
+                  #[0, 100],    # Halo density [Msun/pc^3]
                   [0.1, 1000], # Halo radius [kpc]
                   [0.1, 0.436*np.pi],  # Inclination angle
                   [0, 2.2 * np.pi],  # Phase angle
@@ -405,6 +414,7 @@ def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar, mask):
     vsys = 0
 
     ig_bur = [-1, 1, 1000, 4, -3, 25, incl, ph, x_guess, y_guess, vsys]
+    #ig_bur = [0.1, 1, 1000, 4, 0.001, 25, incl, ph, x_guess, y_guess, vsys]
 
     bestfit_bur = minimize(nloglikelihood_bur_flat,
                            ig_bur, 
