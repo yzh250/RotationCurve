@@ -15,3 +15,4 @@
 *.sh~
 /2D_RC/main/build/*
 /2D_RC/main/*.npy
+/2D_RC/main/Notebooks/.ipynb_checkpoints/*
