@@ -26,7 +26,116 @@ cdef DTYPE_F64_t G = 6.674e-11  # m^3 kg^-1 s^-2
 cdef DTYPE_F64_t Msun = 1.989e30  # kg
 
 cdef DTYPE_F64_t pi = np.pi
+
+cdef DTYPE_F64_t gamma = 3.3308
+
+cdef DTYPE_F64_t kappa = gamma * log(10.0)
 ################################################################################
+
+
+
+
+################################################################################
+# de Vaucouleurs bulge model (Sofue 2017)
+#-------------------------------------------------------------------------------
+cpdef sigma_b(DTYPE_F64_t r, 
+              DTYPE_F64_t SigBE, 
+              DTYPE_F64_t Rb):
+    '''
+    Function to calculate the surface mass density of the de Vaucouleurs bulge.
+
+
+    PARAMETERS
+    ==========
+
+    r : The distance from the center [pc]
+
+    SigBE : The surface mass density at the scale radius [Msun/pc^2]
+
+    Rb : The scale radius of the bulge [pc]
+
+
+    RETURNS
+    =======
+
+    SigB : The surface mass density at radius r [Msun/pc^2]
+    '''
+
+    cdef DTYPE_F64_t SigB
+
+    SigB = SigBE * exp(-kappa * ((r / Rb)**0.25 - 1))
+
+    return SigB
+
+
+
+cpdef dSdx(DTYPE_F64_t x, 
+           DTYPE_F64_t SigBE, 
+           DTYPE_F64_t Rb):
+    '''
+    Function to calculate the derivative of the surface mass density of the 
+    de Vaucouleurs bulge.
+
+
+    PARAMETERS
+    ==========
+
+    x : The distance from the center [pc]
+
+    SigBE : The surface mass density at the scale radius [Msun/pc^2]
+
+    Rb : The scale radius of the bulge [pc]
+
+
+    RETURNS
+    =======
+
+    dSigb_dx : The first derivative of the surface mass density at radius x 
+        [Msun/pc^3]
+    '''
+
+    cdef DTYPE_F64_t dSigb_dx
+
+    dSigb_dx = sigma_b(x, SigBE, Rb) * (-0.25 * kappa / x) * (x / Rb)**-0.25
+
+    return dSigb_dx
+
+
+
+cpdef Sigb_integrand(DTYPE_F64_t x, 
+                     DTYPE_F64_t r, 
+                     DTYPE_F64_t SigBE, 
+                     DTYPE_F64_t Rb):
+    '''
+    Function to calculate the integrand of the integral to calculate the 
+    volume mass density of the de Vaucouleurs bulge.
+
+
+    PARAMETERS
+    ==========
+
+    x : integral variable [pc]
+
+    r : The distance from the center [pc]
+
+    SigBE : The surface mass density at the scale radius [Msun/pc^2]
+
+    Rb : The scale radius of the bulge [pc]
+
+
+    RETURNS
+    =======
+
+    drho_dx : The integrand of the volume mass density integral [Msun/pc^4]
+    '''
+
+    cdef DTYPE_F64_t drho_dx
+
+    drho_dx = (1 / pi) * dSdx(x, SigBE, Rb) / sqrt(x**2 - r**2)
+
+    return drho_dx
+################################################################################
+
 
 
 
@@ -38,6 +147,9 @@ cpdef DTYPE_F64_t bulge_vel_feng_2014(DTYPE_F64_t r,
                             DTYPE_F64_t Rb):
     '''
     Function to calculate the bulge velocity at a given galactocentric radius.
+
+    NOTE: Not to be used with traditional disk models - this peaks at a much 
+    larger radius than is normally expected for a galaxy.
 
 
     PARAMETERS
@@ -73,11 +185,14 @@ cpdef DTYPE_F64_t bulge_vel_feng_2014(DTYPE_F64_t r,
     return Vb
 ################################################################################
 
+
+
 ################################################################################
 # Exponential bulge model (Sofue 2017)
 #-------------------------------------------------------------------------------
 cpdef DTYPE_F64_t bulge_vel(DTYPE_F64_t r,
                             DTYPE_F64_t log_rhob0, 
+                            #DTYPE_F64_t rho_0, 
                             DTYPE_F64_t Rb):
     '''
     Function to calculate the bulge velocity at a given galactocentric radius.
@@ -102,23 +217,28 @@ cpdef DTYPE_F64_t bulge_vel(DTYPE_F64_t r,
     cdef DTYPE_F64_t mass_0
     cdef DTYPE_F64_t x
     cdef DTYPE_F64_t F
-    cdef DTYPE_F64_t vel
+    cdef DTYPE_F64_t vel = 0.0
     cdef DTYPE_F64_t Vb 
 
-    rho_0 = 10.0**log_rhob0
-
-    x = r/Rb
-
-    F = 1.0 - exp(-x) * (1.0 + x + 0.5 * x**2)
-
-    mass_0 = 8.0 * pi * (Rb * 3.086e16)**3 * rho_0
+    if r != 0.0:
         
-    vel = sqrt((G * mass_0 * Msun * F) / (Rb * 3.086e16))
+        rho_0 = 10.0**log_rhob0
+
+        x = r/Rb
+
+        F = 1.0 - exp(-x) * (1.0 + x + 0.5 * x**2)
+
+        mass_0 = 8.0 * pi * Rb**3 * rho_0
+            
+        vel = sqrt((G * mass_0 * Msun * F) / (r * 3.086e16))
 
     Vb = vel / 1000.0
 
     return Vb
 ################################################################################
+
+
+
 
 ################################################################################
 # Disk velocity from Sofue (2013)
@@ -175,6 +295,7 @@ cpdef DTYPE_F64_t disk_vel(DTYPE_F64_t r,
 #-------------------------------------------------------------------------------
 cpdef DTYPE_F64_t halo_vel_iso(DTYPE_F64_t r, 
                                DTYPE_F64_t log_rhoh0, 
+                               #DTYPE_F64_t rho0_h, 
                                DTYPE_F64_t Rh):
     '''
     Function to calculate the isothermal halo velocity at a given galactocentric 
@@ -225,7 +346,8 @@ cpdef DTYPE_F64_t halo_vel_iso(DTYPE_F64_t r,
 # integral form can be seen from "rotation_curve_functions.py"
 #-------------------------------------------------------------------------------
 cpdef DTYPE_F64_t halo_vel_NFW(DTYPE_F64_t r, 
-                               DTYPE_F64_t log_rhoh0, 
+                               #DTYPE_F64_t log_rhoh0, 
+                               DTYPE_F64_t rho0_h, 
                                DTYPE_F64_t Rh):
     '''
     Function to calculate the NFW halo velocity at a given galactocentric 
@@ -249,12 +371,12 @@ cpdef DTYPE_F64_t halo_vel_NFW(DTYPE_F64_t r,
     Vh : The rotational velocity of the halo [km/s]
     '''
 
-    cdef DTYPE_F64_t rho0_h
+    #cdef DTYPE_F64_t rho0_h
     cdef DTYPE_F64_t halo_mass
     cdef DTYPE_F64_t vel2 = 0.0
     cdef DTYPE_F64_t Vh
 
-    rho0_h = 10**log_rhoh0
+    #rho0_h = 10**log_rhoh0
     
     halo_mass = 4.0 * pi * rho0_h * Rh**3.0 * ((Rh/(Rh + r)) + log(Rh + r) - 1.0 - log(Rh))
 
@@ -276,7 +398,8 @@ cpdef DTYPE_F64_t halo_vel_NFW(DTYPE_F64_t r,
 # integral form can be seen from "rotation_curve_functions.py"
 #-------------------------------------------------------------------------------
 cpdef DTYPE_F64_t halo_vel_bur(DTYPE_F64_t r, 
-                               DTYPE_F64_t log_rhoh0, 
+                               #DTYPE_F64_t log_rhoh0, 
+                               DTYPE_F64_t rho0_h, 
                                DTYPE_F64_t Rh):
     '''
     Function to calculate the Burket halo velocity at a given galactocentric 
@@ -300,12 +423,12 @@ cpdef DTYPE_F64_t halo_vel_bur(DTYPE_F64_t r,
     Vh : The rotational velocity of the halo [km/s]
     '''
 
-    cdef DTYPE_F64_t rho0_h
+    #cdef DTYPE_F64_t rho0_h
     cdef DTYPE_F64_t halo_mass
     cdef DTYPE_F64_t vel2 = 0.0
     cdef DTYPE_F64_t Vh
 
-    rho0_h = 10**log_rhoh0
+    #rho0_h = 10**log_rhoh0
     
     halo_mass = np.pi * (-rho0_h) * (Rh**3) * (-log(Rh**2 + r**2) \
                                                - 2.0*log(Rh + r)\
