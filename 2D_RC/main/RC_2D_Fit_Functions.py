@@ -225,11 +225,11 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, mask):
     incl, ph, x_guess, y_guess = params
 
     # Isothermal Fitting
-    bounds_iso = [[-7,2], # Bulge density log([Msun/pc^2])
+    bounds_iso = [[-7,1], # Bulge density log([Msun/pc^3])
                   [0,5],  # Bulge radius [kpc/h]
                   [0.1, 3000],  # Surface Density [Msol/pc^2]
                   [0.1, 30],  # Disk radius [kpc/h]
-                  [-7, 2],  # Halo density log([Msun/pc^2])
+                  [-7, 2],  # Halo density log([Msun/pc^3])
                   [0.1, 1000],  # Halo radius [kpc]
                   [0.1, 0.436*np.pi],  # Inclination angle
                   [0, 2.2 * np.pi],  # Phase angle
@@ -308,7 +308,7 @@ def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar, mask):
     incl, ph, x_guess, y_guess = params
 
     # NFW Fitting
-    bounds_NFW = [[-7, 2], # Bulge density [log(Msun/pc^2)]
+    bounds_NFW = [[-7, 1], # Bulge density [log(Msun/pc^2)]
                   [0, 5],  # Bulge radius [kpc/h]
                   [0.1, 3000], # Surface Density [Msol/pc^2]
                   [0.1, 30],   # Disk radius [kpc/h]
@@ -388,7 +388,7 @@ def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar, mask):
     incl, ph, x_guess, y_guess = params
 
     # Burket Fitting
-    bounds_bur = [[-7, 2], # Bulge density [log(Msun/pc^2)]
+    bounds_bur = [[-7, 1], # Bulge density [log(Msun/pc^2)]
                   [0, 5],  # Bulge radius [kpc/h]
                   [0.1, 3000], # Surface Density [Msol/pc^2]
                   [0.1, 30],   # Disk radius [kpc/h]
@@ -731,7 +731,7 @@ def plot_rot_curve(mHa_vel,
                 v[i] = vel_tot_iso(r[i],best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
             elif halo_model == 'NFW':
                 v_h[i] = halo_vel_NFW(r[i]*1000,best_fit_values[4],best_fit_values[5]*1000)
-                v[i] = vel_tot_NFW(r[i],bbest_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
+                v[i] = vel_tot_NFW(r[i],best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
             elif halo_model == 'Burket':
                 v_h[i] = halo_vel_bur(r[i]*1000,best_fit_values[4],best_fit_values[5]*1000)
                 v[i] = vel_tot_bur(r[i],best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])

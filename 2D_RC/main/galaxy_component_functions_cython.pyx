@@ -33,7 +33,7 @@ cdef DTYPE_F64_t pi = np.pi
 ################################################################################
 # Exponential bulge model (Feng2014)
 #-------------------------------------------------------------------------------
-cpdef DTYPE_F64_t bulge_vel(DTYPE_F64_t r,
+cpdef DTYPE_F64_t bulge_vel_feng_2014(DTYPE_F64_t r,
                             DTYPE_F64_t log_rhob0, 
                             DTYPE_F64_t Rb):
     '''
@@ -73,7 +73,52 @@ cpdef DTYPE_F64_t bulge_vel(DTYPE_F64_t r,
     return Vb
 ################################################################################
 
+################################################################################
+# Exponential bulge model (Sofue 2017)
+#-------------------------------------------------------------------------------
+cpdef DTYPE_F64_t bulge_vel(DTYPE_F64_t r,
+                            DTYPE_F64_t log_rhob0, 
+                            DTYPE_F64_t Rb):
+    '''
+    Function to calculate the bulge velocity at a given galactocentric radius.
 
+
+    PARAMETERS
+    ==========
+
+    r : The distance from the center [pc]
+
+    log_rhob0 : log10(central bulge density) log([M_sol/pc^3])
+
+    Rb : The scale radius of the bulge [pc]
+
+
+    RETURNS
+    =======
+
+    Vb : The rotational velocity of the bulge [km/s]
+    '''
+    cdef DTYPE_F64_t rho_0
+    cdef DTYPE_F64_t mass_0
+    cdef DTYPE_F64_t x
+    cdef DTYPE_F64_t F
+    cdef DTYPE_F64_t vel
+    cdef DTYPE_F64_t Vb 
+
+    rho_0 = 10.0**log_rhob0
+
+    x = r/Rb
+
+    F = 1.0 - exp(-x) * (1.0 + x + 0.5 * x**2)
+
+    mass_0 = 8.0 * pi * (Rb * 3.086e16)**3 * rho_0
+        
+    vel = sqrt((G * mass_0 * Msun * F) / (Rb * 3.086e16))
+
+    Vb = vel / 1000.0
+
+    return Vb
+################################################################################
 
 ################################################################################
 # Disk velocity from Sofue (2013)
