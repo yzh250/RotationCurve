@@ -43,6 +43,7 @@ from mapSmoothness_functions import how_smooth
 c = 3E5 # km * s ^1
 h = 1 # reduced hubble constant
 H_0 =  100 * h # km * s^-1 * Mpc^-1
+q0 = 0.2 # minimum inclination value
 ################################################################################
 
 
@@ -51,11 +52,6 @@ H_0 =  100 * h # km * s^-1 * Mpc^-1
 ################################################################################
 # Used files
 #-------------------------------------------------------------------------------
-'''
-DTable1 = QTable.read('Master_Table.txt',format='ascii.commented_header')
-DTable2 = QTable.read('DRPall-master_file.txt',format='ascii.ecsv')
-'''
-
 #MANGA_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
 MANGA_FOLDER = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/spectro/'
 DRP_FILENAME = MANGA_FOLDER + 'redux/v2_4_3/drpall-v2_4_3.fits'
