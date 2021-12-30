@@ -25,7 +25,7 @@ G = 6.674E-11  # m^3 kg^-1 s^-2
 Msun = 1.989E30  # kg
 
 # Specific for galaxy 7443-6101
-scale = 0.22471093                                           
+scale = 0.2101665333430296                                          
 ################################################################################
 
 
@@ -35,8 +35,8 @@ scale = 0.22471093
 # Data location
 #-------------------------------------------------------------------------------
 #manga = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
-#manga = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
-manga = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/spectro/'
+manga = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+#manga = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/spectro/'
 ################################################################################
 
 
@@ -45,7 +45,7 @@ manga = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/spectro/'
 ################################################################################
 # Import galaxy data
 #-------------------------------------------------------------------------------
-data_maps, gshape, x_center_guess, y_center_guess = Galaxy_Data('7443-6101', 
+data_maps, gshape, x_center_guess, y_center_guess = Galaxy_Data('7495-12704', 
                                                                 manga)
 ################################################################################
 
@@ -117,17 +117,17 @@ def log_prob_iso(params, scale, shape, vdata, ivar, mask):
 ################################################################################
 # Best-fit parameter values from scipy.optimize.minimize
 #-------------------------------------------------------------------------------
-mini_soln = [5.22556630e-01,  
-             8.75867868e-02,  
-             1.22274318e+03,  
-             1.84783695e+00,
-             -2.58560881e+00,  
-             2.49168726e+00,  
-             4.87943120e-01,  
-             1.95828750e+00,
-             2.68901538e+01,  
-             2.78359427e+01, 
-             -3.14480464e+00]
+mini_soln = [0.999956293,
+             5.985783412,
+             2999.999855,
+             5.896416606,
+             1.830766403,
+             0.101792515,
+             0.400013985,
+             2.086430968,
+             42.75920041,
+             8.822686101,
+             99.99993356]
 ################################################################################
 
 

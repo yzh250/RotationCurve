@@ -35,6 +35,8 @@ from Velocity_Map_Functions_cython import rot_incl_iso,\
 from mapSmoothness_functions import how_smooth
 
 from os import path
+
+import matplotlib.pyplot as plt
 ################################################################################
 
 
@@ -55,16 +57,16 @@ q0 = 0.2 # minimum inclination value
 ################################################################################
 # Used files
 #-------------------------------------------------------------------------------
-#MANGA_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+MANGA_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
 #MANGA_FOLDER = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
-MANGA_FOLDER = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/spectro/'
+#MANGA_FOLDER = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/spectro/'
 
 DRP_FILENAME = MANGA_FOLDER + 'redux/v2_4_3/drpall-v2_4_3.fits'
 
 VEL_MAP_FOLDER = MANGA_FOLDER + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
 
-#MORPH_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/2D_RC/'
-MORPH_FOLDER = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/morphology/manga_visual_morpho/1.0.1/'
+MORPH_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/2D_RC/'
+#MORPH_FOLDER = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/morphology/manga_visual_morpho/1.0.1/'
 
 
 DTable =  Table.read(DRP_FILENAME, format='fits')
@@ -104,8 +106,8 @@ galaxy_ID = []
 
 #plate = ['7443','7495','7815']
 #IFU = ['1901','1902','3701','3702','3703','3704','6101','6102','6103','6104','9101','9102','12701','12702','12703','12704','12705']
-plate = ['7443']
-IFU = ['6101']
+plate = ['7495']
+IFU = ['12704']
 
 for i in range(len(plate)):
     for j in range(len(IFU)):
@@ -203,6 +205,7 @@ for i in range(len(galaxy_ID)):
                                                                         MANGA_FOLDER)
         #-----------------------------------------------------------------------
 
+
         ########################################################################
         # Selection
         #-----------------------------------------------------------------------
@@ -219,6 +222,9 @@ for i in range(len(galaxy_ID)):
 
         vmasked = ma.array(data_maps['Ha_vel'], mask = Ha_vel_mask)
         ivar_masked = ma.array(data_maps['Ha_vel_ivar'], mask = Ha_vel_mask)
+
+        plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
+        plt.show()
 
         if map_smoothness <= max_map_smoothness and tidal == 0:
             
@@ -253,7 +259,7 @@ for i in range(len(galaxy_ID)):
             elif galaxy_ID[i] in ['7495-6104']:
                 phi_guess -= 0.8 * np.pi
 
-            elif galaxy_ID[i] in ['7815-6103','9029-12705', '8137-3701', '8618-3704', '8323-12701',
+            elif galaxy_ID[i] in ['7495-12704','7815-6103','9029-12705', '8137-3701', '8618-3704', '8323-12701',
                                  '8942-3703', '8333-12701', '8615-6103', '9486-3704',
                                  '8937-1902', '9095-3704', '8466-1902', '9508-3702',
                                  '8727-3703', '8341-12704', '8655-6103']:
@@ -277,6 +283,8 @@ for i in range(len(galaxy_ID)):
 
             # elif gal_ID in ['8655-1902', '7960-3701', '9864-9101', '8588-3703']:
             #     phi_guess = phi_EofN_deg * np.pi / 180.
+
+            print(phi_guess * 180 / (np.pi))
 
             phi_guess = phi_guess % (2 * np.pi)
             ####################################################################
@@ -330,7 +338,7 @@ for i in range(len(galaxy_ID)):
             NFW_fit = np.ndarray.tolist(NFW_fit)
             Burket_fit = np.ndarray.tolist(Burket_fit)
             
-            #plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, data_maps['Ha_vel_mask'], data_maps['vmasked'], data_maps['ivar_masked'])
+            plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, data_maps['Ha_vel_mask'], data_maps['vmasked'], data_maps['ivar_masked'])
             ####################################################################
 
 
