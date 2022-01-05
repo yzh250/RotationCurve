@@ -25,7 +25,7 @@ G = 6.674E-11  # m^3 kg^-1 s^-2
 Msun = 1.989E30  # kg
 
 # Specific for galaxy 7443-6101
-scale = 0.2101665333430296                                        
+scale = 0.991506072                                      
 ################################################################################
 
 
@@ -45,7 +45,7 @@ manga =  '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spe
 ################################################################################
 # Import galaxy data
 #-------------------------------------------------------------------------------
-data_maps, gshape, x_center_guess, y_center_guess = Galaxy_Data('7495-12704', 
+data_maps, gshape, x_center_guess, y_center_guess = Galaxy_Data('7815-3701', 
                                                                 manga)
 ################################################################################
 
@@ -149,12 +149,13 @@ mini_soln = [0.999956293,
 ################################################################################
 # Burket
 #-------------------------------------------------------------------------------
-pos = np.array(mini_soln) + np.random.uniform(low=-1e-3*np.ones(len(mini_soln)), 
-                                              high=1e-3*np.ones(len(mini_soln)), 
-                                              size=(64,11))
-#pos = np.random.uniform(low=[-6,0.00001,200,0.1,2e-5,0.1,0,0,15,15,-50], 
-#                        high=[2,5,2500,25,0.1,500,0.436*np.pi,2*np.pi,45,45,50], 
-#                        size=(64,11))
+#pos = np.array(mini_soln) + np.random.uniform(low=-1e-3*np.ones(len(mini_soln)), 
+#                                             high=1e-3*np.ones(len(mini_soln)), 
+#                                              size=(64,11))
+
+pos = np.random.uniform(low=[-6,0.00001,200,0.1,2e-5,0.1,0,0,15,15,-50], 
+                        high=[2,5,2500,25,0.1,500,0.436*np.pi,2*np.pi,45,45,50], 
+                        size=(64,11))
 
 nwalkers, ndim = pos.shape
 

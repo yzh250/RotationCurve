@@ -104,10 +104,10 @@ r50_ang = DTable['nsa_elpetro_th50_r']
 #-------------------------------------------------------------------------------
 galaxy_ID = []
 
-#plate = ['7443','7495','7815']
-#IFU = ['1901','1902','3701','3702','3703','3704','6101','6102','6103','6104','9101','9102','12701','12702','12703','12704','12705']
-plate = ['7495']
-IFU = ['12704']
+plate = ['7443','7495','7815']
+IFU = ['1901','1902','3701','3702','3703','3704','6101','6102','6103','6104','9101','9102','12701','12702','12703','12704','12705']
+#plate = ['7495']
+#IFU = ['12704']
 
 for i in range(len(plate)):
     for j in range(len(IFU)):
@@ -170,7 +170,9 @@ c_bur['y_cen'] = np.nan
 c_bur['Vsys'] = np.nan
 c_bur['chi2'] = np.nan
 
-
+c_scale = Table()
+c_scale['galaxy_ID'] = galaxy_ID
+c_scale['scale'] = np.nan
 
 # Fitting the galaxy
 
@@ -186,6 +188,8 @@ for i in range(len(galaxy_ID)):
     velocity =  redshift* c
     distance = (velocity / H_0) * 1000 #kpc
     scale = 0.5 * distance / 206265
+
+    c_scale['scale'][i] = scale
 
     #incl = np.arccos(rat[j])
     cosi2 = (rat[j]**2 - q0**2)/(1 - q0**2)
@@ -223,8 +227,8 @@ for i in range(len(galaxy_ID)):
         vmasked = ma.array(data_maps['Ha_vel'], mask = Ha_vel_mask)
         ivar_masked = ma.array(data_maps['Ha_vel_ivar'], mask = Ha_vel_mask)
 
-        plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
-        plt.show()
+        #plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
+        #plt.show()
 
         if map_smoothness <= max_map_smoothness and tidal == 0:
             
@@ -566,4 +570,4 @@ c_bur.close()
 c_iso.write('iso_exp.csv', format='ascii.csv', overwrite=True)
 c_nfw.write('nfw_exp.csv', format='ascii.csv', overwrite=True)
 c_bur.write('bur_exp.csv', format='ascii.csv', overwrite=True)
-
+c_scale.write('gal_scale.csv', format='ascii.csv',overwrite=True)

@@ -372,17 +372,16 @@ cpdef DTYPE_F64_t halo_vel_NFW(DTYPE_F64_t r,
     '''
 
     cdef DTYPE_F64_t rho0_h
-    #cdef DTYPE_F64_t halo_mass
+    cdef DTYPE_F64_t halo_mass
     cdef DTYPE_F64_t vel2 = 0.0
     cdef DTYPE_F64_t Vh
 
     rho0_h = 10**log_rhoh0
     
-    #halo_mass = 4.0 * pi * rho0_h * Rh**3 * ((Rh/(Rh + r)) + log(Rh + r) - 1.0 - log(Rh))
+    halo_mass = 4.0 * pi * rho0_h * Rh**3 * ((Rh/(Rh + r)) + log(Rh + r) - 1.0 - log(Rh))
 
     if r != 0.0:
-        #vel2 = G * (halo_mass * Msun) / (r * 3.086e16)
-        vel2 = 4.0 * pi * G * (rho0_h * Msun) * Rh**3 / (r * 3.086e16) * (log(1 + (r/Rh)) - ((r/Rh)/ (1 + (r/Rh))))
+        vel2 = G * (halo_mass * Msun) / (r * 3.086e16)
 
     Vh = sqrt(vel2) / 1000.0
 
@@ -425,22 +424,21 @@ cpdef DTYPE_F64_t halo_vel_bur(DTYPE_F64_t r,
     '''
 
     cdef DTYPE_F64_t rho0_h
-    #cdef DTYPE_F64_t halo_mass
+    cdef DTYPE_F64_t halo_mass
     cdef DTYPE_F64_t vel2 = 0.0
     cdef DTYPE_F64_t Vh
 
     rho0_h = 10**log_rhoh0
     
-    #halo_mass = np.pi * (-rho0_h) * (Rh**3) * (-log(Rh**2 + r**2) \
-    #                                           - 2.0*log(Rh + r)\
-    #                                           + 2.0*atan2(r, Rh)\
-    #                                           + log(Rh**2)\
-    #                                           + 2.0*log(Rh)\
-    #                                           - 2.0*atan2(0.0, Rh))
+    halo_mass = np.pi * (-rho0_h) * (Rh**3) * (-log(Rh**2 + r**2) \
+                                               - 2.0*log(Rh + r)\
+                                               + 2.0*atan2(r, Rh)\
+                                               + log(Rh**2)\
+                                               + 2.0*log(Rh)\
+                                               - 2.0*atan2(0.0, Rh))
 
     if r != 0.0:
-        #vel2 = G * (halo_mass * Msun) / (r * 3.086e16)
-        vel2 = 6.4 * G * rho0_h * Msun * Rh**3 / (r * 3.086e16) * (log(1 + (r/Rh)) - atan2(r, Rh) + 0.5 * log(1 + (r/Rh)**2))
+        vel2 = G * (halo_mass * Msun) / (r * 3.086e16)
 
     Vh = sqrt(vel2) / 1000.0
 
