@@ -7,7 +7,7 @@ import numpy as np
 import numpy.ma as ma
 
 from astropy.io import fits
-from astropy.table import QTable
+from astropy.table import Table, QTable
 
 from scipy.optimize import minimize, Bounds
 #from scipy_minimize_custom import minimize_powell
@@ -34,6 +34,8 @@ from galaxy_component_functions_cython import vel_tot_iso,\
                                               halo_vel_iso,\
                                               halo_vel_NFW,\
                                               halo_vel_bur
+
+import csv
 ################################################################################
 
 
@@ -87,7 +89,6 @@ z = DTable2['redshift'].data
 r50_ang = DTable2['nsa_elpetro_th50_r'].data
 ################################################################################
 '''
-
 
 
 
@@ -244,6 +245,7 @@ def Galaxy_Fitting_iso(params, scale, shape, vmap, ivar, mask):
     ig_iso = [-1, 1, 1000, 4, -3, 25, incl, ph, x_guess, y_guess, vsys]
     #ig_iso = [-1, 1, 1000, 4, 0.001, 25, incl, ph, x_guess, y_guess, vsys]
     #ig_iso = [0.0001, 4, 2000, 25, 5, 250, incl, ph, x_guess, y_guess, vsys]
+    print(ig_iso)
 
     bestfit_iso = minimize(nloglikelihood_iso_flat,
                            ig_iso,
@@ -330,6 +332,7 @@ def Galaxy_Fitting_NFW(params, scale, shape, vmap, ivar, mask):
 
     ig_NFW = [-1, 1, 1000, 4, -3, 25, incl, ph, x_guess, y_guess, vsys]
     #ig_NFW = [0.1, 1, 1000, 4, 0.001, 25, incl, ph, x_guess, y_guess, vsys]
+    print(ig_NFW)
 
     bestfit_NFW = minimize(nloglikelihood_NFW_flat,
                            ig_NFW, 
@@ -415,6 +418,7 @@ def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar, mask):
 
     ig_bur = [-1, 1, 1000, 4, -3, 25, incl, ph, x_guess, y_guess, vsys]
     #ig_bur = [0.1, 1, 1000, 4, 0.001, 25, incl, ph, x_guess, y_guess, vsys]
+    print(ig_bur)
 
     bestfit_bur = minimize(nloglikelihood_bur_flat,
                            ig_bur, 

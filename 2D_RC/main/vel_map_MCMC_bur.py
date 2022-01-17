@@ -16,16 +16,19 @@ from RC_2D_Fit_Functions import Galaxy_Data
 ################################################################################
 
 
-
-
+  
 ################################################################################
 # Constants
 #-------------------------------------------------------------------------------
 G = 6.674E-11  # m^3 kg^-1 s^-2
 Msun = 1.989E30  # kg
 
-# Specific for galaxy 7443-6101
-scale = 0.991506072                                      
+# scaling for different galaxies
+scale_7443_6101 = 0.224801833  
+scale_7495_6101 = 0.194487674
+scale_7495_9101 = 0.235674496
+scale_7443_12704 = 0.210446513
+scale_7495_12704 = 0.136270089                                     
 ################################################################################
 
 
@@ -45,7 +48,15 @@ manga =  '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spe
 ################################################################################
 # Import galaxy data
 #-------------------------------------------------------------------------------
-data_maps, gshape, x_center_guess, y_center_guess = Galaxy_Data('7815-3701', 
+data_maps_7443_6101, gshape_7443_6101, x_center_guess_7443_6101, y_center_guess_7443_6101 = Galaxy_Data('7443-6101', 
+                                                                manga)
+data_maps_7495_6101, gshape_7495_6101, x_center_guess_7495_6101, y_center_guess_7495_6101 = Galaxy_Data('7495-6101', 
+                                                                manga)
+data_maps_7495_9101, gshape_7495_9101, x_center_guess_7495_9101, y_center_guess_7495_9101 = Galaxy_Data('7495-9101', 
+                                                                manga)
+data_maps_7443_12704, gshape_7443_12704, x_center_guess_7443_12704, y_center_guess_7443_12704 = Galaxy_Data('7443-12704', 
+                                                                manga)
+data_maps_7495_12704, gshape_7495_12704, x_center_guess_7495_12704, y_center_guess_7495_12704 = Galaxy_Data('7495-12704', 
                                                                 manga)
 ################################################################################
 
@@ -130,17 +141,46 @@ mini_soln = [np.log10(5.36E-05),
              37.23417255,
              -0.685352448]
 '''
-mini_soln = [0.999956293,
-             4.469934154,
-             2999.999855,
-             7.423787826,
-             0.048158806,
-             127.6522708,
-             0.571032036,
-             2.018775432,
-             41.30157734,
-             7.728779602,
-             99.99993356]
+
+# 7443-6101
+
+initial_guesses_7443_6101 = [-1, 1, 1000, 4, -3, 25, 0.7488906714558082, 1.7935701525194527, 34, 24, 0]
+
+model_guesses_7443_6101 = [-1, 1, 1000, 4, -3, 25]
+
+geo_guesses_7443_6101 = [0.7488906714558082, 1.7935701525194527, 34, 24, 0]
+
+# 7495-6101
+
+initial_guesses_7495_6101 = [-1, 1, 1000, 4, -3, 25, 0.7447799431612057, 2.468087548537701, 24, 35, 0]
+
+model_guesses_7495_6101 = [-1, 1, 1000, 4, -3, 25]
+
+geo_guesses_7495_6101 = [0.7447799431612057, 2.468087548537701, 24, 35, 0]
+
+# 7495-9101
+
+initial_guesses_7495_9101 = [-1, 1, 1000, 4, -3, 25, 0.47163306333039906, 4.664746727793, 24, 29, 0]
+
+model_guesses_7495_9101 = [-1, 1, 1000, 4, -3, 25]
+
+geo_guesses_7495_9101 = [0.47163306333039906, 4.664746727793, 24, 29, 0]
+
+# 7443-12704
+
+initial_guesses_7443_12704 = [-1, 1, 1000, 4, -3, 25, 1.3117846596366782, 2.177018989182607, 24, 52, 0]
+
+model_guesses_7443_12704 = [-1, 1, 1000, 4, -3, 25]
+
+geo_guesses_7443_12704 = [1.3117846596366782, 2.177018989182607, 24, 52, 0]
+
+# 7495-12704
+
+initial_guesses_7495_12704 = [-1, 1, 1000, 4, -3, 25, 0.8725795257390155, 6.05728734209396, 38, 16, 0]
+
+model_guesses_7495_12704 = [-1, 1, 1000, 4, -3, 25]
+
+geo_guesses_7495_12704 =  [0.8725795257390155, 6.05728734209396, 38, 16, 0]
 ################################################################################
 
 
@@ -153,28 +193,450 @@ mini_soln = [0.999956293,
 #                                             high=1e-3*np.ones(len(mini_soln)), 
 #                                              size=(64,11))
 
-pos = np.random.uniform(low=[-6,0.00001,200,0.1,2e-5,0.1,0,0,15,15,-50], 
-                        high=[2,5,2500,25,0.1,500,0.436*np.pi,2*np.pi,45,45,50], 
+# 7443-6101
+
+pos_rand_7443_6101 = np.random.uniform(low=[-7,0,0.1,0.1,-7,0.001,0,0,10,10,-100], 
+                        high=[1,5,3000,30,-2,500,0.436*np.pi,2*np.pi,50,50,100], 
                         size=(64,11))
 
-nwalkers, ndim = pos.shape
+# Seeding around initial guess
+
+pos_init_7443_6101 = initial_guesses_7443_6101 + np.random.uniform(np.random.uniform(low=-1e-3*np.ones(len(initial_guesses_7443_6101)), 
+                                              high=1e-3*np.ones(len(initial_guesses_7443_6101)), 
+                                              size=(64,len(initial_guesses_7443_6101))))
+
+# Combined
+pos_model_7443_6101 = np.random.uniform(low=[-7,0.00001,200,0.1,2e-5,0.1], 
+                        high=[1,5,2500,25,0.1,500], 
+                        size=(64,6))
+
+pos_geo_7443_6101 = np.array(geo_guesses_7443_6101) + np.random.uniform(np.random.uniform(low=-1e-3*np.ones(len(geo_guesses_7443_6101)), 
+                                              high=1e-3*np.ones(len(geo_guesses_7443_6101)), 
+                                              size=(64,len(geo_guesses_7443_6101))))
+
+pos_combined_7443_6101 = np.column_stack((pos_model_7443_6101,pos_geo_7443_6101))
+
+# random walker
+
+nwalkers, ndim = pos_rand_7443_6101.shape
 
 bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
                                         ndim, 
                                         log_prob_bur, 
-                                        args=(scale, 
-                                              gshape, 
-                                              data_maps['vmasked'], 
-                                              data_maps['ivar_masked'], 
-                                              data_maps['Ha_vel_mask']))
-bad_sampler_bur.run_mcmc(pos, 10000, progress=True)
+                                        args=(scale_7443_6101, 
+                                              gshape_7443_6101, 
+                                              data_maps_7443_6101['vmasked'], 
+                                              data_maps_7443_6101['ivar_masked'], 
+                                              data_maps_7443_6101['Ha_vel_mask']))
+
+bad_sampler_bur.run_mcmc(pos_rand_7443_6101, 10000, progress=True)
 bad_samples_bur = bad_sampler_bur.get_chain()
 #bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
 
-np.save('bad_samples_bur.npy', bad_samples_bur)
+np.save('bad_samples_bur_7443_6101_rand.npy', bad_samples_bur)
 
 good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
-np.save('good_walkers_bur.npy', good_walkers_bur)
+np.save('good_walkers_bur_7443_6101_rand.npy', good_walkers_bur)
+
+# seeding around initial guess
+
+nwalkers, ndim = pos_init_7443_6101.shape
+
+bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
+                                        ndim, 
+                                        log_prob_bur, 
+                                        args=(scale_7443_6101, 
+                                              gshape_7443_6101, 
+                                              data_maps_7443_6101['vmasked'], 
+                                              data_maps_7443_6101['ivar_masked'], 
+                                              data_maps_7443_6101['Ha_vel_mask']))
+
+bad_sampler_bur.run_mcmc(pos_init_7443_6101, 10000, progress=True)
+bad_samples_bur = bad_sampler_bur.get_chain()
+#bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
+
+np.save('bad_samples_bur_7443_6101_init.npy', bad_samples_bur)
+
+good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
+np.save('good_walkers_bur_7443_6101_init.npy', good_walkers_bur)
+
+# Combined
+
+nwalkers, ndim = pos_combined_7443_6101.shape
+
+bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
+                                        ndim, 
+                                        log_prob_bur, 
+                                        args=(scale_7443_6101, 
+                                              gshape_7443_6101, 
+                                              data_maps_7443_6101['vmasked'], 
+                                              data_maps_7443_6101['ivar_masked'], 
+                                              data_maps_7443_6101['Ha_vel_mask']))
+
+bad_sampler_bur.run_mcmc(pos_combined_7443_6101, 10000, progress=True)
+bad_samples_bur = bad_sampler_bur.get_chain()
+#bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
+
+np.save('bad_samples_bur_7443_6101_comb.npy', bad_samples_bur)
+
+good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
+np.save('good_walkers_bur_7443_6101_comb.npy', good_walkers_bur)
+
+# 7495-6101
+
+pos_rand_7495_6101 = np.random.uniform(low=[-7,0,0.1,0.1,-7,0.001,0,0,10,10,-100], 
+                        high=[1,5,3000,30,-2,500,0.436*np.pi,2*np.pi,50,50,100], 
+                        size=(64,11))
+
+# Seeding around initial guess
+
+pos_init_7495_6101 = initial_guesses_7495_6101 + np.random.uniform(np.random.uniform(low=-1e-3*np.ones(len(initial_guesses_7495_6101)), 
+                                              high=1e-3*np.ones(len(initial_guesses_7495_6101)), 
+                                              size=(64,len(initial_guesses_7495_6101))))
+
+# Combined
+pos_model_7495_6101 = np.random.uniform(low=[-7,0.00001,200,0.1,2e-5,0.1], 
+                        high=[1,5,2500,25,0.1,500], 
+                        size=(64,6))
+
+pos_geo_7495_6101 = np.array(geo_guesses_7495_6101) + np.random.uniform(np.random.uniform(low=-1e-3*np.ones(len(geo_guesses_7495_6101)), 
+                                              high=1e-3*np.ones(len(geo_guesses_7495_6101)), 
+                                              size=(64,len(geo_guesses_7495_6101))))
+
+pos_combined_7495_6101 = np.column_stack((pos_model_7495_6101,pos_geo_7495_6101))
+
+# random walker
+
+nwalkers, ndim = pos_rand_7495_6101.shape
+
+bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
+                                        ndim, 
+                                        log_prob_bur, 
+                                        args=(scale_7495_6101, 
+                                              gshape_7495_6101, 
+                                              data_maps_7495_6101['vmasked'], 
+                                              data_maps_7495_6101['ivar_masked'], 
+                                              data_maps_7495_6101['Ha_vel_mask']))
+
+bad_sampler_bur.run_mcmc(pos_rand_7495_6101, 10000, progress=True)
+bad_samples_bur = bad_sampler_bur.get_chain()
+#bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
+
+np.save('bad_samples_bur_7495_6101_rand.npy', bad_samples_bur)
+
+good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
+np.save('good_walkers_bur_7495_6101_rand.npy', good_walkers_bur)
+
+# seeding around initial guess
+
+nwalkers, ndim = pos_init_7495_6101.shape
+
+bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
+                                        ndim, 
+                                        log_prob_bur, 
+                                        args=(scale_7495_6101, 
+                                              gshape_7495_6101, 
+                                              data_maps_7495_6101['vmasked'], 
+                                              data_maps_7495_6101['ivar_masked'], 
+                                              data_maps_7495_6101['Ha_vel_mask']))
+
+bad_sampler_bur.run_mcmc(pos_init_7495_6101, 10000, progress=True)
+bad_samples_bur = bad_sampler_bur.get_chain()
+#bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
+
+np.save('bad_samples_bur_7495_6101_init.npy', bad_samples_bur)
+
+good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
+np.save('good_walkers_bur_7495_6101_init.npy', good_walkers_bur)
+
+# Combined
+
+nwalkers, ndim = pos_combined_7495_6101.shape
+
+bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
+                                        ndim, 
+                                        log_prob_bur, 
+                                        args=(scale_7495_6101, 
+                                              gshape_7495_6101, 
+                                              data_maps_7495_6101['vmasked'], 
+                                              data_maps_7495_6101['ivar_masked'], 
+                                              data_maps_7495_6101['Ha_vel_mask']))
+
+bad_sampler_bur.run_mcmc(pos_combined_7495_6101, 10000, progress=True)
+bad_samples_bur = bad_sampler_bur.get_chain()
+#bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
+
+np.save('bad_samples_bur_7495_6101_comb.npy', bad_samples_bur)
+
+good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
+np.save('good_walkers_bur_7495_6101_comb.npy', good_walkers_bur)
+
+# 7459-9101
+
+pos_rand_7495_9101 = np.random.uniform(low=[-7,0,0.1,0.1,-7,0.001,0,0,10,10,-100], 
+                        high=[1,5,3000,30,-2,500,0.436*np.pi,2*np.pi,50,50,100], 
+                        size=(64,11))
+
+# Seeding around initial guess
+
+pos_init_7495_9101 = initial_guesses_7495_9101 + np.random.uniform(np.random.uniform(low=-1e-3*np.ones(len(initial_guesses_7495_9101)), 
+                                              high=1e-3*np.ones(len(initial_guesses_7495_9101)), 
+                                              size=(64,len(initial_guesses_7495_9101))))
+
+# Combined
+pos_model_7495_9101 = np.random.uniform(low=[-7,0.00001,200,0.1,2e-5,0.1], 
+                        high=[1,5,2500,25,0.1,500], 
+                        size=(64,6))
+
+pos_geo_7495_9101 = np.array(geo_guesses_7459_9101) + np.random.uniform(np.random.uniform(low=-1e-3*np.ones(len(geo_guesses_7495_9101)), 
+                                              high=1e-3*np.ones(len(geo_guesses_7495_9101)), 
+                                              size=(64,len(geo_guesses_7495_9101))))
+
+pos_combined_7495_9101 = np.column_stack((pos_model_7495_9101,pos_geo_7495_9101))
+
+# random walker
+
+nwalkers, ndim = pos_rand_7495_9101.shape
+
+bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
+                                        ndim, 
+                                        log_prob_bur, 
+                                        args=(scale_7495_9101, 
+                                              gshape_7495_9101, 
+                                              data_maps_7495_9101['vmasked'], 
+                                              data_maps_7495_9101['ivar_masked'], 
+                                              data_maps_7495_9101['Ha_vel_mask']))
+
+bad_sampler_bur.run_mcmc(pos_rand_7495_9101, 10000, progress=True)
+bad_samples_bur = bad_sampler_bur.get_chain()
+#bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
+
+np.save('bad_samples_bur_7495_9101_rand.npy', bad_samples_bur)
+
+good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
+np.save('good_walkers_bur_7495_9101_rand.npy', good_walkers_bur)
+
+# seeding around initial guess
+
+nwalkers, ndim = pos_init_7495_9101.shape
+
+bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
+                                        ndim, 
+                                        log_prob_bur, 
+                                        args=(scale_7495_9101, 
+                                              gshape_7495_9101, 
+                                              data_maps_7495_9101['vmasked'], 
+                                              data_maps_7495_9101['ivar_masked'], 
+                                              data_maps_7495_9101['Ha_vel_mask']))
+
+bad_sampler_bur.run_mcmc(pos_init_7495_9101, 10000, progress=True)
+bad_samples_bur = bad_sampler_bur.get_chain()
+#bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
+
+np.save('bad_samples_bur_7495_9101_init.npy', bad_samples_bur)
+
+good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
+np.save('good_walkers_bur_7495_9101_init.npy', good_walkers_bur)
+
+# Combined
+
+nwalkers, ndim = pos_combined_7495_9101.shape
+
+bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
+                                        ndim, 
+                                        log_prob_bur, 
+                                        args=(scale_7495_9101, 
+                                              gshape_7495_9101, 
+                                              data_maps_7495_9101['vmasked'], 
+                                              data_maps_7495_9101['ivar_masked'], 
+                                              data_maps_7495_9101['Ha_vel_mask']))
+
+bad_sampler_bur.run_mcmc(pos_combined_7495_9101, 10000, progress=True)
+bad_samples_bur = bad_sampler_bur.get_chain()
+#bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
+
+np.save('bad_samples_bur_7495_9101_comb.npy', bad_samples_bur)
+
+good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
+np.save('good_walkers_bur_7495_9101_comb.npy', good_walkers_bur)
+
+# 7443-12704
+
+pos_rand_7443_12704 = np.random.uniform(low=[-7,0,0.1,0.1,-7,0.001,0,0,10,10,-100], 
+                        high=[1,5,3000,30,-2,500,0.436*np.pi,2*np.pi,50,50,100], 
+                        size=(64,11))
+
+# Seeding around initial guess
+
+pos_init_7443_12704 = initial_guesses_7443_12704 + np.random.uniform(np.random.uniform(low=-1e-3*np.ones(len(initial_guesses_7443_12704)), 
+                                              high=1e-3*np.ones(len(initial_guesses_7443_12704)), 
+                                              size=(64,len(initial_guesses_7443_12704))))
+
+# Combined
+pos_model_7443_12704 = np.random.uniform(low=[-7,0.00001,200,0.1,2e-5,0.1], 
+                        high=[1,5,2500,25,0.1,500], 
+                        size=(64,6))
+
+pos_geo_7443_12704 = np.array(geo_guesses_7443_12704) + np.random.uniform(np.random.uniform(low=-1e-3*np.ones(len(geo_guesses_7443_12704)), 
+                                              high=1e-3*np.ones(len(geo_guesses_7443_12704)), 
+                                              size=(64,len(geo_guesses_7443_12704))))
+
+pos_combined_7443_12704 = np.column_stack((pos_model_7443_12704,pos_geo_7443_12704))
+
+# random walker
+
+nwalkers, ndim = pos_rand_7443_12704.shape
+
+bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
+                                        ndim, 
+                                        log_prob_bur, 
+                                        args=(scale_7443_12704, 
+                                              gshape_7443_12704, 
+                                              data_maps_7443_12704['vmasked'], 
+                                              data_maps_7443_12704['ivar_masked'], 
+                                              data_maps_7443_12704['Ha_vel_mask']))
+
+bad_sampler_bur.run_mcmc(pos_rand_7443_12704, 10000, progress=True)
+bad_samples_bur = bad_sampler_bur.get_chain()
+#bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
+
+np.save('bad_samples_bur_7443_12704_rand.npy', bad_samples_bur)
+
+good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
+np.save('good_walkers_bur_7443_12704_rand.npy', good_walkers_bur)
+
+# seeding around initial guess
+
+nwalkers, ndim = pos_init_7443_12704.shape
+
+bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
+                                        ndim, 
+                                        log_prob_bur, 
+                                        args=(scale_7443_12704, 
+                                              gshape_7443_12704, 
+                                              data_maps_7443_12704['vmasked'], 
+                                              data_maps_7443_12704['ivar_masked'], 
+                                              data_maps_7443_12704['Ha_vel_mask']))
+
+bad_sampler_bur.run_mcmc(pos_init_7443_12704, 10000, progress=True)
+bad_samples_bur = bad_sampler_bur.get_chain()
+#bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
+
+np.save('bad_samples_bur_7443_12704_init.npy', bad_samples_bur)
+
+good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
+np.save('good_walkers_bur_7443_12704_init.npy', good_walkers_bur)
+
+# Combined
+
+nwalkers, ndim = pos_combined_7443_12704.shape
+
+bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
+                                        ndim, 
+                                        log_prob_bur, 
+                                        args=(scale_7443_12704, 
+                                              gshape_7443_12704, 
+                                              data_maps_7443_12704['vmasked'], 
+                                              data_maps_7443_12704['ivar_masked'], 
+                                              data_maps_7443_12704['Ha_vel_mask']))
+
+bad_sampler_bur.run_mcmc(pos_combined_7443_12704, 10000, progress=True)
+bad_samples_bur = bad_sampler_bur.get_chain()
+#bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
+
+np.save('bad_samples_bur_7443_12704_comb.npy', bad_samples_bur)
+
+good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
+np.save('good_walkers_bur_7443_12704_comb.npy', good_walkers_bur)
+
+# 7495-12704
+
+pos_rand_7495_12704 = np.random.uniform(low=[-7,0,0.1,0.1,-7,0.001,0,0,10,10,-100], 
+                        high=[1,5,3000,30,-2,500,0.436*np.pi,2*np.pi,50,50,100], 
+                        size=(64,11))
+
+# Seeding around initial guess
+
+pos_init_7495_12704 = initial_guesses_7495_12704 + np.random.uniform(np.random.uniform(low=-1e-3*np.ones(len(initial_guesses_7495_12704)), 
+                                              high=1e-3*np.ones(len(initial_guesses_7495_12704)), 
+                                              size=(64,len(initial_guesses_7495_12704))))
+
+# Combined
+pos_model_7495_12704 = np.random.uniform(low=[-7,0.00001,200,0.1,2e-5,0.1], 
+                        high=[1,5,2500,25,0.1,500], 
+                        size=(64,6))
+
+pos_geo_7495_12704 = np.array(geo_guesses_7495_12704) + np.random.uniform(np.random.uniform(low=-1e-3*np.ones(len(geo_guesses_7495_12704)), 
+                                              high=1e-3*np.ones(len(geo_guesses_7495_12704)), 
+                                              size=(64,len(geo_guesses_7495_12704))))
+
+pos_combined_7495_12704 = np.column_stack((pos_model_7495_12704,pos_geo_7495_12704))
+
+# random walker
+
+nwalkers, ndim = pos_rand_7495_12704.shape
+
+bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
+                                        ndim, 
+                                        log_prob_bur, 
+                                        args=(scale_7495_12704, 
+                                              gshape_7495_12704, 
+                                              data_maps_7495_12704['vmasked'], 
+                                              data_maps_7495_12704['ivar_masked'], 
+                                              data_maps_7495_12704['Ha_vel_mask']))
+
+bad_sampler_bur.run_mcmc(pos_rand_7495_12704, 10000, progress=True)
+bad_samples_bur = bad_sampler_bur.get_chain()
+#bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
+
+np.save('bad_samples_bur_7495_12704_rand.npy', bad_samples_bur)
+
+good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
+np.save('good_walkers_bur_7495_12704_rand.npy', good_walkers_bur)
+
+# seeding around initial guess
+
+nwalkers, ndim = pos_init_7495_12704.shape
+
+bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
+                                        ndim, 
+                                        log_prob_bur, 
+                                        args=(scale_7495_12704, 
+                                              gshape_7495_12704, 
+                                              data_maps_7495_12704['vmasked'], 
+                                              data_maps_7495_12704['ivar_masked'], 
+                                              data_maps_7495_12704['Ha_vel_mask']))
+
+bad_sampler_bur.run_mcmc(pos_init_7495_12704, 10000, progress=True)
+bad_samples_bur = bad_sampler_bur.get_chain()
+#bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
+
+np.save('bad_samples_bur_7495_12704_init.npy', bad_samples_bur)
+
+good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
+np.save('good_walkers_bur_7495_12704_init.npy', good_walkers_bur)
+
+# Combined
+
+nwalkers, ndim = pos_combined_7495_12704.shape
+
+bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
+                                        ndim, 
+                                        log_prob_bur, 
+                                        args=(scale_7495_12704, 
+                                              gshape_7495_12704, 
+                                              data_maps_7495_12704['vmasked'], 
+                                              data_maps_7495_12704['ivar_masked'], 
+                                              data_maps_7495_12704['Ha_vel_mask']))
+
+bad_sampler_bur.run_mcmc(pos_combined_7495_12704, 10000, progress=True)
+bad_samples_bur = bad_sampler_bur.get_chain()
+#bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
+
+np.save('bad_samples_bur_7495_12704_comb.npy', bad_samples_bur)
+
+good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
+np.save('good_walkers_bur_7495_12704_comb.npy', good_walkers_bur)
 
 '''
 labels = ['rho_b','R_b', 'Sigma_d','R_d','rho_h','R_h','i','phi','x','y','vsys']
@@ -225,7 +687,8 @@ for i, label in enumerate(labels):
 # Dumping out put
 #out_directory = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/2D_RC/MCMC_folder/'
 #temp_outfile = open(out_directory + 'results.pickle', 'wb')
-#pickle.dump((flat_bad_samples_iso, flat_bad_samples_NFW, flat_bad_samples_bur), temp_outfile)
+#pickle.dump((flat_bad_samples_iso, flat_bad_samples_bur
+, flat_bad_samples_bur), temp_outfile)
 #temp_outfile.close()
 '''
 
