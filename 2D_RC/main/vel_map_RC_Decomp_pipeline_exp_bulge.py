@@ -198,7 +198,7 @@ for i in range(len(galaxy_ID)):
 
     incl = np.arccos(np.sqrt(cosi2))
 
-    ph = phi[j] * np.pi / 180
+    #ph = phi[j] * np.pi / 180
 
     if path.exists(data_file):
         ########################################################################
@@ -240,7 +240,7 @@ for i in range(len(galaxy_ID)):
             ####################################################################
             # Find initial guess for phi
             #-------------------------------------------------------------------
-            phi_guess = find_phi(center_coord, ph, vmasked)
+            phi_guess = find_phi(center_coord, phi[j], vmasked)
 
             if galaxy_ID[i] in ['8134-6102']:
                 phi_guess += 0.25 * np.pi

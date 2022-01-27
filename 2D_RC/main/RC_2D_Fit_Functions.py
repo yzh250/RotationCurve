@@ -162,6 +162,7 @@ def Galaxy_Data(galaxy_ID, MANGA_FOLDER):
 
 
     maps['vmasked'] = ma.array(maps['Ha_vel'], mask=maps['Ha_vel_mask'])
+    maps['r_band_masked'] = ma.array(maps['r_band'],mask=maps['Ha_vel_mask'])
     maps['ivar_masked'] = ma.array(maps['Ha_vel_ivar'], mask=maps['Ha_vel_mask'])
 
     gshape = maps['vmasked'].shape
@@ -177,9 +178,7 @@ def Galaxy_Data(galaxy_ID, MANGA_FOLDER):
     ############################################################################
     # Finding the center
     #---------------------------------------------------------------------------
-    center_guess = np.unravel_index(ma.argmin(np.abs(maps['vmasked']), 
-                                              axis=None), 
-                                    gshape)
+    center_guess = np.unravel_index(ma.argmax(maps['r_band_masked']), gshape)
     x_center_guess = center_guess[0]
     y_center_guess = center_guess[1]
     ############################################################################

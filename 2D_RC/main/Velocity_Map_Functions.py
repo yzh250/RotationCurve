@@ -58,9 +58,9 @@ def find_phi(center_coords, phi_angle, vel_map):
     '''
 
     # Convert phi_angle to radians
-    #phi = phi_angle * np.pi / 180.
+    phi = phi_angle * np.pi / 180.
 
-    phi = phi_angle
+    #phi = phi_angle 
 
     # Extract "systemic" velocity (velocity at center spaxel)
     v_sys = vel_map[center_coords]
@@ -82,8 +82,6 @@ def find_phi(center_coords, phi_angle, vel_map):
 
         # Check value along semi-major axis
         if vel_map.mask[tuple(semi_major_axis_spaxel)] == 0:
-            checkpoint_masked = False
-        elif time.time() >= 1000:
             checkpoint_masked = False
         else:
             f *= 0.9
