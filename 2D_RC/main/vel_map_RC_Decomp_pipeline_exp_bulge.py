@@ -13,7 +13,7 @@ import time
 # Import functions from other .py files
 from Velocity_Map_Functions import find_phi
 
-from RC_2D_Fit_Functions import Galaxy_Data, \
+from RC_2D_Fit_Functions_old import Galaxy_Data, \
                                 Galaxy_Fitting_iso,\
                                 Galaxy_Fitting_NFW, \
                                 Galaxy_Fitting_bur, \

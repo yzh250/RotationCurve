@@ -104,10 +104,10 @@ r50_ang = DTable['nsa_elpetro_th50_r']
 #-------------------------------------------------------------------------------
 galaxy_ID = []
 
-plate = ['7443','7495','7815']
-IFU = ['1901','1902','3701','3702','3703','3704','6101','6102','6103','6104','9101','9102','12701','12702','12703','12704','12705']
-#plate = ['7495']
-#IFU = ['12704']
+#plate = ['7443','7495','7815','7957','7958','7960','7962','7964','7968','7972','7975','7977','7990','7991','7992']
+#IFU = ['1901','1902','3701','3702','3703','3704','6101','6102','6103','6104','9101','9102','12701','12702','12703','12704','12705']
+plate = ['7815']
+IFU = ['12705']
 
 for i in range(len(plate)):
     for j in range(len(IFU)):
@@ -342,7 +342,8 @@ for i in range(len(galaxy_ID)):
             NFW_fit = np.ndarray.tolist(NFW_fit)
             Burket_fit = np.ndarray.tolist(Burket_fit)
             
-            plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, data_maps['Ha_vel_mask'], data_maps['vmasked'], data_maps['ivar_masked'])
+            #plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, data_maps['Ha_vel_mask'], data_maps['vmasked'], data_maps['ivar_masked'])
+            plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, Ha_vel_mask, vmasked, ivar_masked)
             ####################################################################
 
 
@@ -567,7 +568,7 @@ c_nfw.close()
 c_bur.close()
 '''
 
-c_iso.write('iso_exp.csv', format='ascii.csv', overwrite=True)
-c_nfw.write('nfw_exp.csv', format='ascii.csv', overwrite=True)
-c_bur.write('bur_exp.csv', format='ascii.csv', overwrite=True)
+c_iso.write('iso.csv', format='ascii.csv', overwrite=True)
+c_nfw.write('nfw.csv', format='ascii.csv', overwrite=True)
+c_bur.write('bur.csv', format='ascii.csv', overwrite=True)
 c_scale.write('gal_scale.csv', format='ascii.csv',overwrite=True)
