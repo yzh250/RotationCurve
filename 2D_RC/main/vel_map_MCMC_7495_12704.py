@@ -28,7 +28,7 @@ G = 6.674E-11  # m^3 kg^-1 s^-2
 Msun = 1.989E30  # kg
 
 # scaling for different galaxies
-scale = 0.136270089
+scale = 0.210446513
 ################################################################################
 
 
@@ -170,154 +170,11 @@ mini_soln = [0.999956293,
 
 # 7459-12704
 
-initial_guesses = [-1, 1, 1000, 4, -3, 25, 0.8725795257390155, 6.05728734209396, 38, 16, 0]
+initial_guesses = [-1, 1, 1000, 4, -3, 25, 0.8725795257390155, 2.9156946885041677, 36, 36, 0]
 
 model_guesses = [-1, 1, 1000, 4, -3, 25]
 
-geo_guesses =  [0.8725795257390155, 6.05728734209396, 38, 16, 0]
-################################################################################
-
-
-# random walker
-
-pos_rand = np.random.uniform(low=[-7,0,0.1,0.1,-7,0.001,0,0,10,10,-100], 
-                        high=[1,5,3000,30,-2,500,0.436*np.pi,2*np.pi,50,50,100], 
-                        size=(64,11))
-
-#-------------------------------------------------------------------------------
-
-nwalkers, ndim = pos_rand.shape
-
-bad_sampler_iso = emcee.EnsembleSampler(nwalkers, 
-                                        ndim, 
-                                        log_prob_iso, 
-                                        args=(scale, 
-                                              gshape, 
-                                              data_maps['vmasked'], 
-                                              data_maps['ivar_masked'], 
-                                              data_maps['Ha_vel_mask']))
-
-bad_sampler_iso.run_mcmc(pos_rand, 10000, progress=True)
-bad_samples_iso = bad_sampler_iso.get_chain()
-#bad_samples_iso = bad_sampler_iso.get_chain(discard=500)
-
-np.save('bad_samples_iso_' + gal_ID + '_rand.npy', bad_samples_iso)
-
-good_walkers_iso = bad_sampler_iso.acceptance_fraction > 0
-np.save('good_walkers_iso_' + gal_ID + '_rand.npy', good_walkers_iso)
-
-#-------------------------------------------------------------------------------
-
-bad_sampler_NFW = emcee.EnsembleSampler(nwalkers, 
-                                        ndim, 
-                                        log_prob_NFW, 
-                                        args=(scale, 
-                                              gshape, 
-                                              data_maps['vmasked'], 
-                                              data_maps['ivar_masked'], 
-                                              data_maps['Ha_vel_mask']))
-
-bad_sampler_NFW.run_mcmc(pos_rand, 10000, progress=True)
-bad_samples_NFW = bad_sampler_NFW.get_chain()
-#bad_samples_NFW = bad_sampler_NFW.get_chain(discard=500)
-
-np.save('bad_samples_NFW_' + gal_ID + '_rand.npy', bad_samples_NFW)
-
-good_walkers_NFW = bad_sampler_NFW.acceptance_fraction > 0
-np.save('good_walkers_NFW_' + gal_ID + '_rand.npy', good_walkers_NFW)
-
-#-------------------------------------------------------------------------------
-
-bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
-                                        ndim, 
-                                        log_prob_bur, 
-                                        args=(scale, 
-                                              gshape, 
-                                              data_maps['vmasked'], 
-                                              data_maps['ivar_masked'], 
-                                              data_maps['Ha_vel_mask']))
-
-bad_sampler_bur.run_mcmc(pos_rand, 10000, progress=True)
-bad_samples_bur = bad_sampler_bur.get_chain()
-#bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
-
-np.save('bad_samples_bur_' + gal_ID + '_rand.npy', bad_samples_bur)
-
-good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
-np.save('good_walkers_bur_' + gal_ID + '_rand.npy', good_walkers_bur)
-
-################################################################################
-
-################################################################################
-
-# seeding around initial guess
-
-pos_init = initial_guesses + np.random.uniform(np.random.uniform(low=-1e-3*np.ones(len(initial_guesses)), 
-                                              high=1e-3*np.ones(len(initial_guesses)), 
-                                              size=(64,len(initial_guesses))))
-
-#-------------------------------------------------------------------------------
-
-nwalkers, ndim = pos_init.shape
-
-bad_sampler_iso = emcee.EnsembleSampler(nwalkers, 
-                                        ndim, 
-                                        log_prob_iso, 
-                                        args=(scale, 
-                                              gshape, 
-                                              data_maps['vmasked'], 
-                                              data_maps['ivar_masked'], 
-                                              data_maps['Ha_vel_mask']))
-
-bad_sampler_iso.run_mcmc(pos_init, 10000, progress=True)
-bad_samples_iso = bad_sampler_iso.get_chain()
-#bad_samples_iso = bad_sampler_iso.get_chain(discard=500)
-
-np.save('bad_samples_iso_' + gal_ID + '_init.npy', bad_samples_iso)
-
-good_walkers_iso = bad_sampler_iso.acceptance_fraction > 0
-np.save('good_walkers_iso_' + gal_ID + '_init.npy', good_walkers_iso)
-
-#-------------------------------------------------------------------------------
-
-bad_sampler_NFW = emcee.EnsembleSampler(nwalkers, 
-                                        ndim, 
-                                        log_prob_NFW, 
-                                        args=(scale, 
-                                              gshape, 
-                                              data_maps['vmasked'], 
-                                              data_maps['ivar_masked'], 
-                                              data_maps['Ha_vel_mask']))
-
-bad_sampler_NFW.run_mcmc(pos_init, 10000, progress=True)
-bad_samples_NFW = bad_sampler_NFW.get_chain()
-#bad_samples_NFW = bad_sampler_NFW.get_chain(discard=500)
-
-np.save('bad_samples_NFW_' + gal_ID + '_init.npy', bad_samples_NFW)
-
-good_walkers_NFW = bad_sampler_NFW.acceptance_fraction > 0
-np.save('good_walkers_NFW_' + gal_ID + '_init.npy', good_walkers_NFW)
-
-#-------------------------------------------------------------------------------
-
-bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
-                                        ndim, 
-                                        log_prob_bur, 
-                                        args=(scale, 
-                                              gshape, 
-                                              data_maps['vmasked'], 
-                                              data_maps['ivar_masked'], 
-                                              data_maps['Ha_vel_mask']))
-
-bad_sampler_bur.run_mcmc(pos_init, 10000, progress=True)
-bad_samples_bur = bad_sampler_bur.get_chain()
-#bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
-
-np.save('bad_samples_bur_' + gal_ID + '_init.npy', bad_samples_bur)
-
-good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
-np.save('good_walkers_bur_' + gal_ID + '_init.npy', good_walkers_bur)
-
+geo_guesses =  [0.8725795257390155, 2.9156946885041677, 36, 36, 0]
 ################################################################################
 
 ################################################################################

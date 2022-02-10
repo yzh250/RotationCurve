@@ -103,15 +103,21 @@ r50_ang = DTable['nsa_elpetro_th50_r']
 # Obtaining information for MaNGA galaxies
 #-------------------------------------------------------------------------------
 galaxy_ID = []
+plateifu = DTable['plateifu'].data
 
+for i in range(len(plateifu)):
+    galaxy_ID.append(str(plateifu[i],'utf-8'))
+#DTable['plate'].data
+#DTable['ifu']
 #plate = ['7443','7495','7815','7957','7958','7960','7962','7964','7968','7972','7975','7977','7990','7991','7992']
 #IFU = ['1901','1902','3701','3702','3703','3704','6101','6102','6103','6104','9101','9102','12701','12702','12703','12704','12705']
-plate = ['7815']
-IFU = ['12705']
+#plate = ['7960']
+#IFU = ['3703']
 
-for i in range(len(plate)):
-    for j in range(len(IFU)):
-        galaxy_ID.append(plate[i] + '-' + IFU[j])
+
+#for i in range(len(plate)):
+#   for j in range(len(IFU)):
+#       galaxy_ID.append(plate[i] + '-' + IFU[j])
 
 # Isothermal
 #c_iso = open('iso_exp.csv','w')
