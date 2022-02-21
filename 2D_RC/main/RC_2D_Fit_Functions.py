@@ -20,7 +20,10 @@ from Velocity_Map_Functions import loglikelihood_iso_flat,\
                                    loglikelihood_bur_flat,\
                                    nloglikelihood_iso_flat,\
                                    nloglikelihood_NFW_flat,\
-                                   nloglikelihood_bur_flat
+                                   nloglikelihood_bur_flat,\
+                                   loglikelihood_iso_flat_constraints,\
+                                   loglikelihood_NFW_flat_constraints,\
+                                   loglikelihood_bur_flat_constraints
 
 from Velocity_Map_Functions_cython import rot_incl_iso,\
                                           rot_incl_NFW, \
@@ -36,6 +39,7 @@ from galaxy_component_functions_cython import vel_tot_iso,\
                                               halo_vel_bur
 
 import csv
+import emcee
 ################################################################################
 
 
@@ -910,6 +914,252 @@ def plot_diagnostic_panel( ID, shape, scale, Isothermal_Fit, NFW_Fit, Burket_Fit
     
     plt.savefig(ID + 'Diagnostic Panels')
 
+# MCMC running 
+def log_prior(params):
+
+    log_rhob0,Rb,SigD,Rd,log_rhoh0,Rh,inclination,phi,center_x,center_y,vsys = params
+
+    logP = 0
+
+    rhob_check = -7 < log_rhob0 < 1
+    #rhob_check = 0 < log_rhob0 < 10
+    Rb_check = 0 < Rb < 5
+
+    SigD_check = 0.1 < SigD < 3000
+    Rd_check = 0.1 < Rd < 30
+
+    rhoh_check = -7 < log_rhoh0 < 2
+    #rhoh_check = 0 < log_rhoh0 < 100
+    Rh_check = 0.01 < Rh < 500
+
+    i_check = 0 < inclination < np.pi*0.436
+    phi_check = 0 < phi < 2*np.pi
+
+    x_check = 10 < center_x < 50
+    y_check = 10 < center_y < 50
+
+    v_check = -100 < vsys < 100
+
+    if rhob_check and Rb_check and SigD_check and Rd_check and rhoh_check and Rh_check and i_check and phi_check and x_check and y_check and v_check:
+        logP = 0
+
+    # setting constraints on the radii
+    elif (Rh < Rb) or (Rh < Rd) or (Rd < Rb):
+        logP = -np.inf
+
+    else:
+        logP = -np.inf
+
+    return logP
+
+def log_prob_iso(params, scale, shape, vdata, ivar, mask):
+
+    lp = log_prior(params)
+
+    logL = loglikelihood_iso_flat_constraints(params, 
+                                              scale, 
+                                              shape, 
+                                              vdata.compressed(), 
+                                              ivar.compressed(), 
+                                              mask)
+
+    if not np.isfinite(lp) or not np.isfinite(logL):
+        return -np.inf 
+    else:
+        return lp + logL
+
+def log_prob_NFW(params, scale, shape, vdata, ivar, mask):
+
+    lp = log_prior(params)
+
+    logL = loglikelihood_NFW_flat_constraints(params, 
+                                              scale, 
+                                              shape, 
+                                              vdata.compressed(), 
+                                              ivar.compressed(), 
+                                              mask)
+
+    if not np.isfinite(lp) or not np.isfinite(logL):
+        return -np.inf 
+    else:
+        return lp + logL
+
+def log_prob_bur(params, scale, shape, vdata, ivar, mask):
+
+    lp = log_prior(params)
+
+    logL = loglikelihood_bur_flat_constraints(params, 
+                                              scale, 
+                                              shape, 
+                                              vdata.compressed(), 
+                                              ivar.compressed(), 
+                                              mask)
+
+    if not np.isfinite(lp) or not np.isfinite(logL):
+        return -np.inf 
+    else:
+        return lp + logL
+
+def run_MCMC(gal_ID,MANGA_FOLDER,init_param_geo,scale,model):
+
+    data_maps, gshape, x_center_guess, y_center_guess = Galaxy_Data(gal_ID, 
+                                                                MANGA_FOLDER)
+
+    data_map = data_maps['vmasked']
+
+    model_guesses = [-1, 1, 1000, 4, -3, 25]
+
+    geo_guesses = init_param_geo + [0]
+
+    pos_model = np.random.uniform(low=[-7,0.00001,200,0.1,2e-5,0.1], 
+                        high=[1,5,2500,25,0.1,500], 
+                        size=(64,6))
+
+    pos_geo = np.array(geo_guesses) + np.random.uniform(np.random.uniform(low=-1e-3*np.ones(len(geo_guesses)), 
+                                              high=1e-3*np.ones(len(geo_guesses)), 
+                                              size=(64,len(geo_guesses))))
+
+    pos_combined = np.column_stack((pos_model,pos_geo))
+
+    nwalkers, ndim = pos_combined.shape
+    #-------------------------------------------------------------------------------
+    if model == 'iso':
+
+        bad_sampler_iso = emcee.EnsembleSampler(nwalkers, 
+                                                ndim, 
+                                                log_prob_iso, 
+                                                args=(scale, 
+                                                      gshape, 
+                                                      data_maps['vmasked'], 
+                                                      data_maps['ivar_masked'], 
+                                                      data_maps['Ha_vel_mask']))
+
+        bad_sampler_iso.run_mcmc(pos_combined, 10000, progress=True)
+        bad_samples_iso = bad_sampler_iso.get_chain()
+        #bad_samples_iso = bad_sampler_iso.get_chain(discard=500)
+
+        ns_iso, nw_iso, nd_iso = bad_samples_iso.shape
+
+        #np.save('bad_samples_iso_' + gal_ID + '_comb.npy', bad_samples_iso)
+
+        good_walkers_iso = bad_sampler_iso.acceptance_fraction > 0
+        #np.save('good_walkers_iso_' + gal_ID + '_comb.npy', good_walkers_iso)
+
+        good_samples_iso = bad_samples_iso[:,good_walkers_iso,:]
+
+        # Check if there are walkers being left out
+        # Make the general cut at 4000 steps
+        if good_samples_iso.shape != bad_samples_iso.shape:
+            ns_iso_good, nw_iso_good, nd_iso_good = good_samples_iso[4000:,:,:].shape
+            trimmed_flat_good_samples_iso = good_samples_iso[4000:,:,:].reshape(6000*nw_iso_good, nd_iso_good)
+            samples_mean_iso = np.mean(trimmed_flat_good_samples_iso, axis=0)
+        else:
+            trimmed_flat_good_samples_iso = good_samples_iso[4000:,:,:].reshape(6000*nw_iso, nd_iso)
+            samples_mean_iso = np.mean(trimmed_flat_good_samples_iso, axis=0)
+
+        fitted_map_mcmc_iso = rot_incl_iso(gshape, scale, np.ndarray.tolist(samples_mean_iso))
+
+        mfitted_map_mcmc_iso = ma.array(fitted_map_mcmc_iso, mask=data_maps['Ha_vel_mask'])
+
+        nd_iso_mcmc = np.sum(~mfitted_map_mcmc_iso.mask)
+
+        # chi2_iso = np.nansum((vmasked - vmap_iso) ** 2 * Ha_vel_ivar)
+        chi2_iso_mcmc = ma.sum(data_maps['Ha_vel_ivar'] * (data_map - mfitted_map_mcmc_iso) ** 2)
+
+        # chi2_iso_norm = chi2_iso/(nd_iso - 8)
+        chi2_iso_norm_mcmc = chi2_iso_mcmc / (nd_iso_mcmc - len(samples_mean_iso))
+        return samples_mean_iso, chi2_iso_norm_mcmc
+    #-------------------------------------------------------------------------------
+    elif model == 'NFW':
+        bad_sampler_NFW = emcee.EnsembleSampler(nwalkers, 
+                                                ndim, 
+                                                log_prob_NFW, 
+                                                args=(scale, 
+                                                      gshape, 
+                                                      data_maps['vmasked'], 
+                                                      data_maps['ivar_masked'], 
+                                                      data_maps['Ha_vel_mask']))
+
+        bad_sampler_NFW.run_mcmc(pos_combined, 10000, progress=True)
+        bad_samples_NFW = bad_sampler_NFW.get_chain()
+        #bad_samples_NFW = bad_sampler_NFW.get_chain(discard=500)
+
+        ns_NFW, nw_NFW, nd_NFW = bad_samples_NFW.shape
+
+        #np.save('bad_samples_NFW_' + gal_ID + '_comb.npy', bad_samples_NFW)
+
+        good_walkers_NFW = bad_sampler_NFW.acceptance_fraction > 0
+        #np.save('good_walkers_NFW_' + gal_ID + '_comb.npy', good_walkers_NFW)
+
+        good_samples_NFW = bad_samples_NFW[:,good_walkers_NFW,:]
+
+        # Check if there are walkers being left out
+        # Make the general cut at 4000 steps
+        if good_samples_NFW.shape != bad_samples_NFW.shape:
+            ns_NFW_good, nw_NFW_good, nd_NFW_good = good_samples_NFW[4000:,:,:].shape
+            trimmed_flat_good_samples_NFW = good_samples_NFW[4000:,:,:].reshape(6000*nw_NFW_good, nd_NFW_good)
+            samples_mean_NFW = np.mean(trimmed_flat_good_samples_NFW, axis=0)
+        else:
+            trimmed_flat_good_samples_NFW = good_samples_NFW[4000:,:,:].reshape(6000*nw_NFW, nd_NFW)
+            samples_mean_NFW = np.mean(trimmed_flat_good_samples_NFW, axis=0)
+
+        fitted_map_mcmc_NFW = rot_incl_NFW(gshape, scale, np.ndarray.tolist(samples_mean_NFW))
+
+        mfitted_map_mcmc_NFW = ma.array(fitted_map_mcmc_NFW, mask=data_maps['Ha_vel_mask'])
+
+        nd_NFW_mcmc = np.sum(~mfitted_map_mcmc_NFW.mask)
+
+        chi2_NFW_mcmc = ma.sum(data_maps['Ha_vel_ivar'] * (data_map - mfitted_map_mcmc_NFW)**2)
+
+        chi2_NFW_norm_mcmc = chi2_NFW_mcmc / (nd_NFW_mcmc - len(samples_mean_NFW))
+
+        return samples_mean_NFW, chi2_NFW_norm_mcmc
+    #-------------------------------------------------------------------------------
+    elif model == 'bur':
+        bad_sampler_bur = emcee.EnsembleSampler(nwalkers, 
+                                                ndim, 
+                                                log_prob_bur, 
+                                                args=(scale, 
+                                                      gshape, 
+                                                      data_maps['vmasked'], 
+                                                      data_maps['ivar_masked'], 
+                                                      data_maps['Ha_vel_mask']))
+
+        bad_sampler_bur.run_mcmc(pos_combined, 10000, progress=True)
+        bad_samples_bur = bad_sampler_bur.get_chain()
+        #bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
+
+        ns_bur, nw_bur, nd_bur = bad_samples_bur.shape
+
+        #np.save('bad_samples_bur_' + gal_ID + '_comb.npy', bad_samples_bur)
+
+        good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
+        #np.save('good_walkers_bur_' + gal_ID + '_comb.npy', good_walkers_bur)
+
+        good_samples_bur = bad_samples_bur[:,good_walkers_bur,:]
+
+        # Check if there are walkers being left out
+        # Make the general cut at 4000 steps
+        if good_samples_bur.shape != bad_samples_bur.shape:
+            ns_bur_good, nw_bur_good, nd_bur_good = good_samples_bur[4000:,:,:].shape
+            trimmed_flat_good_samples_bur = good_samples_bur[4000:,:,:].reshape(6000*nw_bur_good, nd_bur_good)
+            samples_mean_bur = np.mean(trimmed_flat_good_samples_bur, axis=0)
+        else:
+            trimmed_flat_good_samples_bur = good_samples_bur[4000:,:,:].reshape(6000*nw_bur, nd_bur)
+            samples_mean_bur = np.mean(trimmed_flat_good_samples_bur, axis=0)
+
+        fitted_map_mcmc_bur = rot_incl_bur(gshape, scale, np.ndarray.tolist(samples_mean_bur))
+
+        mfitted_map_mcmc_bur = ma.array(fitted_map_mcmc_bur, mask=data_maps['Ha_vel_mask'])
+
+        nd_bur_mcmc = np.sum(~mfitted_map_mcmc_bur.mask)
+
+        chi2_bur_mcmc = ma.sum(data_maps['Ha_vel_ivar'] * (data_map - mfitted_map_mcmc_bur)**2)
+
+        chi2_bur_norm_mcmc = chi2_bur_mcmc / (nd_bur_mcmc - len(samples_mean_bur))
+
+        return samples_mean_bur, chi2_bur_norm_mcmc
+    ################################################################################
 
 
 # Functions for calculating the Hessain Matrix numerically

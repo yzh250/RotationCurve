@@ -26,7 +26,8 @@ from RC_2D_Fit_Functions import Galaxy_Data, \
                                 getTidal,\
                                 deproject_spaxel,\
                                 plot_rot_curve,\
-                                plot_diagnostic_panel
+                                plot_diagnostic_panel,\
+                                run_MCMC
 
 from Velocity_Map_Functions_cython import rot_incl_iso,\
                                           rot_incl_NFW, \
@@ -107,17 +108,17 @@ plateifu = DTable['plateifu'].data
 
 for i in range(len(plateifu)):
     galaxy_ID.append(str(plateifu[i],'utf-8'))
-#DTable['plate'].data
-#DTable['ifu']
+#-------------------------------------------------------------------------------
 #plate = ['7443','7495','7815','7957','7958','7960','7962','7964','7968','7972','7975','7977','7990','7991','7992']
 #IFU = ['1901','1902','3701','3702','3703','3704','6101','6102','6103','6104','9101','9102','12701','12702','12703','12704','12705']
-#plate = ['7960']
-#IFU = ['3703']
+#plate = ['7957']
+#IFU = ['9101']
 
 
 #for i in range(len(plate)):
 #   for j in range(len(IFU)):
 #       galaxy_ID.append(plate[i] + '-' + IFU[j])
+#-------------------------------------------------------------------------------
 
 # Isothermal
 #c_iso = open('iso_exp.csv','w')
@@ -179,6 +180,65 @@ c_bur['chi2'] = np.nan
 c_scale = Table()
 c_scale['galaxy_ID'] = galaxy_ID
 c_scale['scale'] = np.nan
+
+# Creating MCMC file
+
+# Isothermal
+#c_iso = open('iso_exp.csv','w')
+#writer_iso = csv.writer(c_iso)
+#writer_iso.writerow(['galaxy_ID', 'A', 'Vin', 'SigD', 'Rd', 'rho0_h', 'Rh', 'incl', 'phi', 'x_cen', 'y_cen','Vsys','chi2'])
+c_iso_MCMC = Table()
+c_iso_MCMC['galaxy_ID'] = galaxy_ID
+c_iso_MCMC['A'] = np.nan
+c_iso_MCMC['Vin'] = np.nan
+c_iso_MCMC['SigD'] = np.nan
+c_iso_MCMC['Rd'] = np.nan
+c_iso_MCMC['rho0_h'] = np.nan
+c_iso_MCMC['Rh'] = np.nan
+c_iso_MCMC['incl'] = np.nan
+c_iso_MCMC['phi'] = np.nan
+c_iso_MCMC['x_cen'] = np.nan
+c_iso_MCMC['y_cen'] = np.nan
+c_iso_MCMC['Vsys'] = np.nan
+c_iso_MCMC['chi2'] = np.nan
+
+# NFW
+#c_nfw = open('nfw_exp.csv','w')
+#writer_nfw = csv.writer(c_nfw)
+#writer_nfw.writerow(['galaxy_ID', 'A', 'Vin', 'SigD', 'Rd', 'rho0_h', 'Rh', 'incl', 'phi', 'x_cen', 'y_cen','Vsys','chi2'])
+c_nfw_MCMC = Table()
+c_nfw_MCMC['galaxy_ID'] = galaxy_ID
+c_nfw_MCMC['A'] = np.nan
+c_nfw_MCMC['Vin'] = np.nan
+c_nfw_MCMC['SigD'] = np.nan
+c_nfw_MCMC['Rd'] = np.nan
+c_nfw_MCMC['rho0_h'] = np.nan
+c_nfw_MCMC['Rh'] = np.nan
+c_nfw_MCMC['incl'] = np.nan
+c_nfw_MCMC['phi'] = np.nan
+c_nfw_MCMC['x_cen'] = np.nan
+c_nfw_MCMC['y_cen'] = np.nan
+c_nfw_MCMC['Vsys'] = np.nan
+c_nfw_MCMC['chi2'] = np.nan
+
+# Burket
+#c_bur = open('bur_exp.csv','w')
+#writer_bur = csv.writer(c_bur)
+#writer_bur.writerow(['galaxy_ID', 'A', 'Vin', 'SigD', 'Rd', 'rho0_h', 'Rh', 'incl', 'phi', 'x_cen', 'y_cen','Vsys','chi2'])
+c_bur_MCMC = Table()
+c_bur_MCMC['galaxy_ID'] = galaxy_ID
+c_bur_MCMC['A'] = np.nan
+c_bur_MCMC['Vin'] = np.nan
+c_bur_MCMC['SigD'] = np.nan
+c_bur_MCMC['Rd'] = np.nan
+c_bur_MCMC['rho0_h'] = np.nan
+c_bur_MCMC['Rh'] = np.nan
+c_bur_MCMC['incl'] = np.nan
+c_bur_MCMC['phi'] = np.nan
+c_bur_MCMC['x_cen'] = np.nan
+c_bur_MCMC['y_cen'] = np.nan
+c_bur_MCMC['Vsys'] = np.nan
+c_bur_MCMC['chi2'] = np.nan
 
 # Fitting the galaxy
 
@@ -349,7 +409,7 @@ for i in range(len(galaxy_ID)):
             Burket_fit = np.ndarray.tolist(Burket_fit)
             
             #plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, data_maps['Ha_vel_mask'], data_maps['vmasked'], data_maps['ivar_masked'])
-            plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, Ha_vel_mask, vmasked, ivar_masked)
+            #plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, Ha_vel_mask, vmasked, ivar_masked)
             ####################################################################
 
 
@@ -417,6 +477,64 @@ for i in range(len(galaxy_ID)):
             chi2_bur_norm = chi2_bur / (nd_bur - len(Burket_fit))
             #-------------------------------------------------------------------
             ####################################################################
+
+            ####################################################################
+            print('Isothermal chi2:', chi2_iso_norm, time.time() - start_time)
+            print('NFW chi2:', chi2_NFW_norm)
+            print('Burket chi2:', chi2_bur_norm)
+            ####################################################################
+
+            ####################################################################
+            # MCMC
+            # If chi2 value of any model for this galaxy > 200 from minize
+            # Run MCMC
+            #-------------------------------------------------------------------
+            if chi2_iso_norm > 200:
+                Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(galaxy_ID[i],MANGA_FOLDER,parameters,scale,'iso')
+                c_iso_MCMC['A'][i] = Isothermal_fit_MCMC[0]
+                c_iso_MCMC['Vin'][i] = Isothermal_fit_MCMC[1]
+                c_iso_MCMC['SigD'][i] = Isothermal_fit_MCMC[2]
+                c_iso_MCMC['Rd'][i] = Isothermal_fit_MCMC[3]
+                c_iso_MCMC['rho0_h'][i] = Isothermal_fit_MCMC[4]
+                c_iso_MCMC['Rh'][i] = Isothermal_fit_MCMC[5]
+                c_iso_MCMC['incl'][i] = Isothermal_fit_MCMC[6]
+                c_iso_MCMC['phi'][i] = Isothermal_fit_MCMC[7]
+                c_iso_MCMC['x_cen'][i] = Isothermal_fit_MCMC[8]
+                c_iso_MCMC['y_cen'][i] = Isothermal_fit_MCMC[9]
+                c_iso_MCMC['Vsys'][i] = Isothermal_fit_MCMC[10]
+                c_iso_MCMC['chi2'][i] = chi2_iso_norm_MCMC
+
+            elif chi2_NFW_norm > 200:
+                NFW_fit_MCMC, chi2_NFW_norm_MCMC = run_MCMC(galaxy_ID[i],MANGA_FOLDER,parameters,scale,'NFW')
+                c_nfw_MCMC['A'][i] = NFW_fit_MCMC[0]
+                c_nfw_MCMC['Vin'][i] = NFW_fit_MCMC[1]
+                c_nfw_MCMC['SigD'][i] = NFW_fit_MCMC[2]
+                c_nfw_MCMC['Rd'][i] = NFW_fit_MCMC[3]
+                c_nfw_MCMC['rho0_h'][i] = NFW_fit_MCMC[4]
+                c_nfw_MCMC['Rh'][i] = NFW_fit_MCMC[5]
+                c_nfw_MCMC['incl'][i] = NFW_fit_MCMC[6]
+                c_nfw_MCMC['phi'][i] = NFW_fit_MCMC[7]
+                c_nfw_MCMC['x_cen'][i] = NFW_fit_MCMC[8]
+                c_nfw_MCMC['y_cen'][i] = NFW_fit_MCMC[9]
+                c_nfw_MCMC['Vsys'][i] = NFW_fit_MCMC[10]
+                c_nfw_MCMC['chi2'][i] = chi2_NFW_norm_MCMC
+
+            elif chi2_bur_norm > 200:
+                Burket_fit_MCMC, chi2_bur_norm_MCMC = run_MCMC(galaxy_ID[i],MANGA_FOLDER,parameters,scale,'bur')
+                c_bur_MCMC['A'][i] = Burket_fit_MCMC[0]
+                c_bur_MCMC['Vin'][i] = Burket_fit_MCMC[1]
+                c_bur_MCMC['SigD'][i] = Burket_fit_MCMC[2]
+                c_bur_MCMC['Rd'][i] = Burket_fit_MCMC[3]
+                c_bur_MCMC['rho0_h'][i] = Burket_fit_MCMC[4]
+                c_bur_MCMC['Rh'][i] = Burket_fit_MCMC[5]
+                c_bur_MCMC['incl'][i] = Burket_fit_MCMC[6]
+                c_bur_MCMC['phi'][i] = Burket_fit_MCMC[7]
+                c_bur_MCMC['x_cen'][i] = Burket_fit_MCMC[8]
+                c_bur_MCMC['y_cen'][i] = Burket_fit_MCMC[9]
+                c_bur_MCMC['Vsys'][i] = Burket_fit_MCMC[10]
+                c_bur_MCMC['chi2'][i] = chi2_bur_norm_MCMC
+            ####################################################################
+
 
 
             ####################################################################
@@ -507,12 +625,6 @@ for i in range(len(galaxy_ID)):
             c_bur['chi2'][i] = chi2_bur_norm
             ####################################################################
 
-            ####################################################################
-            print('Isothermal chi2:', chi2_iso_norm, time.time() - start_time)
-            print('NFW chi2:', chi2_NFW_norm)
-            print('Burket chi2:', chi2_bur_norm)
-            ####################################################################
-
             '''
             ####################################################################
             # Calculating the Hessian Matrix
@@ -574,7 +686,11 @@ c_nfw.close()
 c_bur.close()
 '''
 
-c_iso.write('iso.csv', format='ascii.csv', overwrite=True)
-c_nfw.write('nfw.csv', format='ascii.csv', overwrite=True)
-c_bur.write('bur.csv', format='ascii.csv', overwrite=True)
+c_iso.write('iso_mini.csv', format='ascii.csv', overwrite=True)
+c_nfw.write('nfw_mini.csv', format='ascii.csv', overwrite=True)
+c_bur.write('bur_mini.csv', format='ascii.csv', overwrite=True)
 c_scale.write('gal_scale.csv', format='ascii.csv',overwrite=True)
+c_iso_MCMC.write('iso_mcmc.csv', format='ascii.csv', overwrite=True)
+c_nfw_MCMC.write('nfw_mcmc.csv', format='ascii.csv', overwrite=True)
+c_bur_MCMC.write('bur_mcmc.csv', format='ascii.csv', overwrite=True)
+
