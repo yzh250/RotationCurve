@@ -111,13 +111,12 @@ for i in range(len(plateifu)):
 #-------------------------------------------------------------------------------
 #plate = ['7443','7495','7815','7957','7958','7960','7962','7964','7968','7972','7975','7977','7990','7991','7992']
 #IFU = ['1901','1902','3701','3702','3703','3704','6101','6102','6103','6104','9101','9102','12701','12702','12703','12704','12705']
-#plate = ['7957']
-#IFU = ['9101']
 
-
-#for i in range(len(plate)):
-#   for j in range(len(IFU)):
-#       galaxy_ID.append(plate[i] + '-' + IFU[j])
+'''
+for i in range(len(plate)):
+   for j in range(len(IFU)):
+       galaxy_ID.append(plate[i] + '-' + IFU[j])
+'''
 #-------------------------------------------------------------------------------
 
 # Isothermal
@@ -177,12 +176,15 @@ c_bur['y_cen'] = np.nan
 c_bur['Vsys'] = np.nan
 c_bur['chi2'] = np.nan
 
+'''
 c_scale = Table()
 c_scale['galaxy_ID'] = galaxy_ID
 c_scale['scale'] = np.nan
+'''
 
 # Creating MCMC file
 
+'''
 # Isothermal
 #c_iso = open('iso_exp.csv','w')
 #writer_iso = csv.writer(c_iso)
@@ -239,6 +241,7 @@ c_bur_MCMC['x_cen'] = np.nan
 c_bur_MCMC['y_cen'] = np.nan
 c_bur_MCMC['Vsys'] = np.nan
 c_bur_MCMC['chi2'] = np.nan
+'''
 
 # Fitting the galaxy
 
@@ -255,7 +258,7 @@ for i in range(len(galaxy_ID)):
     distance = (velocity / H_0) * 1000 #kpc
     scale = 0.5 * distance / 206265
 
-    c_scale['scale'][i] = scale
+    #c_scale['scale'][i] = scale
 
     #incl = np.arccos(rat[j])
     cosi2 = (rat[j]**2 - q0**2)/(1 - q0**2)
@@ -483,7 +486,7 @@ for i in range(len(galaxy_ID)):
             print('NFW chi2:', chi2_NFW_norm)
             print('Burket chi2:', chi2_bur_norm)
             ####################################################################
-
+            '''
             ####################################################################
             # MCMC
             # If chi2 value of any model for this galaxy > 200 from minize
@@ -533,8 +536,15 @@ for i in range(len(galaxy_ID)):
                 c_bur_MCMC['y_cen'][i] = Burket_fit_MCMC[9]
                 c_bur_MCMC['Vsys'][i] = Burket_fit_MCMC[10]
                 c_bur_MCMC['chi2'][i] = chi2_bur_norm_MCMC
-            ####################################################################
 
+            ####################################################################
+            print('MCMC Isothermal chi2:', chi2_iso_norm_MCMC, time.time() - start_time)
+            print('MCMC NFW chi2:', chi2_NFW_norm_MCMC)
+            print('MCMC Burket chi2:', chi2_bur_norm_MCMC)
+            ####################################################################
+            '''
+            ####################################################################
+            
 
 
             ####################################################################
@@ -689,8 +699,8 @@ c_bur.close()
 c_iso.write('iso_mini.csv', format='ascii.csv', overwrite=True)
 c_nfw.write('nfw_mini.csv', format='ascii.csv', overwrite=True)
 c_bur.write('bur_mini.csv', format='ascii.csv', overwrite=True)
-c_scale.write('gal_scale.csv', format='ascii.csv',overwrite=True)
-c_iso_MCMC.write('iso_mcmc.csv', format='ascii.csv', overwrite=True)
-c_nfw_MCMC.write('nfw_mcmc.csv', format='ascii.csv', overwrite=True)
-c_bur_MCMC.write('bur_mcmc.csv', format='ascii.csv', overwrite=True)
+#c_scale.write('gal_scale.csv', format='ascii.csv',overwrite=True)
+#c_iso_MCMC.write('iso_mcmc.csv', format='ascii.csv', overwrite=True)
+#c_nfw_MCMC.write('nfw_mcmc.csv', format='ascii.csv', overwrite=True)
+#c_bur_MCMC.write('bur_mcmc.csv', format='ascii.csv', overwrite=True)
 
