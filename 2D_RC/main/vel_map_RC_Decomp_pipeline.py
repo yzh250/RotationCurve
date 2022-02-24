@@ -249,7 +249,7 @@ for i in range(len(galaxy_ID)):
 
     plate, IFU = galaxy_ID[i].split('-')
 
-    data_file = MANGA_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID[i] + '-MAPS-HYB10-GAU-MILESHC.fits.gz'
+    data_file = MANGA_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID[i] + '-MAPS-HYB10-MILESHC-MASTARSSP.fits.gz'
 
     j = DRP_index[galaxy_ID[i]]
 

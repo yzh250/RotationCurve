@@ -155,7 +155,7 @@ def Galaxy_Data(galaxy_ID, MANGA_FOLDER):
     #VEL_MAP_FOLDER = MANGA_FOLDER
     
     #cube = fits.open('manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
-    cube = fits.open(MANGA_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
+    cube = fits.open(MANGA_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-MILESHC-MASTARSSP.fits.gz')
 
     maps = {}
 
