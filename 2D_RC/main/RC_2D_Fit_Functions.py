@@ -152,10 +152,10 @@ def Galaxy_Data(galaxy_ID, MANGA_FOLDER):
     ############################################################################
     # Obtaining Data Cubes, Inverse Variances, and Masks
     #---------------------------------------------------------------------------
-    VEL_MAP_FOLDER = MANGA_FOLDER + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
+    #VEL_MAP_FOLDER = MANGA_FOLDER
     
     #cube = fits.open('manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
-    cube = fits.open(VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
+    cube = fits.open(MANGA_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
 
     maps = {}
 
