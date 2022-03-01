@@ -301,7 +301,7 @@ for i in range(len(galaxy_ID)):
 
         if map_smoothness <= max_map_smoothness and tidal == 0:
             
-            print('Fitting galaxy ', galaxy_ID[i], flush=True)
+            print('Fitting galaxy ', galaxy_ID[i])
             start_time = time.time()
 
             center_coord = (x_center_guess, y_center_guess)
@@ -357,7 +357,7 @@ for i in range(len(galaxy_ID)):
             # elif gal_ID in ['8655-1902', '7960-3701', '9864-9101', '8588-3703']:
             #     phi_guess = phi_EofN_deg * np.pi / 180.
 
-            #print(phi_guess * 180 / (np.pi), flush=True)
+            print(phi_guess * 180 / (np.pi))
 
             phi_guess = phi_guess % (2 * np.pi)
             ####################################################################
@@ -389,7 +389,7 @@ for i in range(len(galaxy_ID)):
                                             ivar_masked,
                                             Ha_vel_mask)
             
-            print('Fit galaxy', time.time() - start_time, flush=True)
+            print('Fit galaxy', time.time() - start_time)
             ####################################################################
 
 
@@ -411,7 +411,7 @@ for i in range(len(galaxy_ID)):
             NFW_fit = np.ndarray.tolist(NFW_fit)
             Burket_fit = np.ndarray.tolist(Burket_fit)
             
-            plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, data_maps['Ha_vel_mask'], data_maps['vmasked'], data_maps['ivar_masked'])
+            #plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, data_maps['Ha_vel_mask'], data_maps['vmasked'], data_maps['ivar_masked'])
             #plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, Ha_vel_mask, vmasked, ivar_masked)
             ####################################################################
 
@@ -421,7 +421,7 @@ for i in range(len(galaxy_ID)):
             ####################################################################
             # Calculating Chi2
             #-------------------------------------------------------------------
-            print('Calculating chi2',flush=True)
+            print('Calculating chi2')
             start_time = time.time()
 
             #-------------------------------------------------------------------
@@ -482,9 +482,9 @@ for i in range(len(galaxy_ID)):
             ####################################################################
 
             ####################################################################
-            print('Isothermal chi2:', chi2_iso_norm, time.time() - start_time, flush=True)
-            print('NFW chi2:', chi2_NFW_norm, flush=True)
-            print('Burket chi2:', chi2_bur_norm, flush=True)
+            print('Isothermal chi2:', chi2_iso_norm, time.time() - start_time)
+            print('NFW chi2:', chi2_NFW_norm)
+            print('Burket chi2:', chi2_bur_norm)
             ####################################################################
             '''
             ####################################################################
@@ -665,7 +665,7 @@ for i in range(len(galaxy_ID)):
             '''
         
         else:
-            print(galaxy_ID[i] + ' does not have rotation curve', flush=True)
+            print(galaxy_ID[i] + ' does not have rotation curve')
             '''
             writer_iso.writerow([galaxy_ID[i], 
                                  'N/A', 
@@ -684,7 +684,7 @@ for i in range(len(galaxy_ID)):
             writer_bur.writerow([galaxy_ID[i], 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A','N/A','N/A'])
             '''
     else:
-        print('No data for the galaxy.', flush=True)
+        print('No data for the galaxy.')
         '''
         writer_iso.writerow([galaxy_ID[i], 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A','N/A'])
         writer_nfw.writerow([galaxy_ID[i], 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A','N/A'])
