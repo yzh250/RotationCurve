@@ -312,6 +312,8 @@ for i in range(len(galaxy_ID)):
         Ha_vel_mask = data_maps['Ha_vel_mask'] + (SN_map < 5)
 
         vmasked = ma.array(data_maps['Ha_vel'], mask = Ha_vel_mask)
+        plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
+        plt.savefig('vel_map_' + galaxy_ID[i] + '.png',format='png')
         ivar_masked = ma.array(data_maps['Ha_vel_ivar'], mask = Ha_vel_mask)
 
         #plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
