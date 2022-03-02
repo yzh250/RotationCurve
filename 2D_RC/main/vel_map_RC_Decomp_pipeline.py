@@ -300,6 +300,9 @@ for i in range(len(galaxy_ID)):
         #tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
         tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
 
+        plt.imshow(data_maps['Ha_vel'],origin='lower',cmap='RdBu_r')
+        plt.savefig('vel_map_' + galaxy_ID[i] + '.png',format='png')
+
         # Smoothness cut
         max_map_smoothness = 1.85
 
