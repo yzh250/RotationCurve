@@ -52,22 +52,31 @@ H_0 =  100 * h # km * s^-1 * Mpc^-1
 q0 = 0.2 # minimum inclination value
 ################################################################################
 
+################################################################################
+# Used files (local)
+#-------------------------------------------------------------------------------
+'''
+MANGA_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
 
+DRP_FILENAME = MANGA_FOLDER + 'redux/v2_4_3/drpall-v2_4_3.fits'
 
+VEL_MAP_FOLDER = MANGA_FOLDER + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
+
+MORPH_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/morph/'
+'''
+################################################################################
 
 ################################################################################
-# Used files
+# Used files (bluehive)
 #-------------------------------------------------------------------------------
-MANGA_FOLDER = '/scratch/kdougla7/data/SDSS/dr17/manga/spectro/analysis/v3_1_1/3.1.0/HYB10-MILESHC-MASTARSSP/'
 MANGA_FOLDER_yifan = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
-#MANGA_FOLDER = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/spectro/'
 
 DRP_FILENAME = MANGA_FOLDER_yifan + 'redux/v2_4_3/drpall-v2_4_3.fits'
 
-#VEL_MAP_FOLDER = MANGA_FOLDER
+VEL_MAP_FOLDER = '/scratch/kdougla7/data/SDSS/dr17/manga/spectro/analysis/v3_1_1/3.1.0/HYB10-MILESHC-MASTARSSP/'
 
 MORPH_FOLDER = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/morph/'
-#MORPH_FOLDER = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/morphology/manga_visual_morpho/1.0.1/'
+################################################################################
 
 
 DTable =  Table.read(DRP_FILENAME, format='fits')
@@ -108,6 +117,7 @@ plateifu = DTable['plateifu'].data
 
 for i in range(len(plateifu)):
     galaxy_ID.append(str(plateifu[i],'utf-8'))
+
 #-------------------------------------------------------------------------------
 #plate = ['7443','7495','7815','7957','7958','7960','7962','7964','7968','7972','7975','7977','7990','7991','7992']
 #IFU = ['1901','1902','3701','3702','3703','3704','6101','6102','6103','6104','9101','9102','12701','12702','12703','12704','12705']
@@ -249,7 +259,10 @@ for i in range(len(galaxy_ID)):
 
     plate, IFU = galaxy_ID[i].split('-')
 
-    data_file = MANGA_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID[i] + '-MAPS-HYB10-MILESHC-MASTARSSP.fits.gz'
+    # bluehive
+    data_file = VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID[i] + '-MAPS-HYB10-MILESHC-MASTARSSP.fits.gz'
+    # local
+    #data_file = VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID[i] + '-MAPS-HYB10-GAU-MILESHC.fits.gz'
 
     j = DRP_index[galaxy_ID[i]]
 
@@ -275,7 +288,7 @@ for i in range(len(galaxy_ID)):
         #-----------------------------------------------------------------------
         # scale, incl, ph, rband, Ha_vel, Ha_vel_ivar, Ha_vel_mask, vmasked, gshape, x_center_guess, y_center_guess = Galaxy_Data(galaxy_ID)
         data_maps, gshape, x_center_guess, y_center_guess = Galaxy_Data(galaxy_ID[i], 
-                                                                        MANGA_FOLDER)
+                                                                        VEL_MAP_FOLDER)
         #-----------------------------------------------------------------------
 
 
@@ -283,6 +296,7 @@ for i in range(len(galaxy_ID)):
         # Selection
         #-----------------------------------------------------------------------
         # Morphological cut
+        #tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
         tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
 
         # Smoothness cut

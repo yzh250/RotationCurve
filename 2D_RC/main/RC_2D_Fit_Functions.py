@@ -53,25 +53,6 @@ h = 1 # reduced hubble constant
 H_0 =  100 * h # km * s^-1 * Mpc^-1
 ################################################################################
 
-
-'''
-# Local machine directories
-#MANGA_FOLDER_mac = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
-#VEL_MAP_FOLDER_mac = MANGA_FOLDER_mac + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
-#MORPH_file_mac = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/manga_visual_morpho-1.0.1.fits'
-#Mfile_mac = fits.open(MORPH_file_mac)
-#Mdata_mac = Mfile_mac[1].data
-#RC_FILE_FOLDER_mac = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/data/DRP-rot_curve_data_files/'
-
-# Bluehive directories
-MANGA_FOLDER_bluehive = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
-VEL_MAP_FOLDER_bluehive = MANGA_FOLDER_bluehive + 'analysis/v2_4_3/2.2.1/HYB10-GAU-MILESHC/'
-MORPH_file_bluehive = '/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/manga_visual_morpho-1.0.1.fits'
-Mfile_bluehive = fits.open(MORPH_file_bluehive)
-Mdata_bluehive = Mfile_bluehive[1].data
-RC_FILE_FOLDER_bluehive = '/home/yzh250/Documents/UR_Stuff/Research_UR/data/DRP-rot_curve_data_files/'
-'''
-
 '''
 ################################################################################
 # Used files
@@ -96,7 +77,7 @@ r50_ang = DTable2['nsa_elpetro_th50_r'].data
 
 
 
-def Galaxy_Data(galaxy_ID, MANGA_FOLDER):
+def Galaxy_Data(galaxy_ID, VEL_MAP_FOLDER):
     '''
     PARAMETERS
     ==========
@@ -114,7 +95,7 @@ def Galaxy_Data(galaxy_ID, MANGA_FOLDER):
     physical properties & data of the galaxy
 
     '''
-    
+
     plate, IFU = galaxy_ID.split('-')
     '''
     ############################################################################
@@ -152,10 +133,11 @@ def Galaxy_Data(galaxy_ID, MANGA_FOLDER):
     ############################################################################
     # Obtaining Data Cubes, Inverse Variances, and Masks
     #---------------------------------------------------------------------------
-    #VEL_MAP_FOLDER = MANGA_FOLDER
     
-    #cube = fits.open('manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
-    cube = fits.open(MANGA_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-MILESHC-MASTARSSP.fits.gz')
+    #bluehive
+    cube = fits.open(VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-MILESHC-MASTARSSP.fits.gz')
+    #local
+    #cube = fits.open(VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
 
     maps = {}
 
@@ -196,7 +178,6 @@ def Galaxy_Data(galaxy_ID, MANGA_FOLDER):
 
 def getTidal(gal_ID, MORPH_file_path):
 
-    #MORPH_file_path = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/2D_RC/'
     MORPH_file = MORPH_file_path + 'manga_visual_morpho-1.0.1.fits'
 
     Mfile = fits.open(MORPH_file)
@@ -421,7 +402,7 @@ def Galaxy_Fitting_bur(params, scale, shape, vmap, ivar, mask):
 
     ig_bur = [-1, 1, 1000, 4, -3, 25, incl, ph, x_guess, y_guess, vsys]
     #ig_bur = [0.1, 1, 1000, 4, 0.001, 25, incl, ph, x_guess, y_guess, vsys]
-    print(ig_bur)
+    #print(ig_bur)
 
     bestfit_bur = minimize(nloglikelihood_bur_flat,
                            ig_bur, 
