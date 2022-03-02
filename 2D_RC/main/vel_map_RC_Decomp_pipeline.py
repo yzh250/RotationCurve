@@ -426,7 +426,7 @@ for i in range(len(galaxy_ID)):
             NFW_fit = np.ndarray.tolist(NFW_fit)
             Burket_fit = np.ndarray.tolist(Burket_fit)
             
-            plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, data_maps['Ha_vel_mask'], data_maps['vmasked'], data_maps['ivar_masked'])
+            #plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, data_maps['Ha_vel_mask'], data_maps['vmasked'], data_maps['ivar_masked'])
             #plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, Ha_vel_mask, vmasked, ivar_masked)
             ####################################################################
 
