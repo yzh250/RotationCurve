@@ -81,14 +81,14 @@ def find_phi(center_coords, phi_angle, vel_map):
                 semi_major_axis_spaxel[i] = 0
             elif semi_major_axis_spaxel[i] >= vel_map.shape[i]:
                 semi_major_axis_spaxel[i] = vel_map.shape[i] - 1
-            elif time.time() - start_time >= 1000:
-                checkpoint_masked = False
+            #elif time.time() - start_time >= 1000:
+                #lougoycheckpoint_masked = False
 
         # Check value along semi-major axis
         if vel_map.mask[tuple(semi_major_axis_spaxel)] == 0:
             checkpoint_masked = False
-        elif time.time() - start_time >= 1000:
-            checkpoint_masked = False
+        #elif time.time() - start_time >= 1000:
+            #checkpoint_masked = False
         else:
             f *= 0.9
 

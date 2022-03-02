@@ -142,9 +142,9 @@ def Galaxy_Data(galaxy_ID, VEL_MAP_FOLDER):
     maps = {}
 
     maps['r_band'] = cube['SPX_MFLUX'].data
-    maps['Ha_vel'] = cube['EMLINE_GVEL'].data[18]
-    maps['Ha_vel_ivar'] = cube['EMLINE_GVEL_IVAR'].data[18]
-    maps['Ha_vel_mask'] = cube['EMLINE_GVEL_MASK'].data[18]
+    maps['Ha_vel'] = cube['EMLINE_GVEL'].data[23]
+    maps['Ha_vel_ivar'] = cube['EMLINE_GVEL_IVAR'].data[23]
+    maps['Ha_vel_mask'] = cube['EMLINE_GVEL_MASK'].data[23]
 
 
     maps['vmasked'] = ma.array(maps['Ha_vel'], mask=maps['Ha_vel_mask'])
@@ -155,9 +155,9 @@ def Galaxy_Data(galaxy_ID, VEL_MAP_FOLDER):
     ############################################################################
 
     # Ha flux
-    maps['Ha_flux'] = cube['EMLINE_GFLUX'].data[18]
-    maps['Ha_flux_ivar'] = cube['EMLINE_GFLUX_IVAR'].data[18]
-    maps['Ha_flux_mask'] = cube['EMLINE_GFLUX_MASK'].data[18]
+    maps['Ha_flux'] = cube['EMLINE_GFLUX'].data[23]
+    maps['Ha_flux_ivar'] = cube['EMLINE_GFLUX_IVAR'].data[23]
+    maps['Ha_flux_mask'] = cube['EMLINE_GFLUX_MASK'].data[23]
     maps['Ha_flux_masked'] = ma.array(maps['Ha_flux'], mask=maps['Ha_flux_mask'])
 
 
