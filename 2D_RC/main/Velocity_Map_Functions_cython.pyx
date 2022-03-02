@@ -72,8 +72,6 @@ cpdef np.ndarray rot_incl_iso(shape,
 
     log_rhob0, Rb, SigD, Rd, rho0_h, Rh, inclination, phi, center_x, center_y, vsys = params
 
-    print(inclination)
-
     rotated_inclined_map = np.zeros(shape, dtype=np.float64)
     rotated_inclined_map_memview = rotated_inclined_map
     
@@ -153,8 +151,6 @@ cpdef np.ndarray rot_incl_NFW(shape,
     cdef DTYPE_INT64_t num_cols = shape[1]
 
     log_rhob0, Rb, SigD, Rd, rho0_h, Rh, inclination, phi, center_x, center_y, vsys = params
-
-    print(inclination)
 
     rotated_inclined_map = np.zeros(shape, dtype=np.float64)
     rotated_inclined_map_memview = rotated_inclined_map
@@ -236,8 +232,6 @@ cpdef np.ndarray rot_incl_bur(shape,
     cdef DTYPE_INT64_t num_cols = shape[1]
 
     log_rhob0, Rb, SigD, Rd, rho0_h, Rh, inclination, phi, center_x, center_y, vsys = params
-
-    print(inclination)
 
     rotated_inclined_map = np.zeros(shape, dtype=np.float64)
     rotated_inclined_map_memview = rotated_inclined_map
