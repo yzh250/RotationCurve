@@ -69,6 +69,8 @@ def find_phi(center_coords, phi_angle, vel_map):
 
     checkpoint_masked = True
 
+    start_time = time.time()
+
     while checkpoint_masked:
         delta_x = int(center_coords[1] * f)
         delta_y = int(delta_x / np.tan(phi))
@@ -82,6 +84,8 @@ def find_phi(center_coords, phi_angle, vel_map):
 
         # Check value along semi-major axis
         if vel_map.mask[tuple(semi_major_axis_spaxel)] == 0:
+            checkpoint_masked = False
+        elif time.time() - start_time >= 1000:
             checkpoint_masked = False
         else:
             f *= 0.9
