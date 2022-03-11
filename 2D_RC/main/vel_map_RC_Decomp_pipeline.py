@@ -284,7 +284,7 @@ for i in range(len(galaxy_ID)):
 
     #ph = phi[j] * np.pi / 180
 
-    if path.exists(data_file):
+    if path.exists(data_file) and (incl > 0):
         ########################################################################
         # Get data
         #-----------------------------------------------------------------------

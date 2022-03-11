@@ -141,6 +141,7 @@ def Galaxy_Data(galaxy_ID, VEL_MAP_FOLDER):
 
     maps = {}
 
+    # bluehive
     maps['r_band'] = cube['SPX_MFLUX'].data
     maps['Ha_vel'] = cube['EMLINE_GVEL'].data[23]
     maps['Ha_vel_ivar'] = cube['EMLINE_GVEL_IVAR'].data[23]
@@ -160,6 +161,27 @@ def Galaxy_Data(galaxy_ID, VEL_MAP_FOLDER):
     maps['Ha_flux_mask'] = cube['EMLINE_GFLUX_MASK'].data[23]
     maps['Ha_flux_masked'] = ma.array(maps['Ha_flux'], mask=maps['Ha_flux_mask'])
 
+    #local
+    '''
+    maps['r_band'] = cube['SPX_MFLUX'].data
+    maps['Ha_vel'] = cube['EMLINE_GVEL'].data[18]
+    maps['Ha_vel_ivar'] = cube['EMLINE_GVEL_IVAR'].data[18]
+    maps['Ha_vel_mask'] = cube['EMLINE_GVEL_MASK'].data[18]
+
+
+    maps['vmasked'] = ma.array(maps['Ha_vel'], mask=maps['Ha_vel_mask'])
+    maps['r_band_masked'] = ma.array(maps['r_band'],mask=maps['Ha_vel_mask'])
+    maps['ivar_masked'] = ma.array(maps['Ha_vel_ivar'], mask=maps['Ha_vel_mask'])
+
+    gshape = maps['vmasked'].shape
+    ############################################################################
+
+    # Ha flux
+    maps['Ha_flux'] = cube['EMLINE_GFLUX'].data[18]
+    maps['Ha_flux_ivar'] = cube['EMLINE_GFLUX_IVAR'].data[18]
+    maps['Ha_flux_mask'] = cube['EMLINE_GFLUX_MASK'].data[18]
+    maps['Ha_flux_masked'] = ma.array(maps['Ha_flux'], mask=maps['Ha_flux_mask'])
+    '''
 
     ############################################################################
     # Finding the center

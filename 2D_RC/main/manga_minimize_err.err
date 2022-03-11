@@ -1,0 +1,1313 @@
+WARNING: hdu= was not specified but multiple tables are present, reading in first available table (hdu=1) [astropy.io.fits.connect]
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:283: RuntimeWarning: invalid value encountered in arccos
+  incl = np.arccos(np.sqrt(cosi2))
+vel_map_RC_Decomp_pipeline.py:318: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if map_smoothness <= max_map_smoothness and tidal == 0:
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:283: RuntimeWarning: invalid value encountered in arccos
+  incl = np.arccos(np.sqrt(cosi2))
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:877: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`).
+  (RC_Isothermal, RC_NFW, RC_Burket)) = plt.subplots( 2, 3)
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:318: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if map_smoothness <= max_map_smoothness and tidal == 0:
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:318: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if map_smoothness <= max_map_smoothness and tidal == 0:
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:318: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if map_smoothness <= max_map_smoothness and tidal == 0:
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:318: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if map_smoothness <= max_map_smoothness and tidal == 0:
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:318: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if map_smoothness <= max_map_smoothness and tidal == 0:
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:318: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if map_smoothness <= max_map_smoothness and tidal == 0:
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:318: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if map_smoothness <= max_map_smoothness and tidal == 0:
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:318: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if map_smoothness <= max_map_smoothness and tidal == 0:
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:318: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if map_smoothness <= max_map_smoothness and tidal == 0:
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:318: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if map_smoothness <= max_map_smoothness and tidal == 0:
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:318: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if map_smoothness <= max_map_smoothness and tidal == 0:
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:318: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if map_smoothness <= max_map_smoothness and tidal == 0:
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:318: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if map_smoothness <= max_map_smoothness and tidal == 0:
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:318: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if map_smoothness <= max_map_smoothness and tidal == 0:
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:318: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if map_smoothness <= max_map_smoothness and tidal == 0:
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:234: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_iso = minimize(nloglikelihood_iso_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:321: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_NFW = minimize(nloglikelihood_NFW_flat,
+/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py:407: OptimizeWarning: Initial guess is not within the specified bounds
+  bestfit_bur = minimize(nloglikelihood_bur_flat,
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+No handles with labels found to put in legend.
+vel_map_RC_Decomp_pipeline.py:283: RuntimeWarning: invalid value encountered in arccos
+  incl = np.arccos(np.sqrt(cosi2))
+Traceback (most recent call last):
+  File "vel_map_RC_Decomp_pipeline.py", line 430, in <module>
+    plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, data_maps['Ha_vel_mask'], data_maps['vmasked'], data_maps['ivar_masked'])
+  File "/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py", line 888, in plot_diagnostic_panel
+    plot_rot_curve(vmasked,ivar_masked,Isothermal_Fit,scale,ID,'Isothermal', ax = RC_Isothermal)
+  File "/gpfs/fs1/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/RC_2D_Fit_Functions.py", line 768, in plot_rot_curve
+    ax.set_ylim([-1.25*vmax,1.25*vmax])
+  File "/software/anaconda3/2020.11/lib/python3.8/site-packages/matplotlib/axes/_base.py", line 3567, in set_ylim
+    bottom = self._validate_converted_limits(bottom, self.convert_yunits)
+  File "/software/anaconda3/2020.11/lib/python3.8/site-packages/matplotlib/axes/_base.py", line 3213, in _validate_converted_limits
+    raise ValueError("Axis limits cannot be NaN or Inf")
+ValueError: Axis limits cannot be NaN or Inf
+srun: error: bhc0114: task 0: Exited with exit code 1
+srun: Terminating job step 9697535.0
