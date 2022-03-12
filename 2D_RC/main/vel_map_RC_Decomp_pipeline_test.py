@@ -55,22 +55,21 @@ q0 = 0.2 # minimum inclination value
 ################################################################################
 # Used files (local)
 #-------------------------------------------------------------------------------
-
+'''
 MANGA_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
 
 DRP_FILENAME = MANGA_FOLDER + 'redux/v3_1_1/drpall-v3_1_1.fits'
 
 # Can't really use this anymore
-VEL_MAP_FOLDER = MANGA_FOLDER + 'analysis/v3_1_1/2.2.1/HYB10-GAU-MILESHC/'
+VEL_MAP_FOLDER = MANGA_FOLDER + 'analysis//v3_1_1/2.1.1/HYB10-GAU-MILESHC/'
 
 MORPH_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/morph/'
-
+'''
 ################################################################################
 
 ################################################################################
 # Used files (bluehive)
 #-------------------------------------------------------------------------------
-'''
 MANGA_FOLDER_yifan = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr17/manga/spectro/'
 
 DRP_FILENAME = MANGA_FOLDER_yifan + 'redux/v3_1_1/drpall-v3_1_1.fits'
@@ -78,7 +77,6 @@ DRP_FILENAME = MANGA_FOLDER_yifan + 'redux/v3_1_1/drpall-v3_1_1.fits'
 VEL_MAP_FOLDER = '/scratch/kdougla7/data/SDSS/dr17/manga/spectro/analysis/v3_1_1/3.1.0/HYB10-MILESHC-MASTARSSP/'
 
 MORPH_FOLDER = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr17/manga/morph/'
-'''
 ################################################################################
 
 
@@ -106,7 +104,6 @@ rat = DTable['nsa_elpetro_ba']
 phi = DTable['nsa_elpetro_phi']
 z = DTable['nsa_z']
 r50_ang = DTable['nsa_elpetro_th50_r']
-flag = DTable['mngtarg1']
 ################################################################################
 
 
@@ -116,9 +113,9 @@ flag = DTable['mngtarg1']
 ################################################################################
 # Obtaining information for MaNGA galaxies
 #-------------------------------------------------------------------------------
-#galaxy_ID = ['8554-12701']
-galaxy_ID = ['8309-3701','8309-3702','8309-3703','8309-3704','8309-6101','8309-6102','8309-6103','8309-6104','8309-9101','8309-9102']
+galaxy_ID = ['8309-1901']
 '''
+galaxy_ID = []
 plateifu = DTable['plateifu'].data
 
 for i in range(len(plateifu)):
@@ -133,7 +130,6 @@ for i in range(len(plate)):
    for j in range(len(IFU)):
        galaxy_ID.append(plate[i] + '-' + IFU[j])
 '''
-
 #-------------------------------------------------------------------------------
 
 # Isothermal
@@ -264,14 +260,12 @@ c_bur_MCMC['chi2'] = np.nan
 
 for i in range(len(galaxy_ID)):
 
-    print(galaxy_ID[i])
-
     plate, IFU = galaxy_ID[i].split('-')
 
     # bluehive
-    #data_file = VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID[i] + '-MAPS-HYB10-MILESHC-MASTARSSP.fits.gz'
+    data_file = VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID[i] + '-MAPS-HYB10-MILESHC-MASTARSSP.fits.gz'
     # local
-    data_file = VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID[i] + '-MAPS-HYB10-GAU-MILESHC.fits.gz'
+    #data_file = VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID[i] + '-MAPS-HYB10-GAU-MILESHC.fits.gz'
 
     j = DRP_index[galaxy_ID[i]]
 
@@ -280,25 +274,18 @@ for i in range(len(galaxy_ID)):
     distance = (velocity / H_0) * 1000 #kpc
     scale = 0.5 * distance / 206265
 
-    #c_scale['scale'][i] = 
-
-    print(rat[j])
-    print(flag[j])
+    #c_scale['scale'][i] = scale
 
     #incl = np.arccos(rat[j])
     cosi2 = (rat[j]**2 - q0**2)/(1 - q0**2)
     if cosi2 < 0:
         cosi2 = 0
 
-    print(cosi2)
-
     incl = np.arccos(np.sqrt(cosi2))
-    print(incl)
 
     #ph = phi[j] * np.pi / 180
 
     if path.exists(data_file) and (incl > 0):
-        print('data exists')
         ########################################################################
         # Get data
         #-----------------------------------------------------------------------
@@ -440,10 +427,6 @@ for i in range(len(galaxy_ID)):
             Isothermal_fit = np.ndarray.tolist(Isothermal_fit)
             NFW_fit = np.ndarray.tolist(NFW_fit)
             Burket_fit = np.ndarray.tolist(Burket_fit)
-
-            print(Isothermal_fit)
-            print(NFW_fit)
-            print(Burket_fit)
             
             plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, data_maps['Ha_vel_mask'], data_maps['vmasked'], data_maps['ivar_masked'])
             #plot_diagnostic_panel(galaxy_ID[i], gshape, scale, Isothermal_fit, NFW_fit, Burket_fit, Ha_vel_mask, vmasked, ivar_masked)

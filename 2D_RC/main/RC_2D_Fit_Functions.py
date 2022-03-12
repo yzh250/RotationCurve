@@ -135,13 +135,14 @@ def Galaxy_Data(galaxy_ID, VEL_MAP_FOLDER):
     #---------------------------------------------------------------------------
     
     #bluehive
-    cube = fits.open(VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-MILESHC-MASTARSSP.fits.gz')
+    #cube = fits.open(VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-MILESHC-MASTARSSP.fits.gz')
     #local
-    #cube = fits.open(VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
+    cube = fits.open(VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID + '-MAPS-HYB10-GAU-MILESHC.fits.gz')
 
     maps = {}
 
     # bluehive
+    '''
     maps['r_band'] = cube['SPX_MFLUX'].data
     maps['Ha_vel'] = cube['EMLINE_GVEL'].data[23]
     maps['Ha_vel_ivar'] = cube['EMLINE_GVEL_IVAR'].data[23]
@@ -160,9 +161,9 @@ def Galaxy_Data(galaxy_ID, VEL_MAP_FOLDER):
     maps['Ha_flux_ivar'] = cube['EMLINE_GFLUX_IVAR'].data[23]
     maps['Ha_flux_mask'] = cube['EMLINE_GFLUX_MASK'].data[23]
     maps['Ha_flux_masked'] = ma.array(maps['Ha_flux'], mask=maps['Ha_flux_mask'])
+    '''
 
     #local
-    '''
     maps['r_band'] = cube['SPX_MFLUX'].data
     maps['Ha_vel'] = cube['EMLINE_GVEL'].data[18]
     maps['Ha_vel_ivar'] = cube['EMLINE_GVEL_IVAR'].data[18]
@@ -181,7 +182,6 @@ def Galaxy_Data(galaxy_ID, VEL_MAP_FOLDER):
     maps['Ha_flux_ivar'] = cube['EMLINE_GFLUX_IVAR'].data[18]
     maps['Ha_flux_mask'] = cube['EMLINE_GFLUX_MASK'].data[18]
     maps['Ha_flux_masked'] = ma.array(maps['Ha_flux'], mask=maps['Ha_flux_mask'])
-    '''
 
     ############################################################################
     # Finding the center
