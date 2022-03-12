@@ -335,7 +335,7 @@ for i in range(len(galaxy_ID)):
             ####################################################################
             # Find initial guess for phi
             #-------------------------------------------------------------------
-            print(phi[js])
+            print(phi[j])
 
             phi_guess = find_phi(center_coord, phi[j], vmasked)
 
