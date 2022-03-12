@@ -329,7 +329,7 @@ for i in range(len(galaxy_ID)):
             vmasked[center_coord[0]][center_coord[1]] = 0
 
             plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
-            plt.savefig('vmaksed_no_center_vel',format='png')
+            plt.savefig('vmaksed_no_center_vel.png',format='png')
             plt.close()
 
             ####################################################################
