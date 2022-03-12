@@ -308,6 +308,10 @@ for i in range(len(galaxy_ID)):
         # Smoothness cut
         max_map_smoothness = 1.85
 
+        plt.imshow(data_maps['Ha_vel'],origin='lower',cmap='RdBu_r')
+        plt.savefig('data_image.png',format='png')
+        plt.close()
+
         map_smoothness = how_smooth(data_maps['Ha_vel'], data_maps['Ha_vel_mask'])
         print(map_smoothness)
 
