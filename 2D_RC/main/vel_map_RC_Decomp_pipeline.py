@@ -312,10 +312,14 @@ for i in range(len(galaxy_ID)):
         vmasked = ma.array(data_maps['Ha_vel'], mask = Ha_vel_mask)
         ivar_masked = ma.array(data_maps['Ha_vel_ivar'], mask = Ha_vel_mask)
 
-        #plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
-        #plt.show()
+        global_max = ma.max(vmasked)
 
-        if map_smoothness <= max_map_smoothness and tidal == 0:
+        unmasked_data = True
+
+        if np.isnan(global_max) or (global_max is ma.masked):
+            unmasked_data = False
+
+        if map_smoothness <= max_map_smoothness and tidal == 0 and (unmasked_data == True):
             
             print('Fitting galaxy ', galaxy_ID[i], flush=True)
             start_time = time.time()
