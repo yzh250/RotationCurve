@@ -326,11 +326,11 @@ for i in range(len(galaxy_ID)):
 
             print(center_coord)
 
-            vmasked[center_coord[0]][center_coord[1]] = 0
+            #vmasked[center_coord[0]][center_coord[1]] = 0
 
-            plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
-            plt.savefig('vmaksed_no_center_vel.png',format='png')
-            plt.close()
+            #plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
+            #plt.savefig('vmaksed_no_center_vel.png',format='png')
+            #plt.close()
 
             ####################################################################
             # Find initial guess for phi
