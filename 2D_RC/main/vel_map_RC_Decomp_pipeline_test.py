@@ -113,7 +113,7 @@ r50_ang = DTable['nsa_elpetro_th50_r']
 ################################################################################
 # Obtaining information for MaNGA galaxies
 #-------------------------------------------------------------------------------
-galaxy_ID = ['8134-12704']
+galaxy_ID = ['8309-1901']
 '''
 galaxy_ID = []
 plateifu = DTable['plateifu'].data
@@ -282,10 +282,12 @@ for i in range(len(galaxy_ID)):
         cosi2 = 0
 
     incl = np.arccos(np.sqrt(cosi2))
+    print(incl)
 
     #ph = phi[j] * np.pi / 180
 
     if path.exists(data_file) and (incl > 0):
+        print('data exists')
         ########################################################################
         # Get data
         #-----------------------------------------------------------------------
@@ -323,10 +325,14 @@ for i in range(len(galaxy_ID)):
 
             center_coord = (x_center_guess, y_center_guess)
 
+            print(center_coord)
+
             ####################################################################
             # Find initial guess for phi
             #-------------------------------------------------------------------
             phi_guess = find_phi(center_coord, phi[j], vmasked)
+
+            print(phi_guess)
 
             if galaxy_ID[i] in ['8134-6102']:
                 phi_guess += 0.25 * np.pi
@@ -377,6 +383,8 @@ for i in range(len(galaxy_ID)):
             #print(phi_guess * 180 / (np.pi), flush=True)
 
             phi_guess = phi_guess % (2 * np.pi)
+
+            print(phi_guess)
             ####################################################################
 
 
