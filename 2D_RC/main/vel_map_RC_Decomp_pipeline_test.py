@@ -308,10 +308,6 @@ for i in range(len(galaxy_ID)):
         # Smoothness cut
         max_map_smoothness = 1.85
 
-        plt.imshow(data_maps['Ha_vel'],origin='lower',cmap='RdBu_r')
-        plt.savefig('data_image.png',format='png')
-        plt.close()
-
         map_smoothness = how_smooth(data_maps['Ha_vel'], data_maps['Ha_vel_mask'])
         print(map_smoothness)
 
@@ -319,9 +315,17 @@ for i in range(len(galaxy_ID)):
         Ha_vel_mask = data_maps['Ha_vel_mask'] + (SN_map < 5)
 
         vmasked = ma.array(data_maps['Ha_vel'], mask = Ha_vel_mask)
+
         ivar_masked = ma.array(data_maps['Ha_vel_ivar'], mask = Ha_vel_mask)
 
-        if map_smoothness <= max_map_smoothness and tidal == 0:
+        global_max = ma.max(vmasked)
+
+        unmasked_data = True
+
+        if np.isnan(global_max) or (global_max is ma.masked):
+            unmasked_data = False
+
+        if map_smoothness <= max_map_smoothness and tidal == 0 and (umasked == True):
             
             print('Fitting galaxy ', galaxy_ID[i], flush=True)
             start_time = time.time()
@@ -329,20 +333,6 @@ for i in range(len(galaxy_ID)):
             center_coord = (x_center_guess, y_center_guess)
 
             print(center_coord)
-
-            np.save('vmap_array',vmasked)
-
-            plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
-            plt.savefig('vmasked.png',format='png')
-            plt.close()
-
-            '''
-            vmasked = vmasked - vmasked[center_coord[0]][center_coord[1]]
-
-            plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
-            plt.savefig('vmasked_no_center_vel.png',format='png')
-            plt.close()
-            '''
 
             ####################################################################
             # Find initial guess for phi
