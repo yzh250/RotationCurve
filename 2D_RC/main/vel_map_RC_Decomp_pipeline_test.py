@@ -325,7 +325,7 @@ for i in range(len(galaxy_ID)):
         if np.isnan(global_max) or (global_max is ma.masked):
             unmasked_data = False
 
-        if map_smoothness <= max_map_smoothness and tidal == 0 and (umasked == True):
+        if map_smoothness <= max_map_smoothness and tidal == 0 and (unmasked == True):
             
             print('Fitting galaxy ', galaxy_ID[i], flush=True)
             start_time = time.time()
