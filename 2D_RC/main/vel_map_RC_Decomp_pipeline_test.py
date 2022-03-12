@@ -113,7 +113,7 @@ r50_ang = DTable['nsa_elpetro_th50_r']
 ################################################################################
 # Obtaining information for MaNGA galaxies
 #-------------------------------------------------------------------------------
-galaxy_ID = ['8309-1901']
+galaxy_ID = ['8134-12704']
 '''
 galaxy_ID = []
 plateifu = DTable['plateifu'].data
