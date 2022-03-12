@@ -317,9 +317,6 @@ for i in range(len(galaxy_ID)):
         vmasked = ma.array(data_maps['Ha_vel'], mask = Ha_vel_mask)
         ivar_masked = ma.array(data_maps['Ha_vel_ivar'], mask = Ha_vel_mask)
 
-        #plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
-        #plt.show()
-
         if map_smoothness <= max_map_smoothness and tidal == 0:
             
             print('Fitting galaxy ', galaxy_ID[i], flush=True)
@@ -328,6 +325,12 @@ for i in range(len(galaxy_ID)):
             center_coord = (x_center_guess, y_center_guess)
 
             print(center_coord)
+
+            vmasked[center_coord[0]][center_coord[1]] = 0
+
+            plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
+            plt.savefig('vmaksed_no_center_vel',format='png')
+            plt.close()
 
             ####################################################################
             # Find initial guess for phi
