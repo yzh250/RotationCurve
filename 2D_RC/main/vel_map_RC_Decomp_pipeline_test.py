@@ -303,11 +303,13 @@ for i in range(len(galaxy_ID)):
         # Morphological cut
         #tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
         tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
+        print(tidal)
 
         # Smoothness cut
         max_map_smoothness = 1.85
 
         map_smoothness = how_smooth(data_maps['Ha_vel'], data_maps['Ha_vel_mask'])
+        print(map_smoothness)
 
         SN_map = data_maps['Ha_flux'] * np.sqrt(data_maps['Ha_flux_ivar'])
         Ha_vel_mask = data_maps['Ha_vel_mask'] + (SN_map < 5)
@@ -330,7 +332,7 @@ for i in range(len(galaxy_ID)):
             ####################################################################
             # Find initial guess for phi
             #-------------------------------------------------------------------
-            print(phi[j])
+            print(phi[js])
 
             phi_guess = find_phi(center_coord, phi[j], vmasked)
 
