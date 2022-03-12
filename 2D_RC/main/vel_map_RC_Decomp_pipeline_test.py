@@ -326,7 +326,8 @@ for i in range(len(galaxy_ID)):
 
             print(center_coord)
 
-            print(vmasked)
+            print(max(vmasked))
+            print(min(vmasked))
 
             plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
             plt.savefig('vmasked.png',format='png')
