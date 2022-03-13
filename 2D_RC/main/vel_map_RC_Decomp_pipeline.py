@@ -326,6 +326,9 @@ for i in range(len(galaxy_ID)):
 
             center_coord = (x_center_guess, y_center_guess)
 
+            if galaxy_ID[i] in ['8466-12705']:
+                center_coord = (37,42)
+
             ####################################################################
             # Find initial guess for phi
             #-------------------------------------------------------------------
