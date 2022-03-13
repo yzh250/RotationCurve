@@ -117,7 +117,7 @@ flag = DTable['mngtarg1']
 # Obtaining information for MaNGA galaxies
 #-------------------------------------------------------------------------------
 #galaxy_ID = ['8554-12701']
-galaxy_ID = ['8309-1901']
+galaxy_ID = ['8466-12705']
 '''
 plateifu = DTable['plateifu'].data
 
@@ -297,6 +297,7 @@ for i in range(len(galaxy_ID)):
 
     #ph = phi[j] * np.pi / 180
 
+
     if path.exists(data_file) and (incl > 0):
         print('data exists')
         ########################################################################
@@ -331,17 +332,33 @@ for i in range(len(galaxy_ID)):
         #plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
         #plt.show()
 
-        if map_smoothness <= max_map_smoothness and tidal == 0:
+        global_max = ma.max(vmasked)
+
+        unmasked_data = True
+
+        if np.isnan(global_max) or (global_max is ma.masked) :
+            unmasked_data = False
+
+        if map_smoothness <= max_map_smoothness and tidal == 0  and (unmasked_data == True):
             
             print('Fitting galaxy ', galaxy_ID[i], flush=True)
             start_time = time.time()
 
             center_coord = (x_center_guess, y_center_guess)
 
+            if galaxy_ID[i] in ['8466-12705']:
+                center_coord = (37,42)
+
+            print(center_coord)
+
             ####################################################################
             # Find initial guess for phi
             #-------------------------------------------------------------------
             print(phi[j])
+
+            plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
+            plt.savefig('vmap_8466-12705.png',format='png')
+            plt.close()
             phi_guess = find_phi(center_coord, phi[j], vmasked)
             print(phi_guess)
 
