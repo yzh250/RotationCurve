@@ -113,7 +113,7 @@ r50_ang = DTable['nsa_elpetro_th50_r']
 ################################################################################
 # Obtaining information for MaNGA galaxies
 #-------------------------------------------------------------------------------
-galaxy_ID = ['8309-1901']
+galaxy_ID = ['9047-3701']
 '''
 galaxy_ID = []
 plateifu = DTable['plateifu'].data
@@ -311,12 +311,20 @@ for i in range(len(galaxy_ID)):
         map_smoothness = how_smooth(data_maps['Ha_vel'], data_maps['Ha_vel_mask'])
         print(map_smoothness)
 
+        plt.imshow(data_maps['Ha_vel'],origin='lower',cmap='RdBu_r')
+        plt.savefig('dmap.png',format='png')
+        plt.close()
+
         SN_map = data_maps['Ha_flux'] * np.sqrt(data_maps['Ha_flux_ivar'])
         Ha_vel_mask = data_maps['Ha_vel_mask'] + (SN_map < 5)
 
         vmasked = ma.array(data_maps['Ha_vel'], mask = Ha_vel_mask)
 
         ivar_masked = ma.array(data_maps['Ha_vel_ivar'], mask = Ha_vel_mask)
+
+        plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
+        plt.savefig('vmap.png',format='png')
+        plt.close()
 
         global_max = ma.max(vmasked)
 

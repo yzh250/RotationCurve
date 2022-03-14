@@ -117,7 +117,7 @@ flag = DTable['mngtarg1']
 # Obtaining information for MaNGA galaxies
 #-------------------------------------------------------------------------------
 #galaxy_ID = ['8554-12701']
-galaxy_ID = ['8466-12705']
+galaxy_ID = ['9047-3701']
 '''
 plateifu = DTable['plateifu'].data
 
@@ -323,14 +323,19 @@ for i in range(len(galaxy_ID)):
         map_smoothness = how_smooth(data_maps['Ha_vel'], data_maps['Ha_vel_mask'])
         print(map_smoothness)
 
+        plt.imshow(data_maps['Ha_vel'],origin='lower',cmap='RdBu_r')
+        plt.savefig('dmap.png',format='png')
+        plt.close()
+
         SN_map = data_maps['Ha_flux'] * np.sqrt(data_maps['Ha_flux_ivar'])
         Ha_vel_mask = data_maps['Ha_vel_mask'] + (SN_map < 5)
 
         vmasked = ma.array(data_maps['Ha_vel'], mask = Ha_vel_mask)
         ivar_masked = ma.array(data_maps['Ha_vel_ivar'], mask = Ha_vel_mask)
 
-        #plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
-        #plt.show()
+        plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
+        plt.savefig('vmap.png',format='png')
+        plt.close()
 
         global_max = ma.max(vmasked)
 
@@ -346,8 +351,10 @@ for i in range(len(galaxy_ID)):
 
             center_coord = (x_center_guess, y_center_guess)
 
+            '''
             if galaxy_ID[i] in ['8466-12705']:
                 center_coord = (37,42)
+            '''
 
             print(center_coord)
 
@@ -356,9 +363,6 @@ for i in range(len(galaxy_ID)):
             #-------------------------------------------------------------------
             print(phi[j])
 
-            plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
-            plt.savefig('vmap_8466-12705.png',format='png')
-            plt.close()
             phi_guess = find_phi(center_coord, phi[j], vmasked)
             print(phi_guess)
 
