@@ -289,8 +289,7 @@ for i in range(len(galaxy_ID)):
         # Get data
         #-----------------------------------------------------------------------
         # scale, incl, ph, rband, Ha_vel, Ha_vel_ivar, Ha_vel_mask, vmasked, gshape, x_center_guess, y_center_guess = Galaxy_Data(galaxy_ID)
-        data_maps, gshape, x_center_guess, y_center_guess = Galaxy_Data(galaxy_ID[i], 
-                                                                        VEL_MAP_FOLDER)
+        data_maps, gshape = Galaxy_Data(galaxy_ID[i],VEL_MAP_FOLDER)
         #-----------------------------------------------------------------------
 
 
@@ -311,6 +310,12 @@ for i in range(len(galaxy_ID)):
 
         vmasked = ma.array(data_maps['Ha_vel'], mask = Ha_vel_mask)
         ivar_masked = ma.array(data_maps['Ha_vel_ivar'], mask = Ha_vel_mask)
+
+        r_band_masked = ma.array(data_maps['r_band'],mask=Ha_vel_mask)
+
+        center_guess = np.unravel_index(ma.argmax(r_band_masked), gshape)
+        x_center_guess = center_guess[0]
+        y_center_guess = center_guess[1]
 
         global_max = ma.max(vmasked)
 
