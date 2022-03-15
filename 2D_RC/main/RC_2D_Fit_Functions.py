@@ -182,7 +182,7 @@ def Galaxy_Data(galaxy_ID, VEL_MAP_FOLDER):
     maps['Ha_flux_mask'] = cube['EMLINE_GFLUX_MASK'].data[18]
     maps['Ha_flux_masked'] = ma.array(maps['Ha_flux'], mask=maps['Ha_flux_mask'])
     '''
-    
+
     ############################################################################
     # Finding the center
     #---------------------------------------------------------------------------
