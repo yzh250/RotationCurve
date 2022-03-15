@@ -77,7 +77,9 @@ def find_phi(center_coords, phi_angle, vel_map):
 
     while checkpoint_masked:
         delta_x = int(center_coords[1] * f)
+        print(delta_x)
         delta_y = int(delta_x / np.tan(phi))
+        print(delta_y)
         semi_major_axis_spaxel = np.subtract(center_coords, (-delta_y, delta_x))
 
         '''
@@ -86,6 +88,7 @@ def find_phi(center_coords, phi_angle, vel_map):
         '''      
 
         for i in range(len(semi_major_axis_spaxel)):
+            print(semi_major_axis_spaxel)
             if semi_major_axis_spaxel[i] < 0:
                 semi_major_axis_spaxel[i] = 0
             elif semi_major_axis_spaxel[i] >= vel_map.shape[i]:
