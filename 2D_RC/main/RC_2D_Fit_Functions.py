@@ -149,7 +149,7 @@ def Galaxy_Data(galaxy_ID, VEL_MAP_FOLDER):
 
 
     maps['vmasked'] = ma.array(maps['Ha_vel'], mask=maps['Ha_vel_mask'])
-    maps['r_band_masked'] = ma.array(maps['r_band'],mask=maps['Ha_vel_mask'])
+    #maps['r_band_masked'] = ma.array(maps['r_band'],mask=maps['Ha_vel_mask'])
     maps['ivar_masked'] = ma.array(maps['Ha_vel_ivar'], mask=maps['Ha_vel_mask'])
 
     gshape = maps['vmasked'].shape
@@ -170,7 +170,7 @@ def Galaxy_Data(galaxy_ID, VEL_MAP_FOLDER):
 
 
     maps['vmasked'] = ma.array(maps['Ha_vel'], mask=maps['Ha_vel_mask'])
-    maps['r_band_masked'] = ma.array(maps['r_band'],mask=maps['Ha_vel_mask'])
+    #maps['r_band_masked'] = ma.array(maps['r_band'],mask=maps['Ha_vel_mask'])
     maps['ivar_masked'] = ma.array(maps['Ha_vel_ivar'], mask=maps['Ha_vel_mask'])
 
     gshape = maps['vmasked'].shape
@@ -186,13 +186,15 @@ def Galaxy_Data(galaxy_ID, VEL_MAP_FOLDER):
     ############################################################################
     # Finding the center
     #---------------------------------------------------------------------------
+    '''
     center_guess = np.unravel_index(ma.argmax(maps['r_band_masked']), gshape)
     x_center_guess = center_guess[0]
     y_center_guess = center_guess[1]
+    '''
     ############################################################################
 
     #return r_band, Ha_vel, Ha_vel_ivar, Ha_vel_mask, Ha_flux, Ha_flux_ivar, Ha_flux_mask, vmasked, Ha_flux_masked, ivar_masked, gshape, x_center_guess, y_center_guess
-    return maps, gshape, x_center_guess, y_center_guess
+    return maps, gshape#, x_center_guess, y_center_guess
 
 
 
