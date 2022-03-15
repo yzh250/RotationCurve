@@ -65,6 +65,8 @@ def find_phi(center_coords, phi_angle, vel_map):
     # Extract "systemic" velocity (velocity at center spaxel)
     v_sys = vel_map[center_coords]
 
+    print(center_coords)
+
     print(phi)
 
     f = 0.4
@@ -83,7 +85,10 @@ def find_phi(center_coords, phi_angle, vel_map):
         print(semi_major_axis_spaxel)
         '''
 
+        print(semi_major_axis_spaxel)        
+
         for i in range(len(semi_major_axis_spaxel)):
+            print(semi_major_axis_spaxel)
             if semi_major_axis_spaxel[i] < 0:
                 semi_major_axis_spaxel[i] = 0
             elif semi_major_axis_spaxel[i] >= vel_map.shape[i]:
