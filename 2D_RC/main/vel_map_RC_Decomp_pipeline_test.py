@@ -312,6 +312,7 @@ for i in range(len(galaxy_ID)):
         print(map_smoothness)
 
         plt.imshow(data_maps['Ha_vel'],origin='lower',cmap='RdBu_r')
+        plt.colorbar()
         plt.savefig('dmap.png',format='png')
         plt.close()
 
@@ -323,6 +324,7 @@ for i in range(len(galaxy_ID)):
         ivar_masked = ma.array(data_maps['Ha_vel_ivar'], mask = Ha_vel_mask)
 
         plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
+        plt.colorbar()
         plt.savefig('vmap.png',format='png')
         plt.close()
 

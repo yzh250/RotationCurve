@@ -325,6 +325,7 @@ for i in range(len(galaxy_ID)):
 
         plt.imshow(data_maps['Ha_vel'],origin='lower',cmap='RdBu_r')
         plt.savefig('dmap.png',format='png')
+        plt.colorbar()
         plt.close()
 
         SN_map = data_maps['Ha_flux'] * np.sqrt(data_maps['Ha_flux_ivar'])
@@ -335,6 +336,7 @@ for i in range(len(galaxy_ID)):
 
         plt.imshow(vmasked,origin='lower',cmap='RdBu_r')
         plt.savefig('vmap.png',format='png')
+        plt.colorbar()
         plt.close()
 
         global_max = ma.max(vmasked)

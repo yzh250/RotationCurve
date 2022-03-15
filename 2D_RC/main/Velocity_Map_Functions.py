@@ -78,8 +78,10 @@ def find_phi(center_coords, phi_angle, vel_map):
         delta_y = int(delta_x / np.tan(phi))
         semi_major_axis_spaxel = np.subtract(center_coords, (-delta_y, delta_x))
 
+        '''
         print(center_coords)
         print(semi_major_axis_spaxel)
+        '''
 
         for i in range(len(semi_major_axis_spaxel)):
             if semi_major_axis_spaxel[i] < 0:
@@ -89,6 +91,7 @@ def find_phi(center_coords, phi_angle, vel_map):
             #elif time.time() - start_time >= 1000:
                 #lougoycheckpoint_masked = False
 
+
         # Check value along semi-major axis
         if vel_map.mask[tuple(semi_major_axis_spaxel)] == 0:
             checkpoint_masked = False
@@ -96,6 +99,8 @@ def find_phi(center_coords, phi_angle, vel_map):
             #checkpoint_masked = False
         else:
             f *= 0.9
+
+    print(semi_major_axis_spaxel)
 
     if vel_map[tuple(semi_major_axis_spaxel)] - v_sys < 0:
         phi_adjusted = phi + np.pi
