@@ -342,7 +342,7 @@ for i in range(len(galaxy_ID)):
 
         if map_smoothness <= max_map_smoothness and tidal == 0 and (unmasked_data == True):
             good_curve_count += 1
-            c_good_gal['flag'][i] = 'good rotation curve data'
+            c_good_gal['flag'][i] = 1
             '''
             print('Fitting galaxy ', galaxy_ID[i], flush=True)
             start_time = time.time()
@@ -722,7 +722,7 @@ for i in range(len(galaxy_ID)):
         else:
             print(galaxy_ID[i] + ' does not have rotation curve', flush=True)
             bad_curve_count += 1
-            c_good_gal['flag'][i] = 'bad rotation curve'
+            c_good_gal['flag'][i] = -1
             '''
             writer_iso.writerow([galaxy_ID[i], 
                                  'N/A', 
@@ -743,7 +743,7 @@ for i in range(len(galaxy_ID)):
     else:
         print('No data for the galaxy.', flush=True)
         no_data_count += 1
-        c_good_gal['flag'][i] = 'no data'
+        c_good_gal['flag'][i] = 0
         '''
         writer_iso.writerow([galaxy_ID[i], 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A','N/A'])
         writer_nfw.writerow([galaxy_ID[i], 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A','N/A'])
