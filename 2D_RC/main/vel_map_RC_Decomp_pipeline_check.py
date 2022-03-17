@@ -202,7 +202,7 @@ c_smoothness['smoothness'] = np.nan
 
 c_good_gal = Table()
 c_good_gal['galaxy_ID'] = galaxy_ID
-c_smoothness['flag'] = np.nan
+c_good_gal['flag'] = np.nan
 
 # Creating MCMC file
 
