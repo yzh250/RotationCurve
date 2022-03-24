@@ -311,7 +311,7 @@ for i in range(len(galaxy_ID)):
             # If chi2 value of any model for this galaxy > 200 from minize
             # Run MCMC
             #-------------------------------------------------------------------
-            if not isnan(chi2_iso_norm) and chi2_iso_norm > 150 or chi2_iso_norm < 200:
+            if not np.isnan(chi2_iso_norm) and (chi2_iso_norm >= 150 or chi2_iso_norm < 200):
                 Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(galaxy_ID[i],MANGA_FOLDER,parameters,scale,'iso')
                 c_iso_MCMC['A'][i] = Isothermal_fit_MCMC[0]
                 c_iso_MCMC['Vin'][i] = Isothermal_fit_MCMC[1]
