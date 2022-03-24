@@ -161,7 +161,7 @@ c_iso_MCMC['phi'] = np.nan
 c_iso_MCMC['x_cen'] = np.nan
 c_iso_MCMC['y_cen'] = np.nan
 c_iso_MCMC['Vsys'] = np.nan
-c_iso_MCMC['chi2'] = np.nan`
+c_iso_MCMC['chi2'] = np.nan
 
 # Fitting the galaxy
 fit_mini_iso_name = fits_file + 'iso_mini.csv'
