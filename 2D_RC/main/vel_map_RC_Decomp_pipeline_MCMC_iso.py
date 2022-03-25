@@ -56,7 +56,6 @@ q0 = 0.2 # minimum inclination value
 ################################################################################
 # Used files (local)
 #-------------------------------------------------------------------------------
-'''
 MANGA_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
 
 DRP_FILENAME = MANGA_FOLDER + 'redux/v3_1_1/drpall-v3_1_1.fits'
@@ -67,12 +66,12 @@ VEL_MAP_FOLDER = MANGA_FOLDER + 'analysis//v3_1_1/2.1.1/HYB10-GAU-MILESHC/'
 MORPH_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/morph/'
 
 fits_file = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/Notebooks/'
-'''
 ################################################################################
 
 ################################################################################
 # Used files (bluehive)
 #-------------------------------------------------------------------------------
+'''
 MANGA_FOLDER_yifan = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr17/manga/spectro/'
 
 DRP_FILENAME = MANGA_FOLDER_yifan + 'redux/v3_1_1/drpall-v3_1_1.fits'
@@ -82,6 +81,7 @@ VEL_MAP_FOLDER = '/scratch/kdougla7/data/SDSS/dr17/manga/spectro/analysis/v3_1_1
 MORPH_FOLDER = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr17/manga/morph/'
 
 fits_file = '/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/'
+'''
 ################################################################################
 
 
@@ -173,9 +173,9 @@ for i in range(len(galaxy_ID)):
     plate, IFU = galaxy_ID[i].split('-')
 
     # bluehive
-    data_file = VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID[i] + '-MAPS-HYB10-MILESHC-MASTARSSP.fits.gz'
+    #data_file = VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID[i] + '-MAPS-HYB10-MILESHC-MASTARSSP.fits.gz'
     # local
-    #data_file = VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID[i] + '-MAPS-HYB10-GAU-MILESHC.fits.gz'
+    data_file = VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID[i] + '-MAPS-HYB10-GAU-MILESHC.fits.gz'
 
     j = DRP_index[galaxy_ID[i]]
 
@@ -196,6 +196,7 @@ for i in range(len(galaxy_ID)):
     #ph = phi[j] * np.pi / 180
 
     if path.exists(data_file) and (incl > 0):
+        print('galaxy exists')
         ########################################################################
         # Get data
         #-----------------------------------------------------------------------
@@ -237,7 +238,7 @@ for i in range(len(galaxy_ID)):
 
         if map_smoothness <= max_map_smoothness and tidal == 0 and (unmasked_data == True):
             
-            print('Fitting galaxy ', galaxy_ID[i], flush=True)
+            #print('Fitting galaxy ', galaxy_ID[i], flush=True)
             start_time = time.time()
 
             center_coord = (x_center_guess, y_center_guess)
@@ -305,13 +306,14 @@ for i in range(len(galaxy_ID)):
 
             Isothermal_fit_mini = list(fit_mini_iso[i])
             chi2_iso_norm = Isothermal_fit_mini[-1]
-
+            print(chi2_iso_norm)
             ####################################################################
             # MCMC
             # If chi2 value of any model for this galaxy > 200 from minize
             # Run MCMC
             #-------------------------------------------------------------------
             if not np.isnan(chi2_iso_norm) and (chi2_iso_norm >= 150 or chi2_iso_norm < 200):
+                print('fitting MCMC')
                 Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'iso')
                 c_iso_MCMC['A'][i] = Isothermal_fit_MCMC[0]
                 c_iso_MCMC['Vin'][i] = Isothermal_fit_MCMC[1]
