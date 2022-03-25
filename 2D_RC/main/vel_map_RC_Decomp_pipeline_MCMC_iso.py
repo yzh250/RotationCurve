@@ -171,9 +171,9 @@ fit_mini_iso = ascii.read(fit_mini_iso_name,'r')
 for i in range(len(galaxy_ID)):
 
     plate, IFU = galaxy_ID[i].split('-')
-
-    # bluehive
     #data_file = VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID[i] + '-MAPS-HYB10-MILESHC-MASTARSSP.fits.gz'
+    # bluehive
+    
     # local
     data_file = VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID[i] + '-MAPS-HYB10-GAU-MILESHC.fits.gz'
 
@@ -196,7 +196,6 @@ for i in range(len(galaxy_ID)):
     #ph = phi[j] * np.pi / 180
 
     if path.exists(data_file) and (incl > 0):
-        print('galaxy exists')
         ########################################################################
         # Get data
         #-----------------------------------------------------------------------
@@ -459,7 +458,7 @@ for i in range(len(galaxy_ID)):
             '''
         
         else:
-            print(galaxy_ID[i] + ' does not have rotation curve', flush=True)
+            #print(galaxy_ID[i] + ' does not have rotation curve', flush=True)
             '''
             writer_iso.writerow([galaxy_ID[i], 
                                  'N/A', 
@@ -478,7 +477,7 @@ for i in range(len(galaxy_ID)):
             writer_bur.writerow([galaxy_ID[i], 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A','N/A','N/A'])
             '''
     else:
-        print('No data for the galaxy.', flush=True)
+        #print('No data for the galaxy.', flush=True)
         '''
         writer_iso.writerow([galaxy_ID[i], 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A','N/A'])
         writer_nfw.writerow([galaxy_ID[i], 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A','N/A'])

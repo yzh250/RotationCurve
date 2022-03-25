@@ -90,8 +90,8 @@ r50_ang = DTable['nsa_elpetro_th50_r']
 
 ################################################################################
 # Importing fitted values & chi2 for each galaxy
-fit_mini_iso_name = fits_file + 'iso_mini.csv'
-fit_mini_iso = ascii.read(fit_mini_iso_name,'r')
+fit_mini_bur_name = fits_file + 'bur_mini.csv'
+fit_mini_bur = ascii.read(fit_mini_bur_name,'r')
 ################################################################################
 
 ################################################################################
@@ -102,26 +102,26 @@ for i in range(len(plateifu)):
     galaxy_ID.append(str(plateifu[i],'utf-8'))
 ################################################################################
 
-c_iso_MCMC = Table()
-c_iso_MCMC['galaxy_ID'] = galaxy_ID
-c_iso_MCMC['A'] = np.nan
-c_iso_MCMC['Vin'] = np.nan
-c_iso_MCMC['SigD'] = np.nan
-c_iso_MCMC['Rd'] = np.nan
-c_iso_MCMC['rho0_h'] = np.nan
-c_iso_MCMC['Rh'] = np.nan
-c_iso_MCMC['incl'] = np.nan
-c_iso_MCMC['phi'] = np.nan
-c_iso_MCMC['x_cen'] = np.nan
-c_iso_MCMC['y_cen'] = np.nan
-c_iso_MCMC['Vsys'] = np.nan
-c_iso_MCMC['chi2'] = np.nan
+c_bur_MCMC = Table()
+c_bur_MCMC['galaxy_ID'] = galaxy_ID
+c_bur_MCMC['A'] = np.nan
+c_bur_MCMC['Vin'] = np.nan
+c_bur_MCMC['SigD'] = np.nan
+c_bur_MCMC['Rd'] = np.nan
+c_bur_MCMC['rho0_h'] = np.nan
+c_bur_MCMC['Rh'] = np.nan
+c_bur_MCMC['incl'] = np.nan
+c_bur_MCMC['phi'] = np.nan
+c_bur_MCMC['x_cen'] = np.nan
+c_bur_MCMC['y_cen'] = np.nan
+c_bur_MCMC['Vsys'] = np.nan
+c_bur_MCMC['chi2'] = np.nan
 
 ################################################################################
-for i in range(len(fit_mini_iso)):
+for i in range(len(fit_mini_bur)):
     # obtain galaxy data & initial guess parameters
 
-    gal_fit = list(fit_mini_iso[i])
+    gal_fit = list(fit_mini_bur[i])
 
     gal_ID = gal_fit[0]
 
@@ -239,27 +239,27 @@ for i in range(len(fit_mini_iso)):
 
         parameters = [incl, phi_guess, x_center_guess, y_center_guess]
 
-        Isothermal_fit_mini = gal_fit
-        chi2_iso_norm = Isothermal_fit_mini[-1]
-        print(chi2_iso_norm,flush=True)
+        Burket_fit_mini = gal_fit
+        chi2_bur_norm = Burket_fit_mini[-1]
+        print(chi2_bur_norm,flush=True)
 
-        if not np.isnan(chi2_iso_norm) and (chi2_iso_norm >= 150 or chi2_iso_norm < 200):
+        if not np.isnan(chi2_bur_norm) and (chi2_bur_norm >= 150 or chi2_bur_norm < 200):
                 print('fitting MCMC')
-                Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'iso')
-                c_iso_MCMC['A'][i] = Isothermal_fit_MCMC[0]
-                c_iso_MCMC['Vin'][i] = Isothermal_fit_MCMC[1]
-                c_iso_MCMC['SigD'][i] = Isothermal_fit_MCMC[2]
-                c_iso_MCMC['Rd'][i] = Isothermal_fit_MCMC[3]
-                c_iso_MCMC['rho0_h'][i] = Isothermal_fit_MCMC[4]
-                c_iso_MCMC['Rh'][i] = Isothermal_fit_MCMC[5]
-                c_iso_MCMC['incl'][i] = Isothermal_fit_MCMC[6]
-                c_iso_MCMC['phi'][i] = Isothermal_fit_MCMC[7]
-                c_iso_MCMC['x_cen'][i] = Isothermal_fit_MCMC[8]
-                c_iso_MCMC['y_cen'][i] = Isothermal_fit_MCMC[9]
-                c_iso_MCMC['Vsys'][i] = Isothermal_fit_MCMC[10]
-                c_iso_MCMC['chi2'][i] = chi2_iso_norm_MCMC
+                Burket_fit_MCMC, chi2_bur_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'bur')
+                c_bur_MCMC['A'][i] = Burket_fit_MCMC[0]
+                c_bur_MCMC['Vin'][i] = Burket_fit_MCMC[1]
+                c_bur_MCMC['SigD'][i] = Burket_fit_MCMC[2]
+                c_bur_MCMC['Rd'][i] = Burket_fit_MCMC[3]
+                c_bur_MCMC['rho0_h'][i] = Burket_fit_MCMC[4]
+                c_bur_MCMC['Rh'][i] = Burket_fit_MCMC[5]
+                c_bur_MCMC['incl'][i] = Burket_fit_MCMC[6]
+                c_bur_MCMC['phi'][i] = Burket_fit_MCMC[7]
+                c_bur_MCMC['x_cen'][i] = Burket_fit_MCMC[8]
+                c_bur_MCMC['y_cen'][i] = Burket_fit_MCMC[9]
+                c_bur_MCMC['Vsys'][i] = Burket_fit_MCMC[10]
+                c_bur_MCMC['chi2'][i] = chi2_bur_norm_MCMC
     else:
         print('No data for the galaxy',flush=True)
 
-c_iso_MCMC.write('iso_mcmc.csv', format='ascii.csv', overwrite=True)
+c_bur_MCMC.write('bur_mcmc.csv', format='ascii.csv', overwrite=True)
 
