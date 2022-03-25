@@ -243,7 +243,7 @@ for i in range(len(fit_mini_bur)):
         chi2_bur_norm = Burket_fit_mini[-1]
         print(chi2_bur_norm,flush=True)
 
-        if not np.isnan(chi2_bur_norm) and (chi2_bur_norm >= 150 and chi2_bur_norm <= 200):
+        if np.isfinite(chi2_bur_norm) and (chi2_bur_norm >= 150 and chi2_bur_norm <= 200):
                 print('fitting MCMC')
                 Burket_fit_MCMC, chi2_bur_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'bur')
                 c_bur_MCMC['A'][i] = Burket_fit_MCMC[0]
