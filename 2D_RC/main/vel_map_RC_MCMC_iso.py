@@ -92,7 +92,6 @@ r50_ang = DTable['nsa_elpetro_th50_r']
 ################################################################################
 # Used files (bluehive)
 #-------------------------------------------------------------------------------
-'''
 MANGA_FOLDER_yifan = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr17/manga/spectro/'
 
 DRP_FILENAME = MANGA_FOLDER_yifan + 'redux/v3_1_1/drpall-v3_1_1.fits'
@@ -102,7 +101,6 @@ VEL_MAP_FOLDER = '/scratch/kdougla7/data/SDSS/dr17/manga/spectro/analysis/v3_1_1
 MORPH_FOLDER = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr17/manga/morph/'
 
 fits_file = '/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/'
-'''
 ################################################################################
 
 ################################################################################
@@ -142,6 +140,10 @@ for i in range(len(fit_mini_iso)):
 
     gal_ID = gal_fit[0]
 
+    plate, IFU = gal_ID.split('-')
+
+    data_file = VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID[i] + '-MAPS-HYB10-MILESHC-MASTARSSP.fits.gz'
+
     j = DRP_index[gal_ID]
 
     redshift = z[j]
@@ -156,119 +158,123 @@ for i in range(len(fit_mini_iso)):
 
     incl = np.arccos(np.sqrt(cosi2))
 
-    data_maps, gshape = Galaxy_Data(galaxy_ID[i],VEL_MAP_FOLDER)
+    if path.exists(data_file) and (incl > 0):
 
-    #-----------------------------------------------------------------------
+        data_maps, gshape = Galaxy_Data(galaxy_ID[i],VEL_MAP_FOLDER)
 
-    ########################################################################
-    # Selection
-    #-----------------------------------------------------------------------
-    # Morphological cut
-    #tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
-    tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
+        #-----------------------------------------------------------------------
 
-    # Smoothness cut
-    max_map_smoothness = 1.85
+        ########################################################################
+        # Selection
+        #-----------------------------------------------------------------------
+        # Morphological cut
+        #tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
+        tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
 
-    map_smoothness = how_smooth(data_maps['Ha_vel'], data_maps['Ha_vel_mask'])
+        # Smoothness cut
+        max_map_smoothness = 1.85
 
-    SN_map = data_maps['Ha_flux'] * np.sqrt(data_maps['Ha_flux_ivar'])
-    Ha_vel_mask = data_maps['Ha_vel_mask'] + (SN_map < 5)
+        map_smoothness = how_smooth(data_maps['Ha_vel'], data_maps['Ha_vel_mask'])
 
-    vmasked = ma.array(data_maps['Ha_vel'], mask = Ha_vel_mask)
-    ivar_masked = ma.array(data_maps['Ha_vel_ivar'], mask = Ha_vel_mask)
+        SN_map = data_maps['Ha_flux'] * np.sqrt(data_maps['Ha_flux_ivar'])
+        Ha_vel_mask = data_maps['Ha_vel_mask'] + (SN_map < 5)
 
-    r_band_masked = ma.array(data_maps['r_band'],mask=Ha_vel_mask)
+        vmasked = ma.array(data_maps['Ha_vel'], mask = Ha_vel_mask)
+        ivar_masked = ma.array(data_maps['Ha_vel_ivar'], mask = Ha_vel_mask)
 
-    center_guess = np.unravel_index(ma.argmax(r_band_masked), gshape)
-    x_center_guess = center_guess[0]
-    y_center_guess = center_guess[1]
+        r_band_masked = ma.array(data_maps['r_band'],mask=Ha_vel_mask)
 
-    global_max = ma.max(vmasked)
+        center_guess = np.unravel_index(ma.argmax(r_band_masked), gshape)
+        x_center_guess = center_guess[0]
+        y_center_guess = center_guess[1]
 
-    unmasked_data = True
+        global_max = ma.max(vmasked)
 
-    if np.isnan(global_max) or (global_max is ma.masked):
-        unmasked_data = False
+        unmasked_data = True
 
-    # center coordinates
-    center_coord = (x_center_guess, y_center_guess)
+        if np.isnan(global_max) or (global_max is ma.masked):
+            unmasked_data = False
 
-    if galaxy_ID[i] in ['8466-12705']:
-        center_coord = (37,42)
+        # center coordinates
+        center_coord = (x_center_guess, y_center_guess)
 
-        ####################################################################
-        # Find initial guess for phi
-        #-------------------------------------------------------------------
-    phi_guess = find_phi(center_coord, phi[j], vmasked)
+        if galaxy_ID[i] in ['8466-12705']:
+            center_coord = (37,42)
 
-    if galaxy_ID[i] in ['8134-6102']:
-        phi_guess += 0.25 * np.pi
+            ####################################################################
+            # Find initial guess for phi
+            #-------------------------------------------------------------------
+        phi_guess = find_phi(center_coord, phi[j], vmasked)
 
-    elif galaxy_ID[i] in ['8932-12704', '8252-6103']:
-        phi_guess -= 0.25 * np.pi
+        if galaxy_ID[i] in ['8134-6102']:
+            phi_guess += 0.25 * np.pi
 
-    elif galaxy_ID[i] in ['8613-12703', '8726-1901', '8615-1901', '8325-9102',
-                          '8274-6101', '9027-12705', '9868-12702', '8135-1901',
-                          '7815-1901', '8568-1901', '8989-1902', '8458-3701',
-                          '9000-1901', '9037-3701', '8456-6101']:
-        phi_guess += 0.5 * np.pi
+        elif galaxy_ID[i] in ['8932-12704', '8252-6103']:
+            phi_guess -= 0.25 * np.pi
 
-    elif galaxy_ID[i] in ['9864-3702', '8601-1902']:
-        phi_guess -= 0.5 * np.pi
+        elif galaxy_ID[i] in ['8613-12703', '8726-1901', '8615-1901', '8325-9102',
+                              '8274-6101', '9027-12705', '9868-12702', '8135-1901',
+                              '7815-1901', '8568-1901', '8989-1902', '8458-3701',
+                              '9000-1901', '9037-3701', '8456-6101']:
+            phi_guess += 0.5 * np.pi
 
-    elif galaxy_ID[i] in ['9502-12702']:
-        phi_guess += 0.75 * np.pi
+        elif galaxy_ID[i] in ['9864-3702', '8601-1902']:
+            phi_guess -= 0.5 * np.pi
 
-    elif galaxy_ID[i] in ['7495-6104']:
-        phi_guess -= 0.8 * np.pi
+        elif galaxy_ID[i] in ['9502-12702']:
+            phi_guess += 0.75 * np.pi
 
-    elif galaxy_ID[i] in ['7495-12704','7815-6103','9029-12705', '8137-3701', '8618-3704', '8323-12701',
-                          '8942-3703', '8333-12701', '8615-6103', '9486-3704',
-                          '8937-1902', '9095-3704', '8466-1902', '9508-3702',
-                          '8727-3703', '8341-12704', '8655-6103']:
-        phi_guess += np.pi
+        elif galaxy_ID[i] in ['7495-6104']:
+            phi_guess -= 0.8 * np.pi
 
-    elif galaxy_ID[i] in ['7815-9102']:
-        phi_guess -= np.pi
+        elif galaxy_ID[i] in ['7495-12704','7815-6103','9029-12705', '8137-3701', '8618-3704', '8323-12701',
+                              '8942-3703', '8333-12701', '8615-6103', '9486-3704',
+                              '8937-1902', '9095-3704', '8466-1902', '9508-3702',
+                              '8727-3703', '8341-12704', '8655-6103']:
+            phi_guess += np.pi
 
-    elif galaxy_ID[i] in ['7443-9101', '7443-3704']:
-        phi_guess -= 1.06 * np.pi
+        elif galaxy_ID[i] in ['7815-9102']:
+            phi_guess -= np.pi
 
-    elif galaxy_ID[i] in ['8082-1901', '8078-3703', '8551-1902', '9039-3703',
-                          '8624-1902', '8948-12702', '8443-6102', '8259-1901']:
-        phi_guess += 1.5 * np.pi
+        elif galaxy_ID[i] in ['7443-9101', '7443-3704']:
+            phi_guess -= 1.06 * np.pi
 
-    elif galaxy_ID[i] in ['8241-12705', '8326-6102']:
-        phi_guess += 1.75 * np.pi
+        elif galaxy_ID[i] in ['8082-1901', '8078-3703', '8551-1902', '9039-3703',
+                              '8624-1902', '8948-12702', '8443-6102', '8259-1901']:
+            phi_guess += 1.5 * np.pi
 
-    elif galaxy_ID[i] in ['7443-6103']:
-        phi_guess += 2.3 * np.pi
+        elif galaxy_ID[i] in ['8241-12705', '8326-6102']:
+            phi_guess += 1.75 * np.pi
 
-    # phi value
-    phi_guess = phi_guess % (2 * np.pi)
+        elif galaxy_ID[i] in ['7443-6103']:
+            phi_guess += 2.3 * np.pi
 
-    parameters = [incl, phi_guess, x_center_guess, y_center_guess]
+        # phi value
+        phi_guess = phi_guess % (2 * np.pi)
 
-    Isothermal_fit_mini = gal_fit
-    chi2_iso_norm = Isothermal_fit_mini[-1]
-    print(chi2_iso_norm)
+        parameters = [incl, phi_guess, x_center_guess, y_center_guess]
 
-    if not np.isnan(chi2_iso_norm) and (chi2_iso_norm >= 150 or chi2_iso_norm < 200):
-            print('fitting MCMC')
-            Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'iso')
-            c_iso_MCMC['A'][i] = Isothermal_fit_MCMC[0]
-            c_iso_MCMC['Vin'][i] = Isothermal_fit_MCMC[1]
-            c_iso_MCMC['SigD'][i] = Isothermal_fit_MCMC[2]
-            c_iso_MCMC['Rd'][i] = Isothermal_fit_MCMC[3]
-            c_iso_MCMC['rho0_h'][i] = Isothermal_fit_MCMC[4]
-            c_iso_MCMC['Rh'][i] = Isothermal_fit_MCMC[5]
-            c_iso_MCMC['incl'][i] = Isothermal_fit_MCMC[6]
-            c_iso_MCMC['phi'][i] = Isothermal_fit_MCMC[7]
-            c_iso_MCMC['x_cen'][i] = Isothermal_fit_MCMC[8]
-            c_iso_MCMC['y_cen'][i] = Isothermal_fit_MCMC[9]
-            c_iso_MCMC['Vsys'][i] = Isothermal_fit_MCMC[10]
-            c_iso_MCMC['chi2'][i] = chi2_iso_norm_MCMC
+        Isothermal_fit_mini = gal_fit
+        chi2_iso_norm = Isothermal_fit_mini[-1]
+        print(chi2_iso_norm,flush=True)
+
+        if not np.isnan(chi2_iso_norm) and (chi2_iso_norm >= 150 or chi2_iso_norm < 200):
+                print('fitting MCMC')
+                Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'iso')
+                c_iso_MCMC['A'][i] = Isothermal_fit_MCMC[0]
+                c_iso_MCMC['Vin'][i] = Isothermal_fit_MCMC[1]
+                c_iso_MCMC['SigD'][i] = Isothermal_fit_MCMC[2]
+                c_iso_MCMC['Rd'][i] = Isothermal_fit_MCMC[3]
+                c_iso_MCMC['rho0_h'][i] = Isothermal_fit_MCMC[4]
+                c_iso_MCMC['Rh'][i] = Isothermal_fit_MCMC[5]
+                c_iso_MCMC['incl'][i] = Isothermal_fit_MCMC[6]
+                c_iso_MCMC['phi'][i] = Isothermal_fit_MCMC[7]
+                c_iso_MCMC['x_cen'][i] = Isothermal_fit_MCMC[8]
+                c_iso_MCMC['y_cen'][i] = Isothermal_fit_MCMC[9]
+                c_iso_MCMC['Vsys'][i] = Isothermal_fit_MCMC[10]
+                c_iso_MCMC['chi2'][i] = chi2_iso_norm_MCMC
+    else:
+        print('No data for the galaxy',flush=True)
 
 c_iso_MCMC.write('iso_mcmc.csv', format='ascii.csv', overwrite=True)
 
