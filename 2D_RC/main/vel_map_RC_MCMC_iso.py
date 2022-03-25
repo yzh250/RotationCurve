@@ -243,7 +243,7 @@ for i in range(len(fit_mini_iso)):
         chi2_iso_norm = Isothermal_fit_mini[-1]
         print(chi2_iso_norm,flush=True)
 
-        if not np.isnan(chi2_iso_norm) and (chi2_iso_norm >= 150 or chi2_iso_norm < 200):
+        if not np.isnan(chi2_iso_norm) and (chi2_iso_norm >= 150 and chi2_iso_norm <= 200):
                 print('fitting MCMC')
                 Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'iso')
                 c_iso_MCMC['A'][i] = Isothermal_fit_MCMC[0]
