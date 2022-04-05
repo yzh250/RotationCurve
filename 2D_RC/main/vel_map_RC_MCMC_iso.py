@@ -244,7 +244,7 @@ for i in range(len(fit_mini_iso)):
         print(chi2_iso_norm,flush=True)
 
         if np.isfinite(chi2_iso_norm) and (chi2_iso_norm >= 150 and chi2_iso_norm <= 200):
-                print('fitting MCMC')
+                print('fitting galaxy_ID: ' + galaxy_ID[i])
                 Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'iso')
                 c_iso_MCMC['A'][i] = Isothermal_fit_MCMC[0]
                 c_iso_MCMC['Vin'][i] = Isothermal_fit_MCMC[1]
