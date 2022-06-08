@@ -64,12 +64,14 @@ DTable =  Table.read(DRP_FILENAME, format='fits')
 
 z = DTable['nsa_z']
 
+# Exracting r90 data for all galaxies
 f_r90 = ascii.read(r90_file,'r')
 
 r90_list = f_r90['r90']
 
 DRP_index = {}
 
+# creating a list of all galaxy ID
 for i in range(len(DTable)):
 	gal_ID = DTable['plateifu'][i]
 	DRP_index[gal_ID] = i
@@ -81,10 +83,13 @@ plateifu = DTable['plateifu'].data
 for i in range(len(plateifu)):
 	galaxy_ID.append(str(plateifu[i],'utf-8'))
 
+# Extracting stellar mass
 stellar_mass = DTable['nsa_elpetro_mass']
 
+# Extracting log(M_HI)
 logHI = np.load(logHI_file)
 
+# Extracting log(H_H2)
 logH2 = np.load(logH2_file)
 ################################################################################
 
@@ -94,6 +99,8 @@ fit_mini_iso_name = fits_file + 'iso_mini.csv'
 fit_mini_iso = ascii.read(fit_mini_iso_name,'r')
 ################################################################################
 
+################################################################################
+# Writing data to disk
 c_mass_iso = Table()
 c_mass_iso['galaxy_ID'] = galaxy_ID
 c_mass_iso['Mb'] = np.nan

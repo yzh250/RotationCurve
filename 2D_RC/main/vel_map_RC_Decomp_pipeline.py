@@ -90,6 +90,11 @@ for i in range(len(DTable)):
     gal_ID = DTable['plateifu'][i]
 
     DRP_index[gal_ID] = i
+
+# DL morph catalog
+cross_match_table = Table.read(smoothness_morph_file,format='ascii.commented_header')
+gal_ID_cross = cross_match_table['galaxy_ID'].data
+ttype = cross_match_table['DL_ttype'].data
 ################################################################################
 
 
@@ -300,8 +305,12 @@ for i in range(len(galaxy_ID)):
         #tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
         tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
 
+        Ttype = 0
+        if galaxy_ID[i] == gal_ID_cross[i]:
+            Ttype = ttype[i]
+
         # Smoothness cut
-        max_map_smoothness = 1.85
+        max_map_smoothness = 2
 
         map_smoothness = how_smooth(data_maps['Ha_vel'], data_maps['Ha_vel_mask'])
 
@@ -324,7 +333,7 @@ for i in range(len(galaxy_ID)):
         if np.isnan(global_max) or (global_max is ma.masked):
             unmasked_data = False
 
-        if map_smoothness <= max_map_smoothness and tidal == 0 and (unmasked_data == True):
+        if map_smoothness <= max_map_smoothness and tidal == 0 and Ttype > 0 and (unmasked_data == True):
             
             print('Fitting galaxy ', galaxy_ID[i], flush=True)
             start_time = time.time()

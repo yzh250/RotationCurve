@@ -57,6 +57,7 @@ def match_morph_dl(galaxy_ID_list,smoothness_Table):
     #---------------------------------------------------------------------------
     smoothness_Table['DL_ttype'] = np.nan
     smoothness_Table['DL_PLTG'] = np.nan
+    smoothness_Table['DL_Visual_Class'] = np.nan
     #data['DL_s0'] = np.nan
     #data['DL_edge_on'] = np.nan
     #data['DL_bar_GZ2'] = np.nan
@@ -108,6 +109,7 @@ def match_morph_dl(galaxy_ID_list,smoothness_Table):
             #-------------------------------------------------------------------
             smoothness_Table['DL_ttype'][gal_i] = morph_data['T-Type'][i]
             smoothness_Table['DL_PLTG'][gal_i] = morph_data['P_LTG'][i]
+            smoothness_Table['DL_Visual_Class'][gal_i] = morph_data['Visual_Class'][i]
             #data['DL_ttype'][gal_i] = morph_data['TTYPE'][i]
             #data['DL_s0'][gal_i] = morph_data['P_S0'][i]
             #data['DL_edge_on'][gal_i] = morph_data['P_EDGE_ON'][i]
