@@ -3,7 +3,6 @@
 *.png
 *.txt
 *.npy
-*.csv
 *.fits
 *.pdf
 */.ipynb_checkpoints/
