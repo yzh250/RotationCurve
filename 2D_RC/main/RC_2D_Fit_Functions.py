@@ -539,7 +539,7 @@ def Plotting_NFW(ID, shape, scale, fit_solution, mask, ax=None):
     #plt.close()
     
 # Burket
-def Plotting_Burket(ID, shape, scale, fit_solution, mask, ax=None):
+def Plotting_Burkert(ID, shape, scale, fit_solution, mask, ax=None):
     '''
 
     :param ID:
@@ -557,7 +557,7 @@ def Plotting_Burket(ID, shape, scale, fit_solution, mask, ax=None):
                origin='lower',
                cmap='RdBu_r')
 
-    ax.set_title(ID + ' Burket Fit')
+    ax.set_title(ID + ' Burkert Fit')
 
     ax.set_xlabel('spaxel')
     ax.set_ylabel('spaxel')
@@ -754,7 +754,7 @@ def plot_rot_curve(mHa_vel,
             elif halo_model == 'NFW':
                 v_h[i] = halo_vel_NFW(r[i]*1000,best_fit_values[4],best_fit_values[5]*1000)
                 v[i] = vel_tot_NFW(r[i],best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
-            elif halo_model == 'Burket':
+            elif halo_model == 'Burkert':
                 v_h[i] = halo_vel_bur(r[i]*1000,best_fit_values[4],best_fit_values[5]*1000)
                 v[i] = vel_tot_bur(r[i],best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
             else:
@@ -768,7 +768,7 @@ def plot_rot_curve(mHa_vel,
             elif halo_model == 'NFW':
                 v_h[i] = -halo_vel_NFW(np.abs(r[i]*1000),best_fit_values[4],best_fit_values[5]*1000)
                 v[i] = -vel_tot_NFW(np.abs(r[i]),best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
-            elif halo_model == 'Burket':
+            elif halo_model == 'Burkert':
                 v_h[i] = -halo_vel_bur(np.abs(r[i]*1000),best_fit_values[4],best_fit_values[5]*1000)
                 v[i] = -vel_tot_bur(np.abs(r[i]),best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
             else:
@@ -907,13 +907,13 @@ def plot_diagnostic_panel( ID, shape, scale, Isothermal_Fit, NFW_Fit, Burket_Fit
     
     Plotting_NFW(ID, shape, scale, NFW_Fit, mask, ax = NFW_Plot_panel)
     
-    Plotting_Burket(ID, shape, scale, Burket_Fit, mask, ax = Burket_Plot_panel)
+    Plotting_Burkert(ID, shape, scale, Burket_Fit, mask, ax = Burket_Plot_panel)
     
     plot_rot_curve(vmasked,ivar_masked,Isothermal_Fit,scale,ID,'Isothermal', ax = RC_Isothermal)
     
     plot_rot_curve(vmasked,ivar_masked,NFW_Fit,scale,ID,'NFW', ax = RC_NFW)
     
-    plot_rot_curve(vmasked,ivar_masked,Burket_Fit,scale,ID,'NFW', ax = RC_Burket)
+    plot_rot_curve(vmasked,ivar_masked,Burket_Fit,scale,ID,'Burkert', ax = RC_Burket)
     
     panel_fig.tight_layout()
     

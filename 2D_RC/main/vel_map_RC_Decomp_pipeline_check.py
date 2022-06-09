@@ -77,6 +77,10 @@ DRP_FILENAME = MANGA_FOLDER_yifan + 'redux/v3_1_1/drpall-v3_1_1.fits'
 VEL_MAP_FOLDER = '/scratch/kdougla7/data/SDSS/dr17/manga/spectro/analysis/v3_1_1/3.1.0/HYB10-MILESHC-MASTARSSP/'
 
 MORPH_FOLDER = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr17/manga/morph/'
+
+SMOOTHNESS_MORPH_FOLDER = '/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/'
+
+smoothness_morph_file = SMOOTHNESS_MORPH_FOLDER + 'cross_table.csv'
 ################################################################################
 
 
@@ -90,6 +94,11 @@ for i in range(len(DTable)):
     gal_ID = DTable['plateifu'][i]
 
     DRP_index[gal_ID] = i
+
+# DL morph catalog
+cross_match_table = Table.read(smoothness_morph_file,format='ascii.commented_header')
+gal_ID_cross = cross_match_table['galaxy_ID'].data
+ttype = cross_match_table['DL_ttype'].data
 ################################################################################
 
 
@@ -314,6 +323,10 @@ for i in range(len(galaxy_ID)):
         #tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
         tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
 
+        Ttype = 0
+        if galaxy_ID[i] == gal_ID_cross[i]:
+            Ttype = ttype[i]
+
         # Smoothness cut
         max_map_smoothness = 1.85
 
@@ -340,7 +353,7 @@ for i in range(len(galaxy_ID)):
         if np.isnan(global_max) or (global_max is ma.masked):
             unmasked_data = False
 
-        if map_smoothness <= max_map_smoothness and tidal == 0 and (unmasked_data == True):
+        if map_smoothness <= max_map_smoothness and tidal == 0 and Ttype > 0 and (unmasked_data == True):
             good_curve_count += 1
             c_good_gal['flag'][i] = 1
             '''
