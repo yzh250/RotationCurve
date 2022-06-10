@@ -95,12 +95,10 @@ for i in range(len(DTable)):
 
     DRP_index[gal_ID] = i
 
-'''
 # DL morph catalog
 cross_match_table = Table.read(smoothness_morph_file,format='ascii.commented_header')
 gal_ID_cross = cross_match_table['galaxy_ID'].data
 ttype = cross_match_table['DL_ttype'].data
-'''
 ################################################################################
 
 
@@ -325,11 +323,9 @@ for i in range(len(galaxy_ID)):
         #tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
         tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
 
-        '''
         Ttype = 0
         if galaxy_ID[i] == gal_ID_cross[i]:
             Ttype = ttype[i]
-        '''
 
         # Smoothness cut
         max_map_smoothness = 2
@@ -357,7 +353,7 @@ for i in range(len(galaxy_ID)):
         if np.isnan(global_max) or (global_max is ma.masked):
             unmasked_data = False
 
-        if map_smoothness <= max_map_smoothness and tidal == 0 and (unmasked_data == True):
+        if map_smoothness <= max_map_smoothness and tidal == 0 and Ttype > 0 and (unmasked_data == True):
             good_curve_count += 1
             c_good_gal['flag'][i] = 1
             '''
