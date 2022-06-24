@@ -1,0 +1,14 @@
+Metadata-Version: 1.1
+Name: 2D-RC
+Version: 1.0.0
+Summary: 2D rotation curve package
+Home-page: https://github.com/yzh250/RotationCurve
+Author: Kelly Douglass, University of Rochester
+Author-email: kellyadouglass@rochester.edu
+License: BSD 3-clause License
+Description: # RotationCurve
+        This is the repository for my research project for rotation curve fitting (1D & 2D), from summer 2020 to present.
+        
+        
+Platform: UNKNOWN
+Requires: Python (>3.7.0)
