@@ -196,5 +196,5 @@ for i in range(len(galaxy_ID)):
 
         plt.imshow(vmasked,cmap='RdBu_r',origin='lower')
         plt.title(galaxy_ID[i]+'_sm2')
-        plt.savefig(galaxy_ID[i]+'_sm2',format='png')
-
+        plt.savefig(galaxy_ID[i]+'_sm2.png',format='png')
+        plt.close()
