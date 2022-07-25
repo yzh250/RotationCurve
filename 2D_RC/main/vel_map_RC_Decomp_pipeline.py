@@ -737,9 +737,9 @@ c_nfw.close()
 c_bur.close()
 '''
 
-c_iso.write('iso_mini.csv', format='ascii.csv', overwrite=True)
-c_nfw.write('nfw_mini.csv', format='ascii.csv', overwrite=True)
-c_bur.write('bur_mini.csv', format='ascii.csv', overwrite=True)
+c_iso.write('iso_mini_new.csv', format='ascii.csv', overwrite=True)
+c_nfw.write('nfw_mini_new.csv', format='ascii.csv', overwrite=True)
+c_bur.write('bur_mini_new.csv', format='ascii.csv', overwrite=True)
 #c_scale.write('gal_scale.csv', format='ascii.csv',overwrite=True)
 #c_iso_MCMC.write('iso_mcmc.csv', format='ascii.csv', overwrite=True)
 #c_nfw_MCMC.write('nfw_mcmc.csv', format='ascii.csv', overwrite=True)
