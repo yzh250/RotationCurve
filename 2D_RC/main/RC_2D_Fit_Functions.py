@@ -918,7 +918,7 @@ def plot_diagnostic_panel( ID, shape, scale, Isothermal_Fit, NFW_Fit, Burket_Fit
     
     panel_fig.tight_layout()
     
-    plt.savefig(ID + '_Diagnostic_Panels')
+    plt.savefig(ID + '_Diagnostic_Panels_new')
 
 # MCMC running 
 def log_prior(params):
