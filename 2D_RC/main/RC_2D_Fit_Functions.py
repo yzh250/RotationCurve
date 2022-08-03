@@ -788,15 +788,23 @@ def plot_rot_curve(mHa_vel,
     ax.plot(r, v_h,':',label='halo')
 
     vmax = np.max(np.abs(v))
-    print(vmax)
 
-    ax.set_ylim([-1.25*vmax,1.25*vmax])
-    ax.tick_params(axis='both', direction='in')
-    ax.yaxis.set_ticks_position('both')
-    ax.xaxis.set_ticks_position('both')
-    ax.set_xlabel('Deprojected radius [kpc/h]')
-    ax.set_ylabel('Rotational velocity [km/s]')
-    plt.legend()
+    if np.isfinite(vmax):
+        ax.set_ylim([-1.25*vmax,1.25*vmax])
+        ax.tick_params(axis='both', direction='in')
+        ax.yaxis.set_ticks_position('both')
+        ax.xaxis.set_ticks_position('both')
+        ax.set_xlabel('Deprojected radius [kpc/h]')
+        ax.set_ylabel('Rotational velocity [km/s]')
+        plt.legend()
+    else:
+        ax.set_ylim([-1000,1000])
+        ax.tick_params(axis='both', direction='in')
+        ax.yaxis.set_ticks_position('both')
+        ax.xaxis.set_ticks_position('both')
+        ax.set_xlabel('Deprojected radius [kpc/h]')
+        ax.set_ylabel('Rotational velocity [km/s]')
+        plt.legend()
     #plt.savefig(gal_ID + ' rotation curve ' + halo_model + '.png',format='png')
     ############################################################################
 
