@@ -23,7 +23,7 @@ from RC_2D_Fit_Functions import Galaxy_Data, \
                                 Hessian_Calculation_Burket,\
                                 Plotting_Isothermal,\
                                 Plotting_NFW,\
-                                Plotting_Burket,\
+                                Plotting_Burkert,\
                                 getTidal,\
                                 deproject_spaxel,\
                                 plot_rot_curve,\
