@@ -246,8 +246,8 @@ for i in range(len(fit_mini_nfw)):
         if np.isfinite(chi2_nfw_norm) and (chi2_nfw_norm >= 150 and chi2_nfw_norm <= 200):
                 print('fitting MCMC')
                 NFW_fit_MCMC, chi2_nfw_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'NFW')
-                c_nfw_MCMC['A'][i] = NFW_fit_MCMC[0]
-                c_nfw_MCMC['Vin'][i] = NFW_fit_MCMC[1]
+                c_nfw_MCMC['rho0_b'][i] = NFW_fit_MCMC[0]
+                c_nfw_MCMC['Rb'][i] = NFW_fit_MCMC[1]
                 c_nfw_MCMC['SigD'][i] = NFW_fit_MCMC[2]
                 c_nfw_MCMC['Rd'][i] = NFW_fit_MCMC[3]
                 c_nfw_MCMC['rho0_h'][i] = NFW_fit_MCMC[4]
