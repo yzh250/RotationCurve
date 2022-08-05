@@ -261,5 +261,5 @@ for i in range(len(fit_mini_bur)):
     else:
         print('No data for the galaxy',flush=True)
 
-c_bur_MCMC.write('bur_mcmc.csv', format='ascii.csv', overwrite=True)
+c_bur_MCMC.write('bur_mcmc_b1.csv', format='ascii.csv', overwrite=True)
 

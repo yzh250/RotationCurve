@@ -261,5 +261,5 @@ for i in range(len(fit_mini_nfw)):
     else:
         print('No data for the galaxy',flush=True)
 
-c_nfw_MCMC.write('nfw_mcmc.csv', format='ascii.csv', overwrite=True)
+c_nfw_MCMC.write('nfw_mcmc_b1.csv', format='ascii.csv', overwrite=True)
 

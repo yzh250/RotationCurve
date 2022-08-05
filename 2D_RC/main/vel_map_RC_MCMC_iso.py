@@ -261,5 +261,5 @@ for i in range(len(fit_mini_iso)):
     else:
         print('No data for the galaxy',flush=True)
 
-c_iso_MCMC.write('iso_mcmc.csv', format='ascii.csv', overwrite=True)
+c_iso_MCMC.write('iso_mcmc_b1.csv', format='ascii.csv', overwrite=True)
 
