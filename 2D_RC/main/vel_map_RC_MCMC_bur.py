@@ -104,8 +104,8 @@ for i in range(len(plateifu)):
 
 c_bur_MCMC = Table()
 c_bur_MCMC['galaxy_ID'] = galaxy_ID
-c_bur_MCMC['A'] = np.nan
-c_bur_MCMC['Vin'] = np.nan
+c_bur_MCMC['rho0_b'] = np.nan
+c_bur_MCMC['Rb'] = np.nan
 c_bur_MCMC['SigD'] = np.nan
 c_bur_MCMC['Rd'] = np.nan
 c_bur_MCMC['rho0_h'] = np.nan
