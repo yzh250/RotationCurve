@@ -90,7 +90,7 @@ r50_ang = DTable['nsa_elpetro_th50_r']
 
 ################################################################################
 # Importing fitted values & chi2 for each galaxy
-fit_mini_nfw_name = fits_file + 'nfw_mini.csv'
+fit_mini_nfw_name = fits_file + 'nfw_mini_new.csv'
 fit_mini_nfw = ascii.read(fit_mini_nfw_name,'r')
 ################################################################################
 
@@ -243,21 +243,23 @@ for i in range(len(fit_mini_nfw)):
         chi2_nfw_norm = NFW_fit_mini[-1]
         print(chi2_nfw_norm,flush=True)
 
-        if np.isfinite(chi2_nfw_norm) and (chi2_nfw_norm >= 150 and chi2_nfw_norm <= 200):
-                print('fitting MCMC')
-                NFW_fit_MCMC, chi2_nfw_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'NFW')
-                c_nfw_MCMC['rho0_b'][i] = NFW_fit_MCMC[0]
-                c_nfw_MCMC['Rb'][i] = NFW_fit_MCMC[1]
-                c_nfw_MCMC['SigD'][i] = NFW_fit_MCMC[2]
-                c_nfw_MCMC['Rd'][i] = NFW_fit_MCMC[3]
-                c_nfw_MCMC['rho0_h'][i] = NFW_fit_MCMC[4]
-                c_nfw_MCMC['Rh'][i] = NFW_fit_MCMC[5]
-                c_nfw_MCMC['incl'][i] = NFW_fit_MCMC[6]
-                c_nfw_MCMC['phi'][i] = NFW_fit_MCMC[7]
-                c_nfw_MCMC['x_cen'][i] = NFW_fit_MCMC[8]
-                c_nfw_MCMC['y_cen'][i] = NFW_fit_MCMC[9]
-                c_nfw_MCMC['Vsys'][i] = NFW_fit_MCMC[10]
-                c_nfw_MCMC['chi2'][i] = chi2_nfw_norm_MCMC
+        if not np.isfinite(chi2_nfw_norm):
+            continue
+        elif (chi2_nfw_norm >= 150 and chi2_nfw_norm <= 200):
+            print('fitting MCMC')
+            NFW_fit_MCMC, chi2_nfw_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'NFW')
+            c_nfw_MCMC['rho0_b'][i] = NFW_fit_MCMC[0]
+            c_nfw_MCMC['Rb'][i] = NFW_fit_MCMC[1]
+            c_nfw_MCMC['SigD'][i] = NFW_fit_MCMC[2]
+            c_nfw_MCMC['Rd'][i] = NFW_fit_MCMC[3]
+            c_nfw_MCMC['rho0_h'][i] = NFW_fit_MCMC[4]
+            c_nfw_MCMC['Rh'][i] = NFW_fit_MCMC[5]
+            c_nfw_MCMC['incl'][i] = NFW_fit_MCMC[6]
+            c_nfw_MCMC['phi'][i] = NFW_fit_MCMC[7]
+            c_nfw_MCMC['x_cen'][i] = NFW_fit_MCMC[8]
+            c_nfw_MCMC['y_cen'][i] = NFW_fit_MCMC[9]
+            c_nfw_MCMC['Vsys'][i] = NFW_fit_MCMC[10]
+            c_nfw_MCMC['chi2'][i] = chi2_nfw_norm_MCMC
     else:
         print('No data for the galaxy',flush=True)
 

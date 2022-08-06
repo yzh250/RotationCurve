@@ -90,7 +90,7 @@ r50_ang = DTable['nsa_elpetro_th50_r']
 
 ################################################################################
 # Importing fitted values & chi2 for each galaxy
-fit_mini_bur_name = fits_file + 'bur_mini.csv'
+fit_mini_bur_name = fits_file + 'bur_mini_new.csv'
 fit_mini_bur = ascii.read(fit_mini_bur_name,'r')
 ################################################################################
 
@@ -243,21 +243,23 @@ for i in range(len(fit_mini_bur)):
         chi2_bur_norm = Burket_fit_mini[-1]
         print(chi2_bur_norm,flush=True)
 
-        if np.isfinite(chi2_bur_norm) and (chi2_bur_norm >= 150 and chi2_bur_norm <= 200):
-                print('fitting MCMC')
-                Burket_fit_MCMC, chi2_bur_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'bur')
-                c_bur_MCMC['rho0_b'][i] = Burket_fit_MCMC[0]
-                c_bur_MCMC['Rb'][i] = Burket_fit_MCMC[1]
-                c_bur_MCMC['SigD'][i] = Burket_fit_MCMC[2]
-                c_bur_MCMC['Rd'][i] = Burket_fit_MCMC[3]
-                c_bur_MCMC['rho0_h'][i] = Burket_fit_MCMC[4]
-                c_bur_MCMC['Rh'][i] = Burket_fit_MCMC[5]
-                c_bur_MCMC['incl'][i] = Burket_fit_MCMC[6]
-                c_bur_MCMC['phi'][i] = Burket_fit_MCMC[7]
-                c_bur_MCMC['x_cen'][i] = Burket_fit_MCMC[8]
-                c_bur_MCMC['y_cen'][i] = Burket_fit_MCMC[9]
-                c_bur_MCMC['Vsys'][i] = Burket_fit_MCMC[10]
-                c_bur_MCMC['chi2'][i] = chi2_bur_norm_MCMC
+        if np.isfinite(chi2_bur_norm):
+            continue
+        elif (chi2_bur_norm >= 150 and chi2_bur_norm <= 200):
+            print('fitting MCMC')
+            Burket_fit_MCMC, chi2_bur_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'bur')
+            c_bur_MCMC['rho0_b'][i] = Burket_fit_MCMC[0]
+            c_bur_MCMC['Rb'][i] = Burket_fit_MCMC[1]
+            c_bur_MCMC['SigD'][i] = Burket_fit_MCMC[2]
+            c_bur_MCMC['Rd'][i] = Burket_fit_MCMC[3]
+            c_bur_MCMC['rho0_h'][i] = Burket_fit_MCMC[4]
+            c_bur_MCMC['Rh'][i] = Burket_fit_MCMC[5]
+            c_bur_MCMC['incl'][i] = Burket_fit_MCMC[6]
+            c_bur_MCMC['phi'][i] = Burket_fit_MCMC[7]
+            c_bur_MCMC['x_cen'][i] = Burket_fit_MCMC[8]
+            c_bur_MCMC['y_cen'][i] = Burket_fit_MCMC[9]
+            c_bur_MCMC['Vsys'][i] = Burket_fit_MCMC[10]
+            c_bur_MCMC['chi2'][i] = chi2_bur_norm_MCMC
     else:
         print('No data for the galaxy',flush=True)
 
