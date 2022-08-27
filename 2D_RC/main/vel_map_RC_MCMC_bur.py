@@ -92,6 +92,9 @@ r50_ang = DTable['nsa_elpetro_th50_r']
 # Importing fitted values & chi2 for each galaxy
 fit_mini_bur_name = fits_file + 'bur_mini_new.csv'
 fit_mini_bur = ascii.read(fit_mini_bur_name,'r')
+fit_new = []
+
+fit_mini_bur
 ################################################################################
 
 ################################################################################
@@ -243,9 +246,7 @@ for i in range(len(fit_mini_bur)):
         chi2_bur_norm = Burket_fit_mini[-1]
         print(chi2_bur_norm,flush=True)
 
-        if np.isfinite(chi2_bur_norm):
-            continue
-        elif (chi2_bur_norm >= 150 and chi2_bur_norm <= 200):
+        if chi2_bur_norm >= 150 and chi2_bur_norm <= 200:
             print('fitting MCMC')
             Burket_fit_MCMC, chi2_bur_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'bur')
             c_bur_MCMC['rho0_b'][i] = Burket_fit_MCMC[0]
