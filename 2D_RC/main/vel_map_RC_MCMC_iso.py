@@ -243,11 +243,11 @@ for i in range(len(fit_mini_iso)):
         chi2_iso_norm = Isothermal_fit_mini[-1]
         print(chi2_iso_norm,flush=True)
 
-        if chi2_iso_norm >= 150 and chi2_iso_norm <= 200:
-            print('fitting galaxy_ID: ' + galaxy_ID[i])
+        if not np.isnan(chi2_iso_norm) and (chi2_iso_norm > 150 and chi2_iso_norm <= 200):
+            print('fitting MCMC')
             Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'iso')
-            c_iso_MCMC['rho0_b'][i] = Isothermal_fit_MCMC[0]
-            c_iso_MCMC['Rb'][i] = Isothermal_fit_MCMC[1]
+            c_iso_MCMC['A'][i] = Isothermal_fit_MCMC[0]
+            c_iso_MCMC['Vin'][i] = Isothermal_fit_MCMC[1]
             c_iso_MCMC['SigD'][i] = Isothermal_fit_MCMC[2]
             c_iso_MCMC['Rd'][i] = Isothermal_fit_MCMC[3]
             c_iso_MCMC['rho0_h'][i] = Isothermal_fit_MCMC[4]
@@ -258,6 +258,12 @@ for i in range(len(fit_mini_iso)):
             c_iso_MCMC['y_cen'][i] = Isothermal_fit_MCMC[9]
             c_iso_MCMC['Vsys'][i] = Isothermal_fit_MCMC[10]
             c_iso_MCMC['chi2'][i] = chi2_iso_norm_MCMC
+        elif not np.isnan(chi2_iso_norm) and (chi2_iso_norm > 200):
+            print(galaxy_ID[i] + ' next batch (chi2 > 200)')
+        elif not np.isnan(chi2_iso_norm) and (chi2_iso_norm <= 150):
+            print(galaxy_ID[i] + ' good fits from minimize')
+        else:
+            print(galaxy_ID[i] + ' was not fitted by minimize, did not pass morphology cut')
     else:
         print('No data for the galaxy',flush=True)
 

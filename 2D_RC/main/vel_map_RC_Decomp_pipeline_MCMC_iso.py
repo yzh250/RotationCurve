@@ -311,7 +311,7 @@ for i in range(len(galaxy_ID)):
             # If chi2 value of any model for this galaxy > 200 from minize
             # Run MCMC
             #-------------------------------------------------------------------
-            if not np.isnan(chi2_iso_norm) and (chi2_iso_norm >= 150 or chi2_iso_norm < 200):
+            if not np.isnan(chi2_iso_norm) and (chi2_iso_norm > 150 or chi2_iso_norm <= 200):
                 print('fitting MCMC')
                 Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'iso')
                 c_iso_MCMC['A'][i] = Isothermal_fit_MCMC[0]
@@ -326,9 +326,12 @@ for i in range(len(galaxy_ID)):
                 c_iso_MCMC['y_cen'][i] = Isothermal_fit_MCMC[9]
                 c_iso_MCMC['Vsys'][i] = Isothermal_fit_MCMC[10]
                 c_iso_MCMC['chi2'][i] = chi2_iso_norm_MCMC
+            elif not np.isnan(chi2_iso_norm) and (chi2_iso_norm > 200):
+                print(galaxy_ID[i] + ' next batch (chi2 > 200)')
+            elif not np.isnan(chi2_iso_norm) and (chi2_iso_norm <= 200):
+                print(galaxy_ID[i] + ' good fits from minimize')
             else:
-                print(galaxy_ID[i] + ' have good fits from minimize')
-
+                print(galaxy_ID[i] + ' was not fitted by minimize, did not pass morphology cut')
             ####################################################################
             print('MCMC Isothermal chi2:', chi2_iso_norm_MCMC, time.time() - start_time)
             ####################################################################
@@ -458,7 +461,7 @@ for i in range(len(galaxy_ID)):
             '''
         
         else:
-            #print(galaxy_ID[i] + ' does not have rotation curve', flush=True)
+            print(galaxy_ID[i] + ' does not have rotation curve', flush=True)
             '''
             writer_iso.writerow([galaxy_ID[i], 
                                  'N/A', 
@@ -477,7 +480,7 @@ for i in range(len(galaxy_ID)):
             writer_bur.writerow([galaxy_ID[i], 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A','N/A','N/A'])
             '''
     else:
-        #print('No data for the galaxy.', flush=True)
+        print('No data for the galaxy.', flush=True)
         '''
         writer_iso.writerow([galaxy_ID[i], 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A','N/A'])
         writer_nfw.writerow([galaxy_ID[i], 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A', 'N/A','N/A'])
@@ -493,5 +496,5 @@ c_bur.close()
 #c_nfw.write('nfw_mini.csv', format='ascii.csv', overwrite=True)
 #c_bur.write('bur_mini.csv', format='ascii.csv', overwrite=True)
 #c_scale.write('gal_scale.csv', format='ascii.csv',overwrite=True)
-c_iso_MCMC.write('iso_mcmc.csv', format='ascii.csv', overwrite=True)
+c_iso_MCMC.write('iso_mcmc_150_200.csv', format='ascii.csv', overwrite=True)
 
