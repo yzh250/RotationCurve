@@ -103,6 +103,8 @@ plateifu = ['10001-1902']
 for i in range(len(plateifu)):
     galaxy_ID.append(str(plateifu[i],'utf-8'))
 '''
+
+galaxy_ID = plateifu
 ################################################################################
 
 c_iso_MCMC = Table()
