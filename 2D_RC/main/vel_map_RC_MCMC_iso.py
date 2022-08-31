@@ -96,7 +96,8 @@ fit_mini_iso = ascii.read(fit_mini_iso_name,'r')
 
 ################################################################################
 galaxy_ID = []
-plateifu = DTable['plateifu'].data
+#plateifu = DTable['plateifu'].data
+plateifu = ['10001-1902']
 
 for i in range(len(plateifu)):
     galaxy_ID.append(str(plateifu[i],'utf-8'))
