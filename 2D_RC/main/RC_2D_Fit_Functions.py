@@ -1034,6 +1034,8 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
 
     pos_combined = np.column_stack((pos_model,pos_geo))
 
+    print('Hi')
+
     nwalkers, ndim = pos_combined.shape
     #-------------------------------------------------------------------------------
     if model == 'iso':
@@ -1046,6 +1048,8 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
                                                       data_maps['vmasked'], 
                                                       data_maps['ivar_masked'], 
                                                       data_maps['Ha_vel_mask']))
+
+        print('Hi')
 
         bad_sampler_iso.run_mcmc(pos_combined, 10000, progress=True)
         bad_samples_iso = bad_sampler_iso.get_chain()
