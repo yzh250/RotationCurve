@@ -238,7 +238,7 @@ for i in range(len(galaxy_ID)):
 
 
 print(no_data_count + ' galaxies have no data')
-print(incl_less_0 + ' galaxies have invalid inclination angle (less than equal to 0)')
+print(incl_less_0 + ' galaxies have invalid inclination angle for initial guess (less than equal to 0)')
 print(smoothness_leq_2 + ' galaxies have smoothness score less than or equal to 2')
 print(ttype_g_0 + ' galaxies have a ttype greater than 0')
 print(ttype_g_0_not_smoothness_leq_2 + ' galaxies have ttype greater than 0 but a smoothness score greater than 2')
