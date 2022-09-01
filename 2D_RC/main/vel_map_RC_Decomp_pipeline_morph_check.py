@@ -196,8 +196,6 @@ for i in range(len(galaxy_ID)):
 
             map_smoothness = how_smooth(data_maps['Ha_vel'], data_maps['Ha_vel_mask'])
 
-            c_smoothness['smoothness'][i] = map_smoothness 
-
             SN_map = data_maps['Ha_flux'] * np.sqrt(data_maps['Ha_flux_ivar'])
             Ha_vel_mask = data_maps['Ha_vel_mask'] + (SN_map < 5)
 
