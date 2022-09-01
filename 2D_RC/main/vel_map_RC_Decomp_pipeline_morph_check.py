@@ -172,7 +172,7 @@ for i in range(len(galaxy_ID)):
     #ph = phi[j] * np.pi / 180
 
     if path.exists(data_file):
-        print(plateifu[i] + ' data exists.')
+        print(galaxy_ID[i] + ' data exists.')
         ########################################################################
         # Get data
         #-----------------------------------------------------------------------
