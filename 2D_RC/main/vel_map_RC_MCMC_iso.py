@@ -245,8 +245,9 @@ for i in range(len(fit_mini_iso)):
     Isothermal_fit_mini = gal_fit
     chi2_iso_norm = Isothermal_fit_mini[-1]
     print(chi2_iso_norm,flush=True)
-
+    
     if (chi2_iso_norm > 150 and chi2_iso_norm <= 200):
+        print()
         print('fitting MCMC')
         Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'iso')
         c_iso_MCMC['rho0_b'][i] = Isothermal_fit_MCMC[0]
@@ -265,6 +266,5 @@ for i in range(len(fit_mini_iso)):
         print(galaxy_ID[i] + ' next batch (chi2 > 200)')
     else:
         print(galaxy_ID[i] + ' good fits from minimize')
-
 c_iso_MCMC.write('iso_mcmc_b1.csv', format='ascii.csv', overwrite=True)
 

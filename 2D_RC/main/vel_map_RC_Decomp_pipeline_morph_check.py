@@ -235,15 +235,15 @@ for i in range(len(galaxy_ID)):
         no_data_count += 1
 
 
-print(no_data_count + ' galaxies have no data')
-print(incl_less_0 + ' galaxies have invalid inclination angle for initial guess (less than equal to 0)')
-print(smoothness_leq_2 + ' galaxies have smoothness score less than or equal to 2')
-print(ttype_g_0 + ' galaxies have a ttype greater than 0')
-print(ttype_g_0_not_smoothness_leq_2 + ' galaxies have ttype greater than 0 but a smoothness score greater than 2')
-print(smoothness_leq_2_not_ttype_g_0 + ' galaxies have a smoothness score less than or equal to 2 but a ttype less or equal to 0')
-print(smoothness_leq_2_ttype_g_0 + ' galaxies have ttype greater than 0 and a smoothness score less than or equal to 2')
-print(not_ttype_g_0_not_smoothness_leq_2 + ' galaxies have ttype less than or equal to 0 and a smoothness score greater than 2')
-print(bad_rot_curve + ' galaxies have tidal presence or mostly masked.')
+print(str(no_data_count) + ' galaxies have no data')
+print(str(incl_less_0) + ' galaxies have invalid inclination angle for initial guess (less than equal to 0)')
+print(str(smoothness_leq_2) + ' galaxies have smoothness score less than or equal to 2')
+print(str(ttype_g_0) + ' galaxies have a ttype greater than 0')
+print(str(ttype_g_0_not_smoothness_leq_2) + ' galaxies have ttype greater than 0 but a smoothness score greater than 2')
+print(str(smoothness_leq_2_not_ttype_g_0) + ' galaxies have a smoothness score less than or equal to 2 but a ttype less or equal to 0')
+print(str(smoothness_leq_2_ttype_g_0) + ' galaxies have ttype greater than 0 and a smoothness score less than or equal to 2')
+print(str(not_ttype_g_0_not_smoothness_leq_2) + ' galaxies have ttype less than or equal to 0 and a smoothness score greater than 2')
+print(str(bad_rot_curve) + ' galaxies have tidal presence or mostly masked.')
 
 
 
