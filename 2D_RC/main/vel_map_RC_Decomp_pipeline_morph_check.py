@@ -141,7 +141,8 @@ ttype_g_0_not_smoothness_leq_2 = 0
 not_ttype_g_0_not_smoothness_leq_2 = 0
 
 incl_less_0 = 0
-bad_rot_curve = 0
+tidal_presence = 0
+masked_data = 0
 
 for i in range(len(galaxy_ID)):
 
@@ -171,79 +172,81 @@ for i in range(len(galaxy_ID)):
     #ph = phi[j] * np.pi / 180
 
     if path.exists(data_file):
-        if incl > 0:
-            ########################################################################
-            # Get data
-            #-----------------------------------------------------------------------
-            # scale, incl, ph, rband, Ha_vel, Ha_vel_ivar, Ha_vel_mask, vmasked, gshape, x_center_guess, y_center_guess = Galaxy_Data(galaxy_ID)
-            data_maps, gshape = Galaxy_Data(galaxy_ID[i],VEL_MAP_FOLDER)
-            #-----------------------------------------------------------------------
+        print(plateifu[i] + ' data exists.')
+        ########################################################################
+        # Get data
+        #-----------------------------------------------------------------------
+        # scale, incl, ph, rband, Ha_vel, Ha_vel_ivar, Ha_vel_mask, vmasked, gshape, x_center_guess, y_center_guess = Galaxy_Data(galaxy_ID)
+        data_maps, gshape = Galaxy_Data(galaxy_ID[i],VEL_MAP_FOLDER)
+        #-----------------------------------------------------------------------
 
 
-            ########################################################################
-            # Selection
-            #-----------------------------------------------------------------------
-            # Morphological cut
-            #tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
-            tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
+        ########################################################################
+        # Selection
+        #-----------------------------------------------------------------------
+        # Morphological cut
+        #tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
+        tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
 
-            Ttype = 0
-            if galaxy_ID[i] == gal_ID_cross[i]:
-                Ttype = ttype[i]
+        Ttype = 0
+        if galaxy_ID[i] == gal_ID_cross[i]:
+            Ttype = ttype[i]
 
-            # Smoothness cut
-            max_map_smoothness = 2
+        # Smoothness cut
+        max_map_smoothness = 2
 
-            map_smoothness = how_smooth(data_maps['Ha_vel'], data_maps['Ha_vel_mask'])
+        map_smoothness = how_smooth(data_maps['Ha_vel'], data_maps['Ha_vel_mask'])
 
-            SN_map = data_maps['Ha_flux'] * np.sqrt(data_maps['Ha_flux_ivar'])
-            Ha_vel_mask = data_maps['Ha_vel_mask'] + (SN_map < 5)
+        SN_map = data_maps['Ha_flux'] * np.sqrt(data_maps['Ha_flux_ivar'])
+        Ha_vel_mask = data_maps['Ha_vel_mask'] + (SN_map < 5)
 
-            vmasked = ma.array(data_maps['Ha_vel'], mask = Ha_vel_mask)
-            ivar_masked = ma.array(data_maps['Ha_vel_ivar'], mask = Ha_vel_mask)
+        vmasked = ma.array(data_maps['Ha_vel'], mask = Ha_vel_mask)
+        ivar_masked = ma.array(data_maps['Ha_vel_ivar'], mask = Ha_vel_mask)
 
-            r_band_masked = ma.array(data_maps['r_band'],mask=Ha_vel_mask)
+        r_band_masked = ma.array(data_maps['r_band'],mask=Ha_vel_mask)
 
-            center_guess = np.unravel_index(ma.argmax(r_band_masked), gshape)
-            x_center_guess = center_guess[0]
-            y_center_guess = center_guess[1]
+        center_guess = np.unravel_index(ma.argmax(r_band_masked), gshape)
+        x_center_guess = center_guess[0]
+        y_center_guess = center_guess[1]
 
-            global_max = ma.max(vmasked)
+        '''
+        global_max = ma.max(vmasked)
 
-            unmasked_data = True
+        unmasked_data = True
 
-            if np.isnan(global_max) or (global_max is ma.masked):
-                unmasked_data = False
-
-            if map_smoothness <= max_map_smoothness and tidal == 0 and (unmasked_data == True):
-                smoothness_leq_2 += 1
-            elif Ttype > 0 and tidal == 0 and (unmasked_data == True):
-                ttype_g_0 += 1
-            elif Ttype > 0 and (not map_smoothness <= max_map_smoothness) and tidal == 0 and (unmasked_data == True):
-                ttype_g_0_not_smoothness_leq_2 += 1
-            elif (not Ttype > 0) and map_smoothness <= max_map_smoothness and tidal == 0 and (unmasked_data == True):
-                smoothness_leq_2_not_ttype_g_0 += 1
-            elif Ttype > 0 and map_smoothness <= max_map_smoothness and tidal == 0 and (unmasked_data == True):
-                smoothness_leq_2_ttype_g_0 += 1
-            elif not (Ttype > 0 or map_smoothness <= max_map_smoothness):
-                not_ttype_g_0_not_smoothness_leq_2 += 1
-            else:
-                bad_rot_curve += 1
+        if np.isnan(global_max) or (global_max is ma.masked):
+            unmasked_data = False
+        '''
+        if map_smoothness <= max_map_smoothness:
+            print(plateifu[i] + ' has smoothness score less than or equal to 2')
+            smoothness_leq_2 += 1
+        elif Ttype > 0:
+            print(plateifu[i] + ' has a ttype greater than 0')
+            ttype_g_0 += 1
         else:
-            incl_less_0 += 1
+            print(plateifu[i] + ' has ttype less than or equal to 0 and a smoothness score greater than 2')
+            not_ttype_g_0_not_smoothness_leq_2 += 1
+
+        if Ttype > 0 and map_smoothness <= max_map_smoothness:
+            print(plateifu[i] + ' has a ttype greater than 0 and a smoothness score less than or equal to 2')
+            smoothness_leq_2_ttype_g_0 += 1
+        elif Ttype > 0 and (map_smoothness > max_map_smoothness):
+            print(plateifu[i] + ' has a ttype greater than 0 but a smoothness score greater than 2')
+            ttype_g_0_not_smoothness_leq_2 += 1
+        elif (Ttype <= 0) and map_smoothness <= max_map_smoothness:
+            print(plateifu[i] + ' has a smoothness score less than or equal to 2 but a ttype less or equal to 0')
+            smoothness_leq_2_not_ttype_g_0 += 1
     else:
+        print(plateifu[i] + ' no data.')
         no_data_count += 1
 
 
 print(str(no_data_count) + ' galaxies have no data')
-print(str(incl_less_0) + ' galaxies have invalid inclination angle for initial guess (less than equal to 0)')
 print(str(smoothness_leq_2) + ' galaxies have smoothness score less than or equal to 2')
 print(str(ttype_g_0) + ' galaxies have a ttype greater than 0')
 print(str(ttype_g_0_not_smoothness_leq_2) + ' galaxies have ttype greater than 0 but a smoothness score greater than 2')
 print(str(smoothness_leq_2_not_ttype_g_0) + ' galaxies have a smoothness score less than or equal to 2 but a ttype less or equal to 0')
 print(str(smoothness_leq_2_ttype_g_0) + ' galaxies have ttype greater than 0 and a smoothness score less than or equal to 2')
 print(str(not_ttype_g_0_not_smoothness_leq_2) + ' galaxies have ttype less than or equal to 0 and a smoothness score greater than 2')
-print(str(bad_rot_curve) + ' galaxies have tidal presence or mostly masked.')
-
 
 
