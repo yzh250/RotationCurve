@@ -221,6 +221,7 @@ for i in range(len(galaxy_ID)):
             print(galaxy_ID[i] + ' has a smoothness score less than or equal to 2')
             smoothness_leq_2 += 1
             if Ttype > 0:
+                ttype_g_0 += 1
                 print(galaxy_ID[i] + ' has a ttype greater than 0 and a smoothness score less than or equal to 2')
                 smoothness_leq_2_ttype_g_0 += 1
             else:
@@ -229,8 +230,8 @@ for i in range(len(galaxy_ID)):
 
         elif map_smoothness > max_map_smoothness:
             print(galaxy_ID[i] + ' a smoothness score greater than 2')
-            #ttype_g_0 += 1
             if Ttype > 0:
+                ttype_g_0 += 1
                 print(galaxy_ID[i] + ' has a ttype greater than 0 but a smoothness score greater than 2')
                 ttype_g_0_not_smoothness_leq_2 += 1
             else:
