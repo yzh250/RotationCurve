@@ -76,7 +76,7 @@ DRP_FILENAME = MANGA_FOLDER_yifan + 'redux/v3_1_1/drpall-v3_1_1.fits'
 
 VEL_MAP_FOLDER = '/scratch/kdougla7/data/SDSS/dr17/manga/spectro/analysis/v3_1_1/3.1.0/HYB10-MILESHC-MASTARSSP/'
 
-MORPH_FOLDER = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr17/manga/morph/'
+#MORPH_FOLDER = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr17/manga/morph/'
 
 SMOOTHNESS_MORPH_FOLDER = '/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/'
 
@@ -307,7 +307,7 @@ for i in range(len(galaxy_ID)):
         #-----------------------------------------------------------------------
         # Morphological cut
         #tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
-        tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
+        tidal = getTidal(galaxy_ID[i], SMOOTHNESS_MORPH_FOLDER)
 
         Ttype = 0
         if galaxy_ID[i] == gal_ID_cross[i]:

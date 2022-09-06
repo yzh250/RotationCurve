@@ -202,7 +202,7 @@ def Galaxy_Data(galaxy_ID, VEL_MAP_FOLDER):
 
 def getTidal(gal_ID, MORPH_file_path):
 
-    MORPH_file = MORPH_file_path + 'manga_visual_morpho-1.0.1.fits'
+    MORPH_file = MORPH_file_path + 'manga_visual_morpho-2.0.1.fits'
 
     Mfile = fits.open(MORPH_file)
     Mdata = Mfile[1].data
