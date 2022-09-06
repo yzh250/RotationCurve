@@ -129,9 +129,9 @@ plateifu = DTable['plateifu'].data
 for i in range(len(plateifu)):
     galaxy_ID.append(str(plateifu[i],'utf-8'))
 
-'''
 no_data_count = 0
 
+'''
 smoothness_leq_2 = 0
 ttype_g_0 = 0
 
