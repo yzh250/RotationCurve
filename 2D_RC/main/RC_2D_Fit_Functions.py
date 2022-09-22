@@ -787,9 +787,10 @@ def plot_rot_curve(mHa_vel,
     ax.plot(r, v_d,'.-',label='disk')
     ax.plot(r, v_h,':',label='halo')
 
-    vmax = np.max(np.abs(v))
+    vmax = 0
 
-    if np.isfinite(vmax):
+    if np.isfinite(np.max(np.abs(v))):
+        vmax = np.max(np.abs(v))
         ax.set_ylim([-1.25*vmax,1.25*vmax])
         ax.tick_params(axis='both', direction='in')
         ax.yaxis.set_ticks_position('both')
@@ -798,7 +799,8 @@ def plot_rot_curve(mHa_vel,
         ax.set_ylabel('Rotational velocity [km/s]')
         plt.legend()
     else:
-        ax.set_ylim([-1000,1000])
+        vmax = 1000
+        ax.set_ylim([-vmax,vmax])
         ax.tick_params(axis='both', direction='in')
         ax.yaxis.set_ticks_position('both')
         ax.xaxis.set_ticks_position('both')
