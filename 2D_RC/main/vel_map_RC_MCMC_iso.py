@@ -92,7 +92,7 @@ r50_ang = DTable['nsa_elpetro_th50_r']
 
 ################################################################################
 # Importing fitted values & chi2 for each galaxy
-fit_mini_iso_name = fits_file + 'iso_mini_clean.csv'
+fit_mini_iso_name = SMOOTHNESS_MORPH_FOLDER + 'iso_mini_clean.csv'
 fit_mini_iso = ascii.read(fit_mini_iso_name,'r')
 ################################################################################
 
