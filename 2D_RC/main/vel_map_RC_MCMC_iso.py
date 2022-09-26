@@ -59,9 +59,11 @@ DRP_FILENAME = MANGA_FOLDER_yifan + 'redux/v3_1_1/drpall-v3_1_1.fits'
 
 VEL_MAP_FOLDER = '/scratch/kdougla7/data/SDSS/dr17/manga/spectro/analysis/v3_1_1/3.1.0/HYB10-MILESHC-MASTARSSP/'
 
-MORPH_FOLDER = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr17/manga/morph/'
+#MORPH_FOLDER = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr17/manga/morph/'
 
-fits_file = '/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/'
+SMOOTHNESS_MORPH_FOLDER = '/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/'
+
+smoothness_morph_file = SMOOTHNESS_MORPH_FOLDER + 'cross_table.csv'
 ################################################################################
 
 ################################################################################
@@ -97,14 +99,9 @@ fit_mini_iso = ascii.read(fit_mini_iso_name,'r')
 ################################################################################
 galaxy_ID = []
 plateifu = DTable['plateifu'].data
-#plateifu = ['10001-3701']
 
-'''
 for i in range(len(plateifu)):
     galaxy_ID.append(str(plateifu[i],'utf-8'))
-'''
-
-galaxy_ID = plateifu
 ################################################################################
 
 c_iso_MCMC = Table()
@@ -157,7 +154,7 @@ for i in range(len(fit_mini_iso)):
     #-----------------------------------------------------------------------
     # Morphological cut
     #tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
-    tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
+    #tidal = getTidal(galaxy_ID[i], SMOOTHNESS_MORPH_FOLDER)
 
     # Smoothness cut
     max_map_smoothness = 1.85
