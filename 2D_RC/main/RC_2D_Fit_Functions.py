@@ -1026,8 +1026,8 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
 
     geo_guesses = init_param_geo + [0]
 
-    pos_model = np.random.uniform(low=[-7,0.00001,200,0.1,2e-5,0.1], 
-                        high=[1,5,2500,25,0.1,500], 
+    pos_model = np.random.uniform(low=[-7,0.00001,0.00001,0.0001,-7,0.1], 
+                        high=[1,10,3000,30,2,1000], 
                         size=(64,6))
 
     pos_geo = np.array(geo_guesses) + np.random.uniform(np.random.uniform(low=-1e-3*np.ones(len(geo_guesses)), 
