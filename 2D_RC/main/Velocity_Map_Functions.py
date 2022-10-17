@@ -121,7 +121,7 @@ def rot_incl_iso(shape, scale, params):
 
     log_rhob0, Rb, SigD, Rd, rho0_h, Rh, inclination, phi, center_x, center_y, vsys = params
 
-    rotated_inclined_map = np.zeros(shape)
+    rotated_inclined_map = np.zeros(shape,dtype=float)
     
     for i in range(shape[0]):
         for j in range(shape[1]):

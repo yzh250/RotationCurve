@@ -244,8 +244,10 @@ for i in range(len(fit_mini_bur)):
     Rd = Burket_fit_mini[4]
     Rh = Burket_fit_mini[6]
 
+    print(Rb,Rd,Rh,flush=True)
+
     if not (Rb < Rd and Rd < Rh):
-        print('fitting MCMC')
+        print('fitting MCMC',flush=True)
         Burket_fit_MCMC, chi2_bur_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'bur')
         c_bur_MCMC['rho0_b'][i] = Burket_fit_MCMC[0]
         c_bur_MCMC['Rb'][i] = Burket_fit_MCMC[1]
@@ -260,7 +262,7 @@ for i in range(len(fit_mini_bur)):
         c_bur_MCMC['Vsys'][i] = Burket_fit_MCMC[10]
         c_bur_MCMC['chi2'][i] = chi2_bur_norm_MCMC
     else:
-        print(galaxy_ID[i] + ' good fits from minimize with physical values')
+        print(galaxy_ID[i] + ' good fits from minimize with physical values',flush=True)
 
 c_bur_MCMC.write('bur_mcmc_corr_mini.csv', format='ascii.csv', overwrite=True)
 

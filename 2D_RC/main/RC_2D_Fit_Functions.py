@@ -1036,7 +1036,7 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
 
     pos_combined = np.column_stack((pos_model,pos_geo))
 
-    print('Hi')
+    print('initial guess generated',flush=True)
 
     nwalkers, ndim = pos_combined.shape
     #-------------------------------------------------------------------------------
@@ -1051,11 +1051,13 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
                                                       data_maps['ivar_masked'], 
                                                       data_maps['Ha_vel_mask']))
 
-        print('Hi')
+        print('bad sampler iso',flush=True)
 
         bad_sampler_iso.run_mcmc(pos_combined, 10000, progress=True)
         bad_samples_iso = bad_sampler_iso.get_chain()
         #bad_samples_iso = bad_sampler_iso.get_chain(discard=500)
+
+        print('bad samples_iso',flush=True)
 
         ns_iso, nw_iso, nd_iso = bad_samples_iso.shape
 
@@ -1065,6 +1067,8 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
         np.save('good_walkers_iso_' + gal_ID + '_comb.npy', good_walkers_iso)
 
         good_samples_iso = bad_samples_iso[:,good_walkers_iso,:]
+
+        print('ok',flush=True)
 
         # Check if there are walkers being left out
         # Make the general cut at 4000 steps
@@ -1076,9 +1080,11 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
             trimmed_flat_good_samples_iso = good_samples_iso[4000:,:,:].reshape(6000*nw_iso, nd_iso)
             samples_mean_iso = np.mean(trimmed_flat_good_samples_iso, axis=0)
 
-        fitted_map_mcmc_iso = rot_incl_iso(gshape, scale, np.ndarray.tolist(samples_mean_iso))
+        print('MCMC fits generated',flush=True)
 
-        mfitted_map_mcmc_iso = ma.array(fitted_map_mcmc_iso, mask=data_maps['Ha_vel_mask'])
+        #fitted_map_mcmc_iso = rot_incl_iso(gshape, scale, np.ndarray.tolist(samples_mean_iso))
+
+        #mfitted_map_mcmc_iso = ma.array(fitted_map_mcmc_iso, mask=data_maps['Ha_vel_mask'])
 
         nd_iso_mcmc = np.sum(~mfitted_map_mcmc_iso.mask)
 
@@ -1099,9 +1105,13 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
                                                       data_maps['ivar_masked'], 
                                                       data_maps['Ha_vel_mask']))
 
+        print('bad sampler NFW',flush=True)
+
         bad_sampler_NFW.run_mcmc(pos_combined, 10000, progress=True)
         bad_samples_NFW = bad_sampler_NFW.get_chain()
         #bad_samples_NFW = bad_sampler_NFW.get_chain(discard=500)
+
+        print('bad samples_NFW',flush=True)
 
         ns_NFW, nw_NFW, nd_NFW = bad_samples_NFW.shape
 
@@ -1111,6 +1121,8 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
         np.save('good_walkers_NFW_' + gal_ID + '_comb.npy', good_walkers_NFW)
 
         good_samples_NFW = bad_samples_NFW[:,good_walkers_NFW,:]
+
+        print('ok',flush=True)
 
         # Check if there are walkers being left out
         # Make the general cut at 4000 steps
@@ -1122,9 +1134,11 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
             trimmed_flat_good_samples_NFW = good_samples_NFW[4000:,:,:].reshape(6000*nw_NFW, nd_NFW)
             samples_mean_NFW = np.mean(trimmed_flat_good_samples_NFW, axis=0)
 
-        fitted_map_mcmc_NFW = rot_incl_NFW(gshape, scale, np.ndarray.tolist(samples_mean_NFW))
+        print('MCMC fits generated',flush=True)
 
-        mfitted_map_mcmc_NFW = ma.array(fitted_map_mcmc_NFW, mask=data_maps['Ha_vel_mask'])
+        #fitted_map_mcmc_NFW = rot_incl_NFW(gshape, scale, np.ndarray.tolist(samples_mean_NFW))
+
+        #mfitted_map_mcmc_NFW = ma.array(fitted_map_mcmc_NFW, mask=data_maps['Ha_vel_mask'])
 
         nd_NFW_mcmc = np.sum(~mfitted_map_mcmc_NFW.mask)
 
@@ -1144,9 +1158,13 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
                                                       data_maps['ivar_masked'], 
                                                       data_maps['Ha_vel_mask']))
 
+        print('bad sampler bur',flush=True)
+
         bad_sampler_bur.run_mcmc(pos_combined, 10000, progress=True)
         bad_samples_bur = bad_sampler_bur.get_chain()
         #bad_samples_bur = bad_sampler_bur.get_chain(discard=500)
+
+        print('bad samples_bur',flush=True)
 
         ns_bur, nw_bur, nd_bur = bad_samples_bur.shape
 
@@ -1156,6 +1174,8 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
         np.save('good_walkers_bur_' + gal_ID + '_comb.npy', good_walkers_bur)
 
         good_samples_bur = bad_samples_bur[:,good_walkers_bur,:]
+
+        print('ok',flush=True)
 
         # Check if there are walkers being left out
         # Make the general cut at 4000 steps
@@ -1167,9 +1187,11 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
             trimmed_flat_good_samples_bur = good_samples_bur[4000:,:,:].reshape(6000*nw_bur, nd_bur)
             samples_mean_bur = np.mean(trimmed_flat_good_samples_bur, axis=0)
 
-        fitted_map_mcmc_bur = rot_incl_bur(gshape, scale, np.ndarray.tolist(samples_mean_bur))
+        print('MCMC fits generated',flush=True)
 
-        mfitted_map_mcmc_bur = ma.array(fitted_map_mcmc_bur, mask=data_maps['Ha_vel_mask'])
+        #fitted_map_mcmc_bur = rot_incl_bur(gshape, scale, np.ndarray.tolist(samples_mean_bur))
+
+        #mfitted_map_mcmc_bur = ma.array(fitted_map_mcmc_bur, mask=data_maps['Ha_vel_mask'])
 
         nd_bur_mcmc = np.sum(~mfitted_map_mcmc_bur.mask)
 

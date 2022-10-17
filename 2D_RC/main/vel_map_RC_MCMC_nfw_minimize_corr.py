@@ -244,8 +244,10 @@ for i in range(len(fit_mini_nfw)):
     Rd = NFW_fit_mini[4]
     Rh = NFW_fit_mini[6]
 
+    print(Rb,Rd,Rh,flush=True)
+
     if not (Rb < Rd and Rd < Rh):
-        print('fitting MCMC')
+        print('fitting MCMC',flush=True)
         NFW_fit_MCMC, chi2_nfw_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'NFW')
         c_nfw_MCMC['rho0_b'][i] = NFW_fit_MCMC[0]
         c_nfw_MCMC['Rb'][i] = NFW_fit_MCMC[1]
@@ -260,7 +262,7 @@ for i in range(len(fit_mini_nfw)):
         c_nfw_MCMC['Vsys'][i] = NFW_fit_MCMC[10]
         c_nfw_MCMC['chi2'][i] = chi2_nfw_norm_MCMC
     else:
-        print(galaxy_ID[i] + ' good fits from minimize with physical values')
+        print(galaxy_ID[i] + ' good fits from minimize with physical values',flush=True)
 
 c_nfw_MCMC.write('nfw_mcmc_corr_mini.csv', format='ascii.csv', overwrite=True)
 
