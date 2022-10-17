@@ -1082,17 +1082,28 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
 
         print('MCMC fits generated',flush=True)
 
-        #fitted_map_mcmc_iso = rot_incl_iso(gshape, scale, np.ndarray.tolist(samples_mean_iso))
+        fitted_map_mcmc_iso = rot_incl_iso(gshape, scale, np.ndarray.tolist(samples_mean_iso))
 
-        #mfitted_map_mcmc_iso = ma.array(fitted_map_mcmc_iso, mask=data_maps['Ha_vel_mask'])
+        print('fitted map generated',flush=True)
+
+        mfitted_map_mcmc_iso = ma.array(fitted_map_mcmc_iso, mask=data_maps['Ha_vel_mask'])
+
+        print('masked map generated',flush=True)
 
         nd_iso_mcmc = np.sum(~mfitted_map_mcmc_iso.mask)
+
+        print('number of data calculated',flush=True)
 
         # chi2_iso = np.nansum((vmasked - vmap_iso) ** 2 * Ha_vel_ivar)
         chi2_iso_mcmc = ma.sum(data_maps['Ha_vel_ivar'] * (data_map - mfitted_map_mcmc_iso) ** 2)
 
+        print('chi2 calculated',flush=True)
+
         # chi2_iso_norm = chi2_iso/(nd_iso - 8)
         chi2_iso_norm_mcmc = chi2_iso_mcmc / (nd_iso_mcmc - len(samples_mean_iso))
+
+        print('normalized chi2 calculated',flush=True)
+
         return samples_mean_iso, chi2_iso_norm_mcmc
     #-------------------------------------------------------------------------------
     elif model == 'NFW':
@@ -1136,15 +1147,25 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
 
         print('MCMC fits generated',flush=True)
 
-        #fitted_map_mcmc_NFW = rot_incl_NFW(gshape, scale, np.ndarray.tolist(samples_mean_NFW))
+        fitted_map_mcmc_NFW = rot_incl_NFW(gshape, scale, np.ndarray.tolist(samples_mean_NFW))
 
-        #mfitted_map_mcmc_NFW = ma.array(fitted_map_mcmc_NFW, mask=data_maps['Ha_vel_mask'])
+        print('fitted map generated',flush=True)
+
+        mfitted_map_mcmc_NFW = ma.array(fitted_map_mcmc_NFW, mask=data_maps['Ha_vel_mask'])
+
+        print('masked map generated',flush=True)
 
         nd_NFW_mcmc = np.sum(~mfitted_map_mcmc_NFW.mask)
 
+        print('number of data calculated',flush=True)
+
         chi2_NFW_mcmc = ma.sum(data_maps['Ha_vel_ivar'] * (data_map - mfitted_map_mcmc_NFW)**2)
 
+        print('chi2 calculated',flush=True)
+
         chi2_NFW_norm_mcmc = chi2_NFW_mcmc / (nd_NFW_mcmc - len(samples_mean_NFW))
+
+        print('normalized chi2 calculated',flush=True)
 
         return samples_mean_NFW, chi2_NFW_norm_mcmc
     #-------------------------------------------------------------------------------
@@ -1189,15 +1210,25 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
 
         print('MCMC fits generated',flush=True)
 
-        #fitted_map_mcmc_bur = rot_incl_bur(gshape, scale, np.ndarray.tolist(samples_mean_bur))
+        fitted_map_mcmc_bur = rot_incl_bur(gshape, scale, np.ndarray.tolist(samples_mean_bur))
 
-        #mfitted_map_mcmc_bur = ma.array(fitted_map_mcmc_bur, mask=data_maps['Ha_vel_mask'])
+        print('fitted map generated',flush=True)
+
+        mfitted_map_mcmc_bur = ma.array(fitted_map_mcmc_bur, mask=data_maps['Ha_vel_mask'])
+
+        print('masked map generated',flush=True)
 
         nd_bur_mcmc = np.sum(~mfitted_map_mcmc_bur.mask)
 
+        print('number of data calculated',flush=True)
+
         chi2_bur_mcmc = ma.sum(data_maps['Ha_vel_ivar'] * (data_map - mfitted_map_mcmc_bur)**2)
 
+        print('chi2 calculated',flush=True)
+
         chi2_bur_norm_mcmc = chi2_bur_mcmc / (nd_bur_mcmc - len(samples_mean_bur))
+
+        print('normalized chi2 calculated',flush=True)
 
         return samples_mean_bur, chi2_bur_norm_mcmc
     ################################################################################
