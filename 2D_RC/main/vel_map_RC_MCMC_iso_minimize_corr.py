@@ -145,6 +145,8 @@ for i in range(len(fit_mini_iso)):
 
     incl = np.arccos(np.sqrt(cosi2))
 
+    print('Incl calculated: ' + str(incl), flush=True)
+
     data_maps, gshape = Galaxy_Data(galaxy_ID[i],VEL_MAP_FOLDER)
 
     #-----------------------------------------------------------------------
@@ -161,6 +163,8 @@ for i in range(len(fit_mini_iso)):
 
     map_smoothness = how_smooth(data_maps['Ha_vel'], data_maps['Ha_vel_mask'])
 
+    print('smoothness calculated: ' + str(map_smoothness), flush=True)
+
     SN_map = data_maps['Ha_flux'] * np.sqrt(data_maps['Ha_flux_ivar'])
     Ha_vel_mask = data_maps['Ha_vel_mask'] + (SN_map < 5)
 
@@ -172,6 +176,8 @@ for i in range(len(fit_mini_iso)):
     center_guess = np.unravel_index(ma.argmax(r_band_masked), gshape)
     x_center_guess = center_guess[0]
     y_center_guess = center_guess[1]
+
+    print('center found',flush=True)
 
     global_max = ma.max(vmasked)
 
@@ -189,6 +195,9 @@ for i in range(len(fit_mini_iso)):
         ####################################################################
         # Find initial guess for phi
         #-------------------------------------------------------------------
+
+    print('Start finding phi', flush=True)
+
     phi_guess = find_phi(center_coord, phi[j], vmasked)
 
     if galaxy_ID[i] in ['8134-6102']:
@@ -247,7 +256,7 @@ for i in range(len(fit_mini_iso)):
     print(Rb,Rd,Rh,flush=True)
     
     if not (Rb < Rd and Rd < Rh):
-        print('fitting MCMC' + galaxy_ID[i],flush=True)
+        print('fitting MCMC ' + galaxy_ID[i],flush=True)
         Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'iso')
         c_iso_MCMC['rho0_b'][i] = Isothermal_fit_MCMC[0]
         c_iso_MCMC['Rb'][i] = Isothermal_fit_MCMC[1]
