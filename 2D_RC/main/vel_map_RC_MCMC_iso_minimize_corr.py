@@ -247,7 +247,7 @@ for i in range(len(fit_mini_iso)):
     print(Rb,Rd,Rh,flush=True)
     
     if not (Rb < Rd and Rd < Rh):
-        print('fitting MCMC',flush=True)
+        print('fitting MCMC' + galaxy_ID[i],flush=True)
         Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'iso')
         c_iso_MCMC['rho0_b'][i] = Isothermal_fit_MCMC[0]
         c_iso_MCMC['Rb'][i] = Isothermal_fit_MCMC[1]

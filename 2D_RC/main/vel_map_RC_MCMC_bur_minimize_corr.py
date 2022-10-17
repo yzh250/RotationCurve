@@ -247,7 +247,7 @@ for i in range(len(fit_mini_bur)):
     print(Rb,Rd,Rh,flush=True)
 
     if not (Rb < Rd and Rd < Rh):
-        print('fitting MCMC',flush=True)
+        print('fitting MCMC ' + galaxy_ID[i],flush=True)
         Burket_fit_MCMC, chi2_bur_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'bur')
         c_bur_MCMC['rho0_b'][i] = Burket_fit_MCMC[0]
         c_bur_MCMC['Rb'][i] = Burket_fit_MCMC[1]

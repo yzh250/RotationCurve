@@ -247,7 +247,7 @@ for i in range(len(fit_mini_nfw)):
     print(Rb,Rd,Rh,flush=True)
 
     if not (Rb < Rd and Rd < Rh):
-        print('fitting MCMC',flush=True)
+        print('fitting MCMC ' + galaxy_ID[i],flush=True)
         NFW_fit_MCMC, chi2_nfw_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'NFW')
         c_nfw_MCMC['rho0_b'][i] = NFW_fit_MCMC[0]
         c_nfw_MCMC['Rb'][i] = NFW_fit_MCMC[1]
