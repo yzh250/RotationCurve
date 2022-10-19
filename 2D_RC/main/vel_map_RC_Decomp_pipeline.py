@@ -190,7 +190,7 @@ c_nfw['chi2'] = np.nan
 #writer_bur.writerow(['galaxy_ID', 'A', 'Vin', 'SigD', 'Rd', 'rho0_h', 'Rh', 'incl', 'phi', 'x_cen', 'y_cen','Vsys','chi2'])
 c_bur = Table()
 c_bur['galaxy_ID'] = galaxy_ID
-c_bur['tidal'] = tidal
+c_bur['tidal'] = np.nan
 c_bur['smoothness'] = np.nan
 c_bur['Ttype'] = np.nan
 c_bur['rho0_b'] = np.nan
