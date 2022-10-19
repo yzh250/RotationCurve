@@ -100,8 +100,8 @@ def find_phi(center_coords, phi_angle, vel_map):
         # Check value along semi-major axis
         if vel_map.mask[tuple(semi_major_axis_spaxel)] == 0:
             checkpoint_masked = False
-        elif time.time() - start_time >= 3000:
-            checkpoint_masked = False
+        #elif time.time() - start_time >= 3000:
+            #checkpoint_masked = False
         else:
             f *= 0.9
 

@@ -146,8 +146,11 @@ for i in range(len(plate)):
 #writer_iso.writerow(['galaxy_ID', 'A', 'Vin', 'SigD', 'Rd', 'rho0_h', 'Rh', 'incl', 'phi', 'x_cen', 'y_cen','Vsys','chi2'])
 c_iso = Table()
 c_iso['galaxy_ID'] = galaxy_ID
-c_iso['A'] = np.nan
-c_iso['Vin'] = np.nan
+c_iso['tidal'] = np.nan
+c_iso['smoothness'] = np.nan
+c_iso['Ttype'] = np.nan
+c_iso['rho0_b'] = np.nan
+c_iso['Rb'] = np.nan
 c_iso['SigD'] = np.nan
 c_iso['Rd'] = np.nan
 c_iso['rho0_h'] = np.nan
@@ -165,8 +168,11 @@ c_iso['chi2'] = np.nan
 #writer_nfw.writerow(['galaxy_ID', 'A', 'Vin', 'SigD', 'Rd', 'rho0_h', 'Rh', 'incl', 'phi', 'x_cen', 'y_cen','Vsys','chi2'])
 c_nfw = Table()
 c_nfw['galaxy_ID'] = galaxy_ID
-c_nfw['A'] = np.nan
-c_nfw['Vin'] = np.nan
+c_nfw['tidal'] = np.nan
+c_nfw['smoothness'] = np.nan
+c_nfw['Ttype'] = np.nan
+c_nfw['rho0_b'] = np.nan
+c_nfw['Rb'] = np.nan
 c_nfw['SigD'] = np.nan
 c_nfw['Rd'] = np.nan
 c_nfw['rho0_h'] = np.nan
@@ -184,8 +190,11 @@ c_nfw['chi2'] = np.nan
 #writer_bur.writerow(['galaxy_ID', 'A', 'Vin', 'SigD', 'Rd', 'rho0_h', 'Rh', 'incl', 'phi', 'x_cen', 'y_cen','Vsys','chi2'])
 c_bur = Table()
 c_bur['galaxy_ID'] = galaxy_ID
-c_bur['A'] = np.nan
-c_bur['Vin'] = np.nan
+c_bur['tidal'] = tidal
+c_bur['smoothness'] = np.nan
+c_bur['Ttype'] = np.nan
+c_bur['rho0_b'] = np.nan
+c_bur['Rb'] = np.nan
 c_bur['SigD'] = np.nan
 c_bur['Rd'] = np.nan
 c_bur['rho0_h'] = np.nan
@@ -293,6 +302,7 @@ for i in range(len(galaxy_ID)):
 
     #ph = phi[j] * np.pi / 180
 
+    # Check if file exits and also if inclination angle is greater than 0
     if path.exists(data_file) and (incl > 0):
         ########################################################################
         # Get data
@@ -309,14 +319,26 @@ for i in range(len(galaxy_ID)):
         #tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
         tidal = getTidal(galaxy_ID[i], SMOOTHNESS_MORPH_FOLDER)
 
+        c_iso['tidal'][i] = tidal
+        c_nfw['tidal'][i] = tidal
+        c_bur['tidal'][i] = tidal
+
         Ttype = 0
         if galaxy_ID[i] == gal_ID_cross[i]:
             Ttype = ttype[i]
+
+        c_iso['Ttype'][i] = Ttype
+        c_nfw['Ttype'][i] = Ttype
+        c_bur['Ttype'][i] = Ttype
 
         # Smoothness cut
         max_map_smoothness = 2
 
         map_smoothness = how_smooth(data_maps['Ha_vel'], data_maps['Ha_vel_mask'])
+
+        c_iso['smoothness'] = map_smoothness
+        c_nfw['smoothness'] = map_smoothness
+        c_bur['smoothness'] = map_smoothness
 
         SN_map = data_maps['Ha_flux'] * np.sqrt(data_maps['Ha_flux_ivar'])
         Ha_vel_mask = data_maps['Ha_vel_mask'] + (SN_map < 5)
@@ -606,8 +628,8 @@ for i in range(len(galaxy_ID)):
                                  Isothermal_fit[10], 
                                  chi2_iso_norm])
             '''
-            c_iso['A'][i] = Isothermal_fit[0]
-            c_iso['Vin'][i] = Isothermal_fit[1]
+            c_iso['rho0_b'][i] = Isothermal_fit[0]
+            c_iso['Rb'][i] = Isothermal_fit[1]
             c_iso['SigD'][i] = Isothermal_fit[2]
             c_iso['Rd'][i] = Isothermal_fit[3]
             c_iso['rho0_h'][i] = Isothermal_fit[4]
@@ -634,8 +656,8 @@ for i in range(len(galaxy_ID)):
                                  NFW_fit[10], 
                                  chi2_NFW_norm])
             '''
-            c_nfw['A'][i] = NFW_fit[0]
-            c_nfw['Vin'][i] = NFW_fit[1]
+            c_nfw['rho0_b'][i] = NFW_fit[0]
+            c_nfw['Rb'][i] = NFW_fit[1]
             c_nfw['SigD'][i] = NFW_fit[2]
             c_nfw['Rd'][i] = NFW_fit[3]
             c_nfw['rho0_h'][i] = NFW_fit[4]
@@ -662,8 +684,8 @@ for i in range(len(galaxy_ID)):
                                  Burket_fit[10],
                                  chi2_bur_norm])
             '''
-            c_bur['A'][i] = Burket_fit[0]
-            c_bur['Vin'][i] = Burket_fit[1]
+            c_bur['rho0_b'][i] = Burket_fit[0]
+            c_bur['Rb'][i] = Burket_fit[1]
             c_bur['SigD'][i] = Burket_fit[2]
             c_bur['Rd'][i] = Burket_fit[3]
             c_bur['rho0_h'][i] = Burket_fit[4]
@@ -737,9 +759,9 @@ c_nfw.close()
 c_bur.close()
 '''
 
-c_iso.write('iso_mini_new.csv', format='ascii.csv', overwrite=True)
-c_nfw.write('nfw_mini_new.csv', format='ascii.csv', overwrite=True)
-c_bur.write('bur_mini_new.csv', format='ascii.csv', overwrite=True)
+c_iso.write('iso_mini_updated.csv', format='ascii.csv', overwrite=True)
+c_nfw.write('nfw_mini_updated.csv', format='ascii.csv', overwrite=True)
+c_bur.write('bur_mini_updated.csv', format='ascii.csv', overwrite=True)
 #c_scale.write('gal_scale.csv', format='ascii.csv',overwrite=True)
 #c_iso_MCMC.write('iso_mcmc.csv', format='ascii.csv', overwrite=True)
 #c_nfw_MCMC.write('nfw_mcmc.csv', format='ascii.csv', overwrite=True)
