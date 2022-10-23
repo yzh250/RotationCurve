@@ -146,7 +146,7 @@ for i in range(len(plate)):
 #writer_iso.writerow(['galaxy_ID', 'A', 'Vin', 'SigD', 'Rd', 'rho0_h', 'Rh', 'incl', 'phi', 'x_cen', 'y_cen','Vsys','chi2'])
 c_iso = Table()
 c_iso['galaxy_ID'] = galaxy_ID
-c_iso['tidal'] = np.nan
+#c_iso['tidal'] = np.nan
 c_iso['smoothness'] = np.nan
 c_iso['Ttype'] = np.nan
 c_iso['rho0_b'] = np.nan
@@ -168,7 +168,7 @@ c_iso['chi2'] = np.nan
 #writer_nfw.writerow(['galaxy_ID', 'A', 'Vin', 'SigD', 'Rd', 'rho0_h', 'Rh', 'incl', 'phi', 'x_cen', 'y_cen','Vsys','chi2'])
 c_nfw = Table()
 c_nfw['galaxy_ID'] = galaxy_ID
-c_nfw['tidal'] = np.nan
+#c_nfw['tidal'] = np.nan
 c_nfw['smoothness'] = np.nan
 c_nfw['Ttype'] = np.nan
 c_nfw['rho0_b'] = np.nan
@@ -190,7 +190,7 @@ c_nfw['chi2'] = np.nan
 #writer_bur.writerow(['galaxy_ID', 'A', 'Vin', 'SigD', 'Rd', 'rho0_h', 'Rh', 'incl', 'phi', 'x_cen', 'y_cen','Vsys','chi2'])
 c_bur = Table()
 c_bur['galaxy_ID'] = galaxy_ID
-c_bur['tidal'] = np.nan
+#c_bur['tidal'] = np.nan
 c_bur['smoothness'] = np.nan
 c_bur['Ttype'] = np.nan
 c_bur['rho0_b'] = np.nan
@@ -319,9 +319,9 @@ for i in range(len(galaxy_ID)):
         #tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
         tidal = getTidal(galaxy_ID[i], SMOOTHNESS_MORPH_FOLDER)
 
-        c_iso['tidal'][i] = tidal
-        c_nfw['tidal'][i] = tidal
-        c_bur['tidal'][i] = tidal
+        #c_iso['tidal'][i] = tidal
+        #c_nfw['tidal'][i] = tidal
+        #c_bur['tidal'][i] = tidal
 
         Ttype = 0
         if galaxy_ID[i] == gal_ID_cross[i]:
