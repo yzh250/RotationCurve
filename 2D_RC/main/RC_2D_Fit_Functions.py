@@ -1020,7 +1020,13 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
 
     data_maps, gshape = Galaxy_Data(gal_ID,VEL_MAP_FOLDER)
 
-    data_map = data_maps['vmasked']
+    #data_map = data_maps['vmasked']
+
+    SN_map = data_maps['Ha_flux'] * np.sqrt(data_maps['Ha_flux_ivar'])
+    Ha_vel_mask = data_maps['Ha_vel_mask'] + (SN_map < 5)
+
+    vmasked = ma.array(data_maps['Ha_vel'], mask = Ha_vel_mask)
+    ivar_masked = ma.array(data_maps['Ha_vel_ivar'], mask = Ha_vel_mask)
 
     model_guesses = [-1, 1, 1000, 4, -3, 25]
 
@@ -1047,9 +1053,9 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
                                                 log_prob_iso, 
                                                 args=(scale, 
                                                       gshape, 
-                                                      data_maps['vmasked'], 
-                                                      data_maps['ivar_masked'], 
-                                                      data_maps['Ha_vel_mask']))
+                                                      vmasked, 
+                                                      ivar_masked, 
+                                                      Ha_vel_mask))
 
         print('bad sampler iso',flush=True)
 
@@ -1112,9 +1118,9 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
                                                 log_prob_NFW, 
                                                 args=(scale, 
                                                       gshape, 
-                                                      data_maps['vmasked'], 
-                                                      data_maps['ivar_masked'], 
-                                                      data_maps['Ha_vel_mask']))
+                                                      vmasked, 
+                                                      ivar_masked, 
+                                                      Ha_vel_mask))
 
         print('bad sampler NFW',flush=True)
 
@@ -1175,9 +1181,9 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
                                                 log_prob_bur, 
                                                 args=(scale, 
                                                       gshape, 
-                                                      data_maps['vmasked'], 
-                                                      data_maps['ivar_masked'], 
-                                                      data_maps['Ha_vel_mask']))
+                                                      vmasked, 
+                                                      ivar_masked, 
+                                                      Ha_vel_mask))
 
         print('bad sampler bur',flush=True)
 
