@@ -97,15 +97,15 @@ fit_mini_iso = ascii.read(fit_mini_iso_name,'r')
 ################################################################################
 
 ################################################################################
-galaxy_ID = []
+gal_ID = []
 plateifu = DTable['plateifu'].data
 
 for i in range(len(plateifu)):
-    galaxy_ID.append(str(plateifu[i],'utf-8'))
+    gal_ID.append(str(plateifu[i],'utf-8'))
 ################################################################################
 
 c_iso_MCMC = Table()
-c_iso_MCMC['galaxy_ID'] = galaxy_ID
+c_iso_MCMC['gal_ID'] = gal_ID
 c_iso_MCMC['rho0_b'] = np.nan
 c_iso_MCMC['Rb'] = np.nan
 c_iso_MCMC['SigD'] = np.nan
@@ -129,7 +129,7 @@ for i in range(len(fit_mini_iso)):
 
     plate, IFU = gal_ID.split('-')
 
-    data_file = VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + galaxy_ID[i] + '-MAPS-HYB10-MILESHC-MASTARSSP.fits.gz'
+    data_file = VEL_MAP_FOLDER + plate + '/' + IFU + '/manga-' + gal_ID[i] + '-MAPS-HYB10-MILESHC-MASTARSSP.fits.gz'
 
     j = DRP_index[gal_ID]
 
@@ -147,7 +147,7 @@ for i in range(len(fit_mini_iso)):
 
     print('Incl calculated: ' + str(incl), flush=True)
 
-    data_maps, gshape = Galaxy_Data(galaxy_ID[i],VEL_MAP_FOLDER)
+    data_maps, gshape = Galaxy_Data(gal_ID[i],VEL_MAP_FOLDER)
 
     #-----------------------------------------------------------------------
 
@@ -155,8 +155,8 @@ for i in range(len(fit_mini_iso)):
     # Selection
     #-----------------------------------------------------------------------
     # Morphological cut
-    #tidal = getTidal(galaxy_ID[i], MORPH_FOLDER)
-    #tidal = getTidal(galaxy_ID[i], SMOOTHNESS_MORPH_FOLDER)
+    #tidal = getTidal(gal_ID[i], MORPH_FOLDER)
+    #tidal = getTidal(gal_ID[i], SMOOTHNESS_MORPH_FOLDER)
 
     # Smoothness cut
     '''
@@ -191,7 +191,7 @@ for i in range(len(fit_mini_iso)):
     # center coordinates
     center_coord = (x_center_guess, y_center_guess)
 
-    if galaxy_ID[i] in ['8466-12705']:
+    if gal_ID[i] in ['8466-12705']:
         center_coord = (37,42)
 
         ####################################################################
@@ -202,47 +202,47 @@ for i in range(len(fit_mini_iso)):
 
     phi_guess = find_phi(center_coord, phi[j], vmasked)
 
-    if galaxy_ID[i] in ['8134-6102']:
+    if gal_ID[i] in ['8134-6102']:
         phi_guess += 0.25 * np.pi
 
-    elif galaxy_ID[i] in ['8932-12704', '8252-6103']:
+    elif gal_ID[i] in ['8932-12704', '8252-6103']:
         phi_guess -= 0.25 * np.pi
 
-    elif galaxy_ID[i] in ['8613-12703', '8726-1901', '8615-1901', '8325-9102',
+    elif gal_ID[i] in ['8613-12703', '8726-1901', '8615-1901', '8325-9102',
                           '8274-6101', '9027-12705', '9868-12702', '8135-1901',
                           '7815-1901', '8568-1901', '8989-1902', '8458-3701',
                           '9000-1901', '9037-3701', '8456-6101']:
         phi_guess += 0.5 * np.pi
 
-    elif galaxy_ID[i] in ['9864-3702', '8601-1902']:
+    elif gal_ID[i] in ['9864-3702', '8601-1902']:
         phi_guess -= 0.5 * np.pi
 
-    elif galaxy_ID[i] in ['9502-12702']:
+    elif gal_ID[i] in ['9502-12702']:
         phi_guess += 0.75 * np.pi
 
-    elif galaxy_ID[i] in ['7495-6104']:
+    elif gal_ID[i] in ['7495-6104']:
         phi_guess -= 0.8 * np.pi
 
-    elif galaxy_ID[i] in ['7495-12704','7815-6103','9029-12705', '8137-3701', '8618-3704', '8323-12701',
+    elif gal_ID[i] in ['7495-12704','7815-6103','9029-12705', '8137-3701', '8618-3704', '8323-12701',
                           '8942-3703', '8333-12701', '8615-6103', '9486-3704',
                           '8937-1902', '9095-3704', '8466-1902', '9508-3702',
                           '8727-3703', '8341-12704', '8655-6103']:
         phi_guess += np.pi
 
-    elif galaxy_ID[i] in ['7815-9102']:
+    elif gal_ID[i] in ['7815-9102']:
         phi_guess -= np.pi
 
-    elif galaxy_ID[i] in ['7443-9101', '7443-3704']:
+    elif gal_ID[i] in ['7443-9101', '7443-3704']:
         phi_guess -= 1.06 * np.pi
 
-    elif galaxy_ID[i] in ['8082-1901', '8078-3703', '8551-1902', '9039-3703',
+    elif gal_ID[i] in ['8082-1901', '8078-3703', '8551-1902', '9039-3703',
                           '8624-1902', '8948-12702', '8443-6102', '8259-1901']:
         phi_guess += 1.5 * np.pi
 
-    elif galaxy_ID[i] in ['8241-12705', '8326-6102']:
+    elif gal_ID[i] in ['8241-12705', '8326-6102']:
         phi_guess += 1.75 * np.pi
 
-    elif galaxy_ID[i] in ['7443-6103']:
+    elif gal_ID[i] in ['7443-6103']:
         phi_guess += 2.3 * np.pi
 
     # phi value
@@ -258,8 +258,8 @@ for i in range(len(fit_mini_iso)):
     print(Rb,Rd,Rh,flush=True)
     
     if not (Rb < Rd and Rd < Rh):
-        print('fitting MCMC ' + galaxy_ID[i],flush=True)
-        Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(galaxy_ID[i],VEL_MAP_FOLDER,parameters,scale,'iso')
+        print('fitting MCMC ' + gal_ID[i],flush=True)
+        Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(gal_ID[i],VEL_MAP_FOLDER,parameters,scale,'iso')
         c_iso_MCMC['rho0_b'][i] = Isothermal_fit_MCMC[0]
         c_iso_MCMC['Rb'][i] = Isothermal_fit_MCMC[1]
         c_iso_MCMC['SigD'][i] = Isothermal_fit_MCMC[2]
@@ -273,7 +273,7 @@ for i in range(len(fit_mini_iso)):
         c_iso_MCMC['Vsys'][i] = Isothermal_fit_MCMC[10]
         c_iso_MCMC['chi2'][i] = chi2_iso_norm_MCMC
     else:
-        print(galaxy_ID[i] + ' good fits from minimize with physical values',flush=True)
+        print(gal_ID[i] + ' good fits from minimize with physical values',flush=True)
         
 c_iso_MCMC.write('iso_mcmc_corr_mini.csv', format='ascii.csv', overwrite=True)
 
