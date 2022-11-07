@@ -1092,7 +1092,7 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
 
         print('fitted map generated',flush=True)
 
-        mfitted_map_mcmc_iso = ma.array(fitted_map_mcmc_iso, mask=data_maps['Ha_vel_mask'])
+        mfitted_map_mcmc_iso = ma.array(fitted_map_mcmc_iso, mask=Ha_vel_mask)
 
         print('masked map generated',flush=True)
 
@@ -1101,7 +1101,7 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
         print('number of data calculated',flush=True)
 
         # chi2_iso = np.nansum((vmasked - vmap_iso) ** 2 * Ha_vel_ivar)
-        chi2_iso_mcmc = ma.sum(data_maps['Ha_vel_ivar'] * (data_map - mfitted_map_mcmc_iso) ** 2)
+        chi2_iso_mcmc = ma.sum(ivar_masked * (vmasked - mfitted_map_mcmc_iso) ** 2)
 
         print('chi2 calculated',flush=True)
 
@@ -1157,7 +1157,7 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
 
         print('fitted map generated',flush=True)
 
-        mfitted_map_mcmc_NFW = ma.array(fitted_map_mcmc_NFW, mask=data_maps['Ha_vel_mask'])
+        mfitted_map_mcmc_NFW = ma.array(fitted_map_mcmc_NFW, mask=Ha_vel_mask)
 
         print('masked map generated',flush=True)
 
@@ -1165,7 +1165,7 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
 
         print('number of data calculated',flush=True)
 
-        chi2_NFW_mcmc = ma.sum(data_maps['Ha_vel_ivar'] * (data_map - mfitted_map_mcmc_NFW)**2)
+        chi2_NFW_mcmc = ma.sum(ivar_masked * (vmasked - mfitted_map_mcmc_NFW)**2)
 
         print('chi2 calculated',flush=True)
 
@@ -1220,7 +1220,7 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
 
         print('fitted map generated',flush=True)
 
-        mfitted_map_mcmc_bur = ma.array(fitted_map_mcmc_bur, mask=data_maps['Ha_vel_mask'])
+        mfitted_map_mcmc_bur = ma.array(fitted_map_mcmc_bur, mask=Ha_vel_mask)
 
         print('masked map generated',flush=True)
 
@@ -1228,7 +1228,7 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
 
         print('number of data calculated',flush=True)
 
-        chi2_bur_mcmc = ma.sum(data_maps['Ha_vel_ivar'] * (data_map - mfitted_map_mcmc_bur)**2)
+        chi2_bur_mcmc = ma.sum(ivar_masked * (vmasked - mfitted_map_mcmc_bur)**2)
 
         print('chi2 calculated',flush=True)
 
