@@ -97,15 +97,15 @@ fit_mini_iso = ascii.read(fit_mini_iso_name,'r')
 ################################################################################
 
 ################################################################################
-gal_ID = []
-plateifu = DTable['plateifu'].data
+#galaxy = []
+#plateifu = DTable['plateifu'].data
 
-for i in range(len(plateifu)):
-    gal_ID.append(str(plateifu[i],'utf-8'))
+#for i in range(len(plateifu)):
+    #gal_ID.append(str(plateifu[i],'utf-8'))
 ################################################################################
 
 c_iso_MCMC = Table()
-c_iso_MCMC['gal_ID'] = gal_ID
+c_iso_MCMC['gal_ID'] = np.nan
 c_iso_MCMC['rho0_b'] = np.nan
 c_iso_MCMC['Rb'] = np.nan
 c_iso_MCMC['SigD'] = np.nan
@@ -260,6 +260,7 @@ for i in range(len(fit_mini_iso)):
     if not (Rb < Rd and Rd < Rh):
         print('fitting MCMC ' + gal_ID[i],flush=True)
         Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(gal_ID[i],VEL_MAP_FOLDER,parameters,scale,'iso')
+        c_iso_MCMC['rho0_b'][i] = gal_ID
         c_iso_MCMC['rho0_b'][i] = Isothermal_fit_MCMC[0]
         c_iso_MCMC['Rb'][i] = Isothermal_fit_MCMC[1]
         c_iso_MCMC['SigD'][i] = Isothermal_fit_MCMC[2]
