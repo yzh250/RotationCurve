@@ -120,7 +120,7 @@ c_iso_MCMC['Vsys'] = np.nan
 c_iso_MCMC['chi2'] = np.nan
 
 ################################################################################
-for i in range(len(fit_mini_iso[:120])):
+for i in range(len(fit_mini_iso[1680:1800])):
     # obtain galaxy data & initial guess parameters
 
     gal_fit = list(fit_mini_iso[i])
