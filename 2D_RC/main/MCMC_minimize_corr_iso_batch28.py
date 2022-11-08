@@ -120,7 +120,7 @@ c_iso_MCMC['Vsys'] = np.nan
 c_iso_MCMC['chi2'] = np.nan
 
 ################################################################################
-for i in range(len(fit_mini_iso[2880:3000])):
+for i in range(len(fit_mini_iso[3240:3360])):
     # obtain galaxy data & initial guess parameters
 
     gal_fit = list(fit_mini_iso[i])
@@ -276,5 +276,5 @@ for i in range(len(fit_mini_iso[2880:3000])):
     else:
         print(gal_ID + ' good fits from minimize with physical values',flush=True)
         
-c_iso_MCMC.write('iso_mcmc_corr_mini_b25.csv', format='ascii.csv', overwrite=True)
+c_iso_MCMC.write('iso_mcmc_corr_mini_b28.csv', format='ascii.csv', overwrite=True)
 
