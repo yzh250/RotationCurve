@@ -120,7 +120,7 @@ c_nfw_MCMC['Vsys'] = np.nan
 c_nfw_MCMC['chi2'] = np.nan
 
 ################################################################################
-for i in range(len(fit_mini_nfw[120:240])):
+for i in range(len(fit_mini_nfw[2160:2280])):
     # obtain galaxy data & initial guess parameters
 
     gal_fit = list(fit_mini_nfw[i])
@@ -276,5 +276,5 @@ for i in range(len(fit_mini_nfw[120:240])):
     else:
         print(gal_ID + ' good fits from minimize with physical values',flush=True)
         
-c_nfw_MCMC.write('nfw_mcmc_corr_mini_b2.csv', format='ascii.csv', overwrite=True)
+c_nfw_MCMC.write('nfw_mcmc_corr_mini_b19.csv', format='ascii.csv', overwrite=True)
 
