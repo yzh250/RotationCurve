@@ -276,5 +276,5 @@ for i in range(len(fit_mini_iso[3600:-1])):
     else:
         print(gal_ID + ' good fits from minimize with physical values',flush=True)
         
-c_iso_MCMC.write('iso_mcmc_corr_mini_b25.csv', format='ascii.csv', overwrite=True)
+c_iso_MCMC.write('iso_mcmc_corr_mini_b31.csv', format='ascii.csv', overwrite=True)
 
