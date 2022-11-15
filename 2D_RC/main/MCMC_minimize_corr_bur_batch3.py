@@ -15,14 +15,14 @@ import time
 from Velocity_Map_Functions import find_phi
 
 from RC_2D_Fit_Functions import Galaxy_Data, \
-                                Galaxy_Fitting_bur,\
+                                Galaxy_Fitting_iso,\
+                                Galaxy_Fitting_NFW, \
                                 Galaxy_Fitting_bur, \
-                                Galaxy_Fitting_bur, \
-                                Hessian_Calculation_bur,\
-                                Hessian_Calculation_bur,\
+                                Hessian_Calculation_Isothermal,\
+                                Hessian_Calculation_NFW,\
                                 Hessian_Calculation_Burket,\
-                                Plotting_bur,\
-                                Plotting_bur,\
+                                Plotting_Isothermal,\
+                                Plotting_NFW,\
                                 Plotting_Burkert,\
                                 getTidal,\
                                 deproject_spaxel,\
@@ -30,8 +30,8 @@ from RC_2D_Fit_Functions import Galaxy_Data, \
                                 plot_diagnostic_panel,\
                                 run_MCMC
 
-from Velocity_Map_Functions_cython import rot_incl_bur,\
-                                          rot_incl_bur, \
+from Velocity_Map_Functions_cython import rot_incl_iso,\
+                                          rot_incl_NFW, \
                                           rot_incl_bur
 
 from mapSmoothness_functions import how_smooth
