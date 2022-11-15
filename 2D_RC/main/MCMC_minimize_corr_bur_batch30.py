@@ -120,7 +120,7 @@ c_bur_MCMC['Vsys'] = np.nan
 c_bur_MCMC['chi2'] = np.nan
 
 ################################################################################
-for i in range(len(fit_mini_bur[3480:3600])):
+for i in range(len(fit_mini_bur[3480:-1])):
     # obtain galaxy data & initial guess parameters
 
     gal_fit = list(fit_mini_bur[i])
