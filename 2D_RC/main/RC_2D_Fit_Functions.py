@@ -1112,7 +1112,7 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
 
         return samples_mean_iso, chi2_iso_norm_mcmc
     #-------------------------------------------------------------------------------
-    elif model == 'NFW':
+    elif model == 'nfw':
         bad_sampler_NFW = emcee.EnsembleSampler(nwalkers, 
                                                 ndim, 
                                                 log_prob_NFW, 

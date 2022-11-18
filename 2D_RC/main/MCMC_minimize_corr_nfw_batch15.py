@@ -93,7 +93,8 @@ r50_ang = DTable['nsa_elpetro_th50_r']
 ################################################################################
 # Importing fitted values & chi2 for each galaxy
 fit_mini_nfw_name = SMOOTHNESS_MORPH_FOLDER + 'nfw_mini_clean2.csv'
-fit_mini_nfw = ascii.read(fit_mini_nfw_name,'r')
+fit_mini_nfw_table = ascii.read(fit_mini_nfw_name,'r')
+fit_mini_nfw = fit_mini_nfw_table[1680:1800]
 ################################################################################
 
 ################################################################################
@@ -120,7 +121,7 @@ c_nfw_MCMC['Vsys'] = np.nan
 c_nfw_MCMC['chi2'] = np.nan
 
 ################################################################################
-for i in range(len(fit_mini_nfw[1680:1800])):
+for i in range(len(fit_mini_nfw)):
     # obtain galaxy data & initial guess parameters
 
     gal_fit = list(fit_mini_nfw[i])
