@@ -1067,10 +1067,10 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
 
         ns_iso, nw_iso, nd_iso = bad_samples_iso.shape
 
-        np.save('bad_samples_iso_' + gal_ID + '_comb.npy', bad_samples_iso)
+        #np.save('bad_samples_iso_' + gal_ID + '_comb.npy', bad_samples_iso)
 
         good_walkers_iso = bad_sampler_iso.acceptance_fraction > 0
-        np.save('good_walkers_iso_' + gal_ID + '_comb.npy', good_walkers_iso)
+        #np.save('good_walkers_iso_' + gal_ID + '_comb.npy', good_walkers_iso)
 
         good_samples_iso = bad_samples_iso[:,good_walkers_iso,:]
 
@@ -1132,10 +1132,10 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
 
         ns_NFW, nw_NFW, nd_NFW = bad_samples_NFW.shape
 
-        np.save('bad_samples_NFW_' + gal_ID + '_comb.npy', bad_samples_NFW)
+        #np.save('bad_samples_NFW_' + gal_ID + '_comb.npy', bad_samples_NFW)
 
         good_walkers_NFW = bad_sampler_NFW.acceptance_fraction > 0
-        np.save('good_walkers_NFW_' + gal_ID + '_comb.npy', good_walkers_NFW)
+        #np.save('good_walkers_NFW_' + gal_ID + '_comb.npy', good_walkers_NFW)
 
         good_samples_NFW = bad_samples_NFW[:,good_walkers_NFW,:]
 
@@ -1195,10 +1195,10 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
 
         ns_bur, nw_bur, nd_bur = bad_samples_bur.shape
 
-        np.save('bad_samples_bur_' + gal_ID + '_comb.npy', bad_samples_bur)
+        #np.save('bad_samples_bur_' + gal_ID + '_comb.npy', bad_samples_bur)
 
         good_walkers_bur = bad_sampler_bur.acceptance_fraction > 0
-        np.save('good_walkers_bur_' + gal_ID + '_comb.npy', good_walkers_bur)
+        #np.save('good_walkers_bur_' + gal_ID + '_comb.npy', good_walkers_bur)
 
         good_samples_bur = bad_samples_bur[:,good_walkers_bur,:]
 
