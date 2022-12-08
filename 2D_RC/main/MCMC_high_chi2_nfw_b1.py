@@ -261,7 +261,7 @@ for i in range(len(fit_mini_NFW)):
     
     if chi2 > 150 and chi2 <= 200:
         print('fitting MCMC ' + gal_ID,flush=True)
-        NFW_fit_MCMC, chi2_NFW_norm_MCMC = run_MCMC(gal_ID,VEL_MAP_FOLDER,parameters,scale,'NFW')
+        NFW_fit_MCMC, chi2_NFW_norm_MCMC = run_MCMC(gal_ID,VEL_MAP_FOLDER,parameters,scale,'nfw')
         #c_NFW_MCMC['rho0_b'][i] = gal_ID
         c_NFW_MCMC['rho0_b'][i] = NFW_fit_MCMC[0]
         c_NFW_MCMC['Rb'][i] = NFW_fit_MCMC[1]
