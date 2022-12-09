@@ -16,13 +16,13 @@ from Velocity_Map_Functions import find_phi
 
 from RC_2D_Fit_Functions import Galaxy_Data, \
                                 Galaxy_Fitting_iso,\
-                                Galaxy_Fitting_bur, \
+                                Galaxy_Fitting_NFW, \
                                 Galaxy_Fitting_bur, \
                                 Hessian_Calculation_Isothermal,\
-                                Hessian_Calculation_bur,\
+                                Hessian_Calculation_NFW,\
                                 Hessian_Calculation_Burket,\
                                 Plotting_Isothermal,\
-                                Plotting_bur,\
+                                Plotting_NFW,\
                                 Plotting_Burkert,\
                                 getTidal,\
                                 deproject_spaxel,\
@@ -38,7 +38,7 @@ from mapSmoothness_functions import how_smooth
 
 from os import path
 
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plts
 ################################################################################
 
 ################################################################################
