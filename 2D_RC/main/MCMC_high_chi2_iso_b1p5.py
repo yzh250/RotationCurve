@@ -92,9 +92,9 @@ r50_ang = DTable['nsa_elpetro_th50_r']
 
 ################################################################################
 # Importing fitted values & chi2 for each galaxy
-fit_mini_NFW_name = SMOOTHNESS_MORPH_FOLDER + 'nfw_mini_bad.csv'
-fit_mini_NFW_table = ascii.read(fit_mini_NFW_name,'r')
-fit_mini_NFW = fit_mini_NFW_table
+fit_mini_iso_name = SMOOTHNESS_MORPH_FOLDER + 'iso_mini_bad.csv'
+fit_mini_iso_table = ascii.read(fit_mini_iso_name,'r')
+fit_mini_iso = fit_mini_iso_table
 ################################################################################
 
 ################################################################################
@@ -105,26 +105,26 @@ fit_mini_NFW = fit_mini_NFW_table
     #gal_ID.append(str(plateifu[i],'utf-8'))
 ################################################################################
 
-c_NFW_MCMC = Table()
-c_NFW_MCMC['gal_ID'] = fit_mini_NFW['galaxy_ID']
-c_NFW_MCMC['rho0_b'] = np.nan
-c_NFW_MCMC['Rb'] = np.nan
-c_NFW_MCMC['SigD'] = np.nan
-c_NFW_MCMC['Rd'] = np.nan
-c_NFW_MCMC['rho0_h'] = np.nan
-c_NFW_MCMC['Rh'] = np.nan
-c_NFW_MCMC['incl'] = np.nan
-c_NFW_MCMC['phi'] = np.nan
-c_NFW_MCMC['x_cen'] = np.nan
-c_NFW_MCMC['y_cen'] = np.nan
-c_NFW_MCMC['Vsys'] = np.nan
-c_NFW_MCMC['chi2'] = np.nan
+c_iso_MCMC = Table()
+c_iso_MCMC['gal_ID'] = fit_mini_iso['galaxy_ID']
+c_iso_MCMC['rho0_b'] = np.nan
+c_iso_MCMC['Rb'] = np.nan
+c_iso_MCMC['SigD'] = np.nan
+c_iso_MCMC['Rd'] = np.nan
+c_iso_MCMC['rho0_h'] = np.nan
+c_iso_MCMC['Rh'] = np.nan
+c_iso_MCMC['incl'] = np.nan
+c_iso_MCMC['phi'] = np.nan
+c_iso_MCMC['x_cen'] = np.nan
+c_iso_MCMC['y_cen'] = np.nan
+c_iso_MCMC['Vsys'] = np.nan
+c_iso_MCMC['chi2'] = np.nan
 
 ################################################################################
-for i in range(len(fit_mini_NFW)):
+for i in range(len(fit_mini_iso)):
     # obtain galaxy data & initial guess parameters
 
-    gal_fit = list(fit_mini_NFW[i])
+    gal_fit = list(fit_mini_iso[i])
 
     gal_ID = gal_fit[0]
 
@@ -251,32 +251,32 @@ for i in range(len(fit_mini_NFW)):
 
     parameters = [incl, phi_guess, x_center_guess, y_center_guess]
 
-    NFW_fit_mini = gal_fit
-    #Rb = NFW_fit_mini[4]
-    #Rd = NFW_fit_mini[6]
-    #Rh = NFW_fit_mini[8]
-    chi2 = NFW_fit_mini[-1]
+    Isothermal_fit_mini = gal_fit
+    #Rb = Isothermal_fit_mini[4]
+    #Rd = Isothermal_fit_mini[6]
+    #Rh = Isothermal_fit_mini[8]
+    chi2 = Isothermal_fit_mini[-1]
 
     #print(Rb,Rd,Rh,flush=True)
     
-    if chi2 > 150 and chi2 <= 170:
+    if chi2 > 170 and chi2 <= 200:
         print('fitting MCMC ' + gal_ID,flush=True)
-        NFW_fit_MCMC, chi2_NFW_norm_MCMC = run_MCMC(gal_ID,VEL_MAP_FOLDER,parameters,scale,'nfw')
-        #c_NFW_MCMC['rho0_b'][i] = gal_ID
-        c_NFW_MCMC['rho0_b'][i] = NFW_fit_MCMC[0]
-        c_NFW_MCMC['Rb'][i] = NFW_fit_MCMC[1]
-        c_NFW_MCMC['SigD'][i] = NFW_fit_MCMC[2]
-        c_NFW_MCMC['Rd'][i] = NFW_fit_MCMC[3]
-        c_NFW_MCMC['rho0_h'][i] = NFW_fit_MCMC[4]
-        c_NFW_MCMC['Rh'][i] = NFW_fit_MCMC[5]
-        c_NFW_MCMC['incl'][i] = NFW_fit_MCMC[6]
-        c_NFW_MCMC['phi'][i] = NFW_fit_MCMC[7]
-        c_NFW_MCMC['x_cen'][i] = NFW_fit_MCMC[8]
-        c_NFW_MCMC['y_cen'][i] = NFW_fit_MCMC[9]
-        c_NFW_MCMC['Vsys'][i] = NFW_fit_MCMC[10]
-        c_NFW_MCMC['chi2'][i] = chi2_NFW_norm_MCMC
+        Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(gal_ID,VEL_MAP_FOLDER,parameters,scale,'iso')
+        #c_iso_MCMC['rho0_b'][i] = gal_ID
+        c_iso_MCMC['rho0_b'][i] = Isothermal_fit_MCMC[0]
+        c_iso_MCMC['Rb'][i] = Isothermal_fit_MCMC[1]
+        c_iso_MCMC['SigD'][i] = Isothermal_fit_MCMC[2]
+        c_iso_MCMC['Rd'][i] = Isothermal_fit_MCMC[3]
+        c_iso_MCMC['rho0_h'][i] = Isothermal_fit_MCMC[4]
+        c_iso_MCMC['Rh'][i] = Isothermal_fit_MCMC[5]
+        c_iso_MCMC['incl'][i] = Isothermal_fit_MCMC[6]
+        c_iso_MCMC['phi'][i] = Isothermal_fit_MCMC[7]
+        c_iso_MCMC['x_cen'][i] = Isothermal_fit_MCMC[8]
+        c_iso_MCMC['y_cen'][i] = Isothermal_fit_MCMC[9]
+        c_iso_MCMC['Vsys'][i] = Isothermal_fit_MCMC[10]
+        c_iso_MCMC['chi2'][i] = chi2_iso_norm_MCMC
     else:
         print(gal_ID + ' good fits from minimize with physical values',flush=True)
         
-c_NFW_MCMC.write('NFW_mcmc_high_chi2_b1.csv', format='ascii.csv', overwrite=True)
+c_iso_MCMC.write('iso_mcmc_high_chi2_b1p5.csv', format='ascii.csv', overwrite=True)
 

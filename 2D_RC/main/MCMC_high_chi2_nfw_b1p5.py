@@ -259,7 +259,7 @@ for i in range(len(fit_mini_NFW)):
 
     #print(Rb,Rd,Rh,flush=True)
     
-    if chi2 > 150 and chi2 <= 170:
+    if chi2 > 170 and chi2 <= 200:
         print('fitting MCMC ' + gal_ID,flush=True)
         NFW_fit_MCMC, chi2_NFW_norm_MCMC = run_MCMC(gal_ID,VEL_MAP_FOLDER,parameters,scale,'nfw')
         #c_NFW_MCMC['rho0_b'][i] = gal_ID
@@ -278,5 +278,5 @@ for i in range(len(fit_mini_NFW)):
     else:
         print(gal_ID + ' good fits from minimize with physical values',flush=True)
         
-c_NFW_MCMC.write('NFW_mcmc_high_chi2_b1.csv', format='ascii.csv', overwrite=True)
+c_NFW_MCMC.write('NFW_mcmc_high_chi2_b1p5.csv', format='ascii.csv', overwrite=True)
 
