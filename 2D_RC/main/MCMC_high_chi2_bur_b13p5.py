@@ -38,7 +38,7 @@ from mapSmoothness_functions import how_smooth
 
 from os import path
 
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plts
 ################################################################################
 
 ################################################################################
@@ -259,7 +259,7 @@ for i in range(len(fit_mini_bur)):
 
     #print(Rb,Rd,Rh,flush=True)
     
-    if chi2 > 5000 and chi2 <= 11000:
+    if chi2 > 1500 and chi2 <= 2000:
         print('fitting MCMC ' + gal_ID,flush=True)
         bur_fit_MCMC, chi2_bur_norm_MCMC = run_MCMC(gal_ID,VEL_MAP_FOLDER,parameters,scale,'bur')
         #c_bur_MCMC['rho0_b'][i] = gal_ID
@@ -278,5 +278,5 @@ for i in range(len(fit_mini_bur)):
     else:
         print(gal_ID + ' good fits from minimize with physical values',flush=True)
         
-c_bur_MCMC.write('bur_mcmc_high_chi2_b17.csv', format='ascii.csv', overwrite=True)
+c_bur_MCMC.write('bur_mcmc_high_chi2_b13p5.csv', format='ascii.csv', overwrite=True)
 
