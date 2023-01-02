@@ -262,6 +262,7 @@ for i in range(len(fit_mini_iso)):
     #if chi2 > 5000:
     print('fitting MCMC ' + gal_ID,flush=True)
     Isothermal_fit_MCMC, chi2_iso_norm_MCMC = run_MCMC(gal_ID,VEL_MAP_FOLDER,parameters,scale,'iso')
+    print(Isothermal_fit_MCMC)
     #c_iso_MCMC['rho0_b'][i] = gal_ID
     c_iso_MCMC['rho0_b'][i] = Isothermal_fit_MCMC[0]
     c_iso_MCMC['Rb'][i] = Isothermal_fit_MCMC[1]
