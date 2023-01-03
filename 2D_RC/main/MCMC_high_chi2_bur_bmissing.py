@@ -262,6 +262,7 @@ for i in range(len(fit_mini_bur)):
     #if chi2 > 11000:
     print('fitting MCMC ' + gal_ID,flush=True)
     bur_fit_MCMC, chi2_bur_norm_MCMC = run_MCMC(gal_ID,VEL_MAP_FOLDER,parameters,scale,'bur')
+    print(bur_fit_MCMC)
     #c_bur_MCMC['rho0_b'][i] = gal_ID
     c_bur_MCMC['rho0_b'][i] = bur_fit_MCMC[0]
     c_bur_MCMC['Rb'][i] = bur_fit_MCMC[1]

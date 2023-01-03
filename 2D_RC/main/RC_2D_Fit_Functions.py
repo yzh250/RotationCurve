@@ -1086,6 +1086,8 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
             trimmed_flat_good_samples_iso = good_samples_iso[4000:,:,:].reshape(6000*nw_iso, nd_iso)
             samples_mean_iso = np.mean(trimmed_flat_good_samples_iso, axis=0)
 
+        print(samples_mean_iso)
+
         print('MCMC fits generated',flush=True)
 
         fitted_map_mcmc_iso = rot_incl_iso(gshape, scale, np.ndarray.tolist(samples_mean_iso))
@@ -1151,6 +1153,8 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
             trimmed_flat_good_samples_NFW = good_samples_NFW[4000:,:,:].reshape(6000*nw_NFW, nd_NFW)
             samples_mean_NFW = np.mean(trimmed_flat_good_samples_NFW, axis=0)
 
+        print(samples_mean_NFW)
+
         print('MCMC fits generated',flush=True)
 
         fitted_map_mcmc_NFW = rot_incl_NFW(gshape, scale, np.ndarray.tolist(samples_mean_NFW))
@@ -1213,6 +1217,8 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
         else:
             trimmed_flat_good_samples_bur = good_samples_bur[4000:,:,:].reshape(6000*nw_bur, nd_bur)
             samples_mean_bur = np.mean(trimmed_flat_good_samples_bur, axis=0)
+
+        print(samples_mean_bur)
 
         print('MCMC fits generated',flush=True)
 
