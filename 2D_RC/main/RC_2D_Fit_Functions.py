@@ -1042,7 +1042,8 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
 
     pos_combined = np.column_stack((pos_model,pos_geo))
 
-    print('initial guess generated',flush=True)
+    print('initial guesses generated: ' ,flush=True)
+    print(pos_combined ,flush=True)
 
     nwalkers, ndim = pos_combined.shape
     #-------------------------------------------------------------------------------
@@ -1079,14 +1080,27 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
         # Check if there are walkers being left out
         # Make the general cut at 4000 steps
         if good_samples_iso.shape != bad_samples_iso.shape:
+            print("Inconsistent shapes")
             ns_iso_good, nw_iso_good, nd_iso_good = good_samples_iso[4000:,:,:].shape
             trimmed_flat_good_samples_iso = good_samples_iso[4000:,:,:].reshape(6000*nw_iso_good, nd_iso_good)
             samples_mean_iso = np.mean(trimmed_flat_good_samples_iso, axis=0)
+            print(samples_mean_iso)
         else:
             trimmed_flat_good_samples_iso = good_samples_iso[4000:,:,:].reshape(6000*nw_iso, nd_iso)
             samples_mean_iso = np.mean(trimmed_flat_good_samples_iso, axis=0)
+            print(samples_mean_iso)
 
-        print(samples_mean_iso)
+        # In case the trimming is too much
+        if not (np.isfinite(samples_mean_iso[-1])):
+            if good_samples_iso.shape != bad_samples_iso.shape:
+                ns_iso_good, nw_iso_good, nd_iso_good = good_samples_iso.shape
+                flat_good_samples_iso = good_samples_iso.reshape(ns_iso_good*nw_iso_good, nd_iso_good)
+                samples_mean_iso = np.mean(flat_good_samples_iso, axis=0)
+                print(samples_mean_iso)
+            else:
+                flat_good_samples_iso = good_samples_iso.reshape(ns_iso*nw_iso, nd_iso)
+                samples_mean_iso = np.mean(flat_good_samples_iso, axis=0)
+                print(samples_mean_iso)
 
         print('MCMC fits generated',flush=True)
 
@@ -1146,14 +1160,28 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
         # Check if there are walkers being left out
         # Make the general cut at 4000 steps
         if good_samples_NFW.shape != bad_samples_NFW.shape:
+            print("Inconsistent shapes")
             ns_NFW_good, nw_NFW_good, nd_NFW_good = good_samples_NFW[4000:,:,:].shape
             trimmed_flat_good_samples_NFW = good_samples_NFW[4000:,:,:].reshape(6000*nw_NFW_good, nd_NFW_good)
             samples_mean_NFW = np.mean(trimmed_flat_good_samples_NFW, axis=0)
+            print(samples_mean_NFW)
         else:
             trimmed_flat_good_samples_NFW = good_samples_NFW[4000:,:,:].reshape(6000*nw_NFW, nd_NFW)
             samples_mean_NFW = np.mean(trimmed_flat_good_samples_NFW, axis=0)
+            print(samples_mean_NFW)
 
-        print(samples_mean_NFW)
+        # In case the trimming is too much
+        if not (np.isfinite(samples_mean_NFW[-1])):
+            if good_samples_NFW.shape != bad_samples_NFW.shape:
+                ns_NFW_good, nw_NFW_good, nd_NFW_good = good_samples_NFW.shape
+                flat_good_samples_NFW = good_samples_NFW.reshape(ns_NFW_good*nw_NFW_good, nd_NFW_good)
+                samples_mean_NFW = np.mean(flat_good_samples_NFW, axis=0)
+                print(samples_mean_NFW)
+            else:
+                flat_good_samples_NFW = good_samples_NFW.reshape(ns_NFW*nw_NFW, nd_NFW)
+                samples_mean_NFW = np.mean(flat_good_samples_NFW, axis=0)
+                print(samples_mean_NFW)
+
 
         print('MCMC fits generated',flush=True)
 
@@ -1211,14 +1239,27 @@ def run_MCMC(gal_ID,VEL_MAP_FOLDER,init_param_geo,scale,model):
         # Check if there are walkers being left out
         # Make the general cut at 4000 steps
         if good_samples_bur.shape != bad_samples_bur.shape:
+            print("Inconsistent shapes")
             ns_bur_good, nw_bur_good, nd_bur_good = good_samples_bur[4000:,:,:].shape
             trimmed_flat_good_samples_bur = good_samples_bur[4000:,:,:].reshape(6000*nw_bur_good, nd_bur_good)
             samples_mean_bur = np.mean(trimmed_flat_good_samples_bur, axis=0)
+            print(samples_mean_bur)
         else:
             trimmed_flat_good_samples_bur = good_samples_bur[4000:,:,:].reshape(6000*nw_bur, nd_bur)
             samples_mean_bur = np.mean(trimmed_flat_good_samples_bur, axis=0)
+            print(samples_mean_bur)
 
-        print(samples_mean_bur)
+        # In case the trimming is too much
+        if not (np.isfinite(samples_mean_bur[-1])):
+            if good_samples_bur.shape != bad_samples_bur.shape:
+                ns_bur_good, nw_bur_good, nd_bur_good = good_samples_bur.shape
+                flat_good_samples_bur = good_samples_bur.reshape(ns_bur_good*nw_bur_good, nd_bur_good)
+                samples_mean_bur = np.mean(flat_good_samples_bur, axis=0)
+                print(samples_mean_bur)
+            else:
+                flat_good_samples_bur = good_samples_bur.reshape(ns_bur*nw_bur, nd_bur)
+                samples_mean_bur = np.mean(flat_good_samples_bur, axis=0)
+                print(samples_mean_bur)
 
         print('MCMC fits generated',flush=True)
 
