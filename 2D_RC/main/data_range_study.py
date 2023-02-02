@@ -17,10 +17,10 @@ from RC_2D_Fit_Functions import Galaxy_Data, getTidal
 from Velocity_Map_Functions_cython import rot_incl_iso, rot_incl_NFW, rot_incl_bur
 
 #MANGA_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr17/manga/spectro/'
-#MANGA_FOLDER = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr17/manga/spectro/'
+MANGA_FOLDER = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr17/manga/spectro/'
 #MANGA_FOLDER = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/spectro/'
 
-#DRP_FILENAME = MANGA_FOLDER + 'redux/v3_1_1/drpall-v3_1_1.fits'
+DRP_FILENAME = MANGA_FOLDER + 'redux/v3_1_1/drpall-v3_1_1.fits'
 
 VEL_MAP_FOLDER = '/scratch/kdougla7/data/SDSS/dr17/manga/spectro/analysis/v3_1_1/3.1.0/HYB10-MILESHC-MASTARSSP/'
 
@@ -36,6 +36,38 @@ from galaxy_component_functions_cython import vel_tot_iso,\
                                               halo_vel_iso,\
                                               halo_vel_NFW,\
                                               halo_vel_bur
+
+################################################################################
+# Physics Constants
+#-------------------------------------------------------------------------------
+c = 3E5 # km * s ^1
+h = 1 # reduced hubble constant
+H_0 =  100 * h # km * s^-1 * Mpc^-1
+q0 = 0.2 # minimum inclination value
+################################################################################
+
+# DRP all table
+DTable =  Table.read(DRP_FILENAME, format='fits')
+
+#MTable =  Table.read(MORPH_file, format='fits')
+
+DRP_index = {}
+
+for i in range(len(DTable)):
+    gal_ID = DTable['plateifu'][i]
+
+    DRP_index[gal_ID] = i
+    
+m = DTable['nsa_elpetro_mass']
+rat = DTable['nsa_elpetro_ba']
+phi = DTable['nsa_elpetro_phi']
+z = DTable['nsa_z']
+r50_ang = DTable['nsa_elpetro_th50_r']
+
+r90_file = '/home/yzh250/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/r90.csv'
+################################################################################
+
+                                     
 
 # Important fitting results
 iso_fits = Table.read('iso_fits_final.csv',format='ascii.csv')
