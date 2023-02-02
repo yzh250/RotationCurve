@@ -36,7 +36,21 @@ from galaxy_component_functions_cython import vel_tot_iso,\
                                               halo_vel_iso,\
                                               halo_vel_NFW,\
                                               halo_vel_bur
-
+from RC_2D_Fit_Functions import Galaxy_Data, \
+                                Galaxy_Fitting_iso,\
+                                Galaxy_Fitting_NFW, \
+                                Galaxy_Fitting_bur, \
+                                Hessian_Calculation_Isothermal,\
+                                Hessian_Calculation_NFW,\
+                                Hessian_Calculation_Burket,\
+                                Plotting_Isothermal,\
+                                Plotting_NFW,\
+                                Plotting_Burkert,\
+                                getTidal,\
+                                deproject_spaxel,\
+                                plot_rot_curve,\
+                                plot_diagnostic_panel,\
+                                run_MCMC
 ################################################################################
 # Physics Constants
 #-------------------------------------------------------------------------------
