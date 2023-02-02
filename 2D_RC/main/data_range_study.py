@@ -244,7 +244,7 @@ for a in range(len(galaxy_ID_iso)):
 
     gal_ID = galaxy_ID_iso[a]
 
-    fit = list(iso_fits[a])[1:-1]
+    fit = list(iso_fits[a])[3:-1]
 
     vmasked, ivar_masked, incl, scale, r90, mfitted_map, r, v_d, v_h, v = get_info(gal_ID,fit, r90_file, 'iso')
 
@@ -257,7 +257,7 @@ for b in range(len(galaxy_ID_nfw)):
 
     gal_ID = galaxy_ID_nfw[b]
 
-    fit = list(nfw_fits[b])[1:-1]
+    fit = list(nfw_fits[b])[3:-1]
 
     vmasked, ivar_masked, incl, scale, r90, mfitted_map, r, v_d, v_h, v = get_info(gal_ID,fit, r90_file, 'nfw')
 
@@ -270,7 +270,7 @@ for c in range(len(galaxy_ID_iso)):
 
     gal_ID = galaxy_ID_bur[c]
 
-    fit = list(bur_fits[c])[1:-1]
+    fit = list(bur_fits[c])[3:-1]
 
     vmasked, ivar_masked, incl, scale, r90, mfitted_map, r, v_d, v_h, v = get_info(gal_ID,fit, r90_file, 'bur')
 
