@@ -320,7 +320,7 @@ for b in range(len(galaxy_ID_nfw)):
     r90_nfw.append(r90)
     rmax_nfw.append(np.max(rm_deproj))
 
-for c in range(len(galaxy_ID_iso)):
+for c in range(len(galaxy_ID_bur)):
 
     gal_ID = galaxy_ID_bur[c]
 
