@@ -1,0 +1,38 @@
+from astropy.io import ascii
+from astropy.table import Table,QTable
+import numpy as np
+import numpy.ma as ma
+#import pandas as pd
+#import corner
+import matplotlib.pyplot as plt
+#%matplotlib notebook
+#import emcee
+from astropy.io import fits
+from astropy.table import Table, QTable
+
+import sys
+sys.path.insert(1, '/Users/richardzhang/Documents/UR_Stuff/Research_UR/RotationCurve/2D_RC/main/')
+#sys.path.insert(1, '/Users/kellydouglass/Documents/Research/Rotation_curves/Yifan_Zhang/RotationCurve/2D_RC/main/')
+from RC_2D_Fit_Functions import Galaxy_Data, getTidal
+from Velocity_Map_Functions_cython import rot_incl_iso, rot_incl_NFW, rot_incl_bur
+
+MANGA_FOLDER = '/Users/richardzhang/Documents/UR_Stuff/Research_UR/SDSS/dr17/manga/spectro/'
+#MANGDA_FOLDER = '/home/yzh250/Documents/UR_Stuff/Research_UR/SDSS/dr16/manga/spectro/'
+#MANGA_FOLDER = '/Users/kellydouglass/Documents/Research/data/SDSS/dr16/manga/spectro/'
+
+DRP_FILENAME = MANGA_FOLDER + 'redux/v3_1_1/drpall-v3_1_1.fits'
+
+VEL_MAP_FOLDER = MANGA_FOLDER + 'analysis/v3_1_1/3.1.0/HYB10-GAU-MILESHC/'
+
+from Velocity_Map_Functions_cython import rot_incl_iso,\
+                                          rot_incl_NFW, \
+                                          rot_incl_bur           
+
+from galaxy_component_functions_cython import vel_tot_iso,\
+                                              vel_tot_NFW,\
+                                              vel_tot_bur,\
+                                              bulge_vel,\
+                                              disk_vel,\
+                                              halo_vel_iso,\
+                                              halo_vel_NFW,\
+                                              halo_vel_bur
