@@ -125,6 +125,46 @@ def vel_map_depro(mHa_vel, best_fit_values, scale):
     
     return rm_deproj, vm_deproj
 
+# deprojected rotation curve
+def rot_curve(best_fit_values,halo_model):
+    r = np.linspace(0,1000,5000)
+    
+    v_b = np.zeros(len(r))
+    v_d = np.zeros(len(r))
+    v_h = np.zeros(len(r))
+    v = np.zeros(len(r))
+    
+    for oo in range(len(r)):
+        if r[oo] > 0:
+            v_b[oo] = bulge_vel(r[oo]*1000,best_fit_values[0],best_fit_values[1]*1000)
+            v_d[oo] = disk_vel(r[oo]*1000,best_fit_values[2],best_fit_values[3]*1000)
+            if halo_model == 'Isothermal':
+                v_h[oo] = halo_vel_iso(r[oo]*1000,best_fit_values[4],best_fit_values[5]*1000)
+                v[oo] = vel_tot_iso(r[oo],best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
+            elif halo_model == 'NFW':
+                v_h[oo] = halo_vel_NFW(r[oo]*1000,best_fit_values[4],best_fit_values[5]*1000)
+                v[oo] = vel_tot_NFW(r[oo],best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
+            elif halo_model == 'Burkert':
+                v_h[oo] = halo_vel_bur(r[oo]*1000,best_fit_values[4],best_fit_values[5]*1000)
+                v[oo] = vel_tot_bur(r[oo],best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
+            else:
+                print('Fit function not known.  Please update plot_rot_curve function.')
+        else:
+            v_b[oo] = -bulge_vel(np.abs(r[oo]*1000),best_fit_values[0],best_fit_values[1]*1000)
+            v_d[oo] = -disk_vel(np.abs(r[oo]*1000),best_fit_values[2],best_fit_values[3]*1000)
+            if halo_model == 'Isothermal':
+                v_h[oo] = -halo_vel_iso(np.abs(r[oo]*1000),best_fit_values[4],best_fit_values[5]*1000)
+                v[oo] = -vel_tot_iso(np.abs(r[oo]),best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
+            elif halo_model == 'NFW':
+                v_h[oo] = -halo_vel_NFW(np.abs(r[oo]*1000),best_fit_values[4],best_fit_values[5]*1000)
+                v[oo] = -vel_tot_NFW(np.abs(r[oo]),best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
+            elif halo_model == 'Burkert':
+                v_h[oo] = -halo_vel_bur(np.abs(r[oo]*1000),best_fit_values[4],best_fit_values[5]*1000)
+                v[oo] = -vel_tot_bur(np.abs(r[oo]),best_fit_values[0],best_fit_values[1],best_fit_values[2],best_fit_values[3],best_fit_values[4],best_fit_values[5])
+            else:
+                print('Fit function not known.  Please update plot_rot_curve function.')
+    return r, v_b, v_d, v_h, v
+
 # Modified function to obtain information for a given galaxy
 def get_info(galaxy_ID,fit, r90_file, flag):
     
