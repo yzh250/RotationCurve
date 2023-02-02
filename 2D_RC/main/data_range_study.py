@@ -305,7 +305,7 @@ for a in range(len(galaxy_ID_iso)):
     rm_deproj, vm_deproj = vel_map_depro(vmasked, fit, scale)
 
     r90_iso.append(r90)
-    rmax_iso.append(np.max(r_deproj))
+    rmax_iso.append(np.max(rm_deproj))
 
 for b in range(len(galaxy_ID_nfw)):
 
@@ -318,7 +318,7 @@ for b in range(len(galaxy_ID_nfw)):
     rm_deproj, vm_deproj = vel_map_depro(vmasked, fit, scale)
 
     r90_nfw.append(r90)
-    rmax_nfw.append(np.max(r_deproj))
+    rmax_nfw.append(np.max(rm_deproj))
 
 for c in range(len(galaxy_ID_iso)):
 
@@ -331,7 +331,7 @@ for c in range(len(galaxy_ID_iso)):
     rm_deproj, vm_deproj = vel_map_depro(vmasked, fit, scale)
 
     r90_bur.append(r90)
-    rmax_bur.append(np.max(r_deproj))
+    rmax_bur.append(np.max(rm_deproj))
 
 c_iso = Table()
 c_iso['galaxy_ID'] = galaxy_ID_iso
