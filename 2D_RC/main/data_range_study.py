@@ -347,6 +347,6 @@ c_bur['r90'] = r90_bur
 c_bur['r_max'] = rmax_bur
 
 
-c_iso = Table.read('iso_data_range.csv',format='ascii.csv')
-c_nfw = Table.read('nfw_data_range.csv',format='ascii.csv')
-c_bur = Table.read('bur_data_range.csv',format='ascii.csv')
+c_iso.write('iso_data_range.csv',format='ascii.csv', overwrite=True)
+c_nfw.write('nfw_data_range.csv',format='ascii.csv', overwrite=True)
+c_bur.write('bur_data_range.csv',format='ascii.csv', overwrite=True)
