@@ -90,7 +90,10 @@ bur_fits = Table.read('bur_fits_final.csv',format='ascii.csv')
 
 # Modified velocity map deprojection function
 def vel_map_depro(mHa_vel, best_fit_values, scale):
+    print('-----------------------------------------------------')
     i_angle = best_fit_values[6]#np.arccos(best_fit_values['ba'])
+    print('Fitted inclination angle')
+    print(i_angle)
     ############################################################################
 
 
@@ -98,6 +101,9 @@ def vel_map_depro(mHa_vel, best_fit_values, scale):
     # Convert rotation angle from degrees to radians
     #---------------------------------------------------------------------------
     phi = best_fit_values[7]
+    print('Fitted phi: ')
+    print(phi)
+    print('-----------------------------------------------------')
     ############################################################################
 
 
@@ -294,44 +300,77 @@ rmax_nfw = []
 r90_bur = []
 rmax_bur = []
 
+print('Isothermal: ')
 for a in range(len(galaxy_ID_iso)):
 
     gal_ID = galaxy_ID_iso[a]
 
     fit = list(iso_fits[a])[3:-1]
 
+    print(fit)
+
     vmasked, ivar_masked, incl, scale, r90, mfitted_map, r, v_d, v_h, v = get_info(gal_ID,fit, r90_file, 'iso')
 
-    rm_deproj, vm_deproj = vel_map_depro(vmasked, fit, scale)
+    rm_deproj_iso, vm_deproj_iso = vel_map_depro(vmasked, fit, scale)
+
+    print('-----------------------------------------------------')
+    print('Galaxy ID:', gal_ID, flush=True)
+    print('r90: ')
+    print(r90)
+    print('rmax: ')
+    print(np.max(rm_deproj_iso))
+    print('-----------------------------------------------------')
 
     r90_iso.append(r90)
-    rmax_iso.append(np.max(rm_deproj))
+    rmax_iso.append(np.max(rm_deproj_iso))
 
+print('NFW: ')
 for b in range(len(galaxy_ID_nfw)):
 
     gal_ID = galaxy_ID_nfw[b]
 
     fit = list(nfw_fits[b])[3:-1]
 
+    print(fit)
+
     vmasked, ivar_masked, incl, scale, r90, mfitted_map, r, v_d, v_h, v = get_info(gal_ID,fit, r90_file, 'nfw')
 
-    rm_deproj, vm_deproj = vel_map_depro(vmasked, fit, scale)
+    rm_deproj_nfw, vm_deproj_nfw = vel_map_depro(vmasked, fit, scale)
+
+    print('-----------------------------------------------------')
+    print('Galaxy ID:', gal_ID, flush=True)
+    print('r90: ')
+    print(r90)
+    print('rmax: ')
+    print(np.max(rm_deproj_nfw))
+    print('-----------------------------------------------------')
 
     r90_nfw.append(r90)
-    rmax_nfw.append(np.max(rm_deproj))
+    rmax_nfw.append(np.max(rm_deproj_nfw))
 
+print('Burkert: ')
 for c in range(len(galaxy_ID_bur)):
 
     gal_ID = galaxy_ID_bur[c]
 
     fit = list(bur_fits[c])[3:-1]
 
+    print(fit)
+
     vmasked, ivar_masked, incl, scale, r90, mfitted_map, r, v_d, v_h, v = get_info(gal_ID,fit, r90_file, 'bur')
 
-    rm_deproj, vm_deproj = vel_map_depro(vmasked, fit, scale)
+    rm_deproj_bur, vm_deproj_bur = vel_map_depro(vmasked, fit, scale)
+
+    print('-----------------------------------------------------')
+    print('Galaxy ID:', gal_ID, flush=True)
+    print('r90: ')
+    print(r90)
+    print('rmax: ')
+    print(np.max(rm_deproj_bur))
+    print('-----------------------------------------------------')
 
     r90_bur.append(r90)
-    rmax_bur.append(np.max(rm_deproj))
+    rmax_bur.append(np.max(rm_deproj_bur))
 
 c_iso = Table()
 c_iso['galaxy_ID'] = galaxy_ID_iso
