@@ -349,11 +349,11 @@ for b in range(len(galaxy_ID_nfw)):
     rmax_nfw.append(np.max(rm_deproj_nfw))
 
 print('Burkert: ')
-for c in range(len(galaxy_ID_bur)):
+for d in range(len(galaxy_ID_bur)):
 
-    gal_ID = galaxy_ID_bur[c]
+    gal_ID = galaxy_ID_bur[d]
 
-    fit = list(bur_fits[c])[3:-1]
+    fit = list(bur_fits[d])[3:-1]
 
     print(fit)
 
